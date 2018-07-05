@@ -25,8 +25,8 @@ import java.util.TimeZone;
 /**
  * Best-effort parser for HTTP dates.
  * <p>
- * 拷贝自：<a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">okhttp</a>。
- * 有一定修改或删除，请勿模仿。
+ * 拷贝自：<a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">HttpDate</a>。
+ * 这个类针对的是 HTTP 中的 GMT 时间，在 0 时区，UTC 和 GMT 没有区别。
  *
  * @author square/okhttp
  */
@@ -41,7 +41,7 @@ final class HttpDate {
   private static final ThreadLocal<DateFormat> STANDARD_DATE_FORMAT =
       ThreadLocal.withInitial(() -> {
         // Date format specified by RFC 7231 section 7.1.1.1.
-        DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.getDefault());
+        DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
         rfc1123.setLenient(false);
         rfc1123.setTimeZone(UTC);
         return rfc1123;
@@ -90,7 +90,7 @@ final class HttpDate {
       for (int i = 0, count = BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS.length; i < count; i++) {
         DateFormat format = BROWSER_COMPATIBLE_DATE_FORMATS[i];
         if (format == null) {
-          format = new SimpleDateFormat(BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS[i], Locale.getDefault());
+          format = new SimpleDateFormat(BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS[i], Locale.US);
           // Set the timezone to use when interpreting formats that don't have a timezone. GMT is
           // specified by RFC 7231.
           format.setTimeZone(UTC);

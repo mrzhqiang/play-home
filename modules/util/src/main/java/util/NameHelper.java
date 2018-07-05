@@ -50,7 +50,7 @@ public final class NameHelper {
   public static int color(String name) {
     Objects.requireNonNull(name);
     if (name.isEmpty()) {
-      return 0xFF202020;
+      return DEFAULT_COLOR;
     }
     // 计算名字的hashCode，位与0xFFFFFFFF——相当于取得最后的8位
     // 然后根据数组长度取模，得到随机的下标位置，返回预定义的颜色值
