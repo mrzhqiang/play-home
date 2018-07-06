@@ -26,13 +26,13 @@ import java.util.TimeZone;
  * Best-effort parser for HTTP dates.
  * <p>
  * 拷贝自：<a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">HttpDate</a>。
- * 这个类针对的是 HTTP 中的 GMT 时间，在 0 时区，UTC 和 GMT 没有区别。
+ * 这个类针对的是 HTTP 中的 GMT 时间，由于都在 0 时区，所以 UTC 和 GMT 没有区别。
  *
  * @author square/okhttp
  */
 final class HttpDate {
   /** GMT and UTC are equivalent for our purposes. */
-  static final TimeZone UTC = TimeZone.getTimeZone("GMT");
+  private static final TimeZone UTC = TimeZone.getTimeZone("GMT");
 
   /**
    * Most websites serve cookies in the blessed format. Eagerly create the parser to ensure such

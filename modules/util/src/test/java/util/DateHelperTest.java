@@ -52,13 +52,24 @@ public class DateHelperTest {
   }
 
   @Test
+  public void formatThisMonth() {
+    try {
+      String format = DateHelper.formatThisMonth(null);
+      assertNotNull(format);
+    } catch (NullPointerException ignore) {
+    }
+    // 07-05 22:58
+    System.out.println(DateHelper.formatThisMonth(new Date()));
+  }
+
+  @Test
   public void formatThisYear() {
     try {
       String format = DateHelper.formatThisYear(null);
       assertNotNull(format);
     } catch (NullPointerException ignore) {
     }
-    // 07-05 22:58
+    // 07-05
     System.out.println(DateHelper.formatThisYear(new Date()));
   }
 

@@ -14,28 +14,32 @@ import java.util.Objects;
  * @author mrzhqiang
  */
 public final class TimeHelper {
-
   private static final String FORMAT_BETWEEN_YEARS = "%d 年之前";
+  private static final String FORMAT_BETWEEN_MONTHS = "%d 个月前";
   private static final String FORMAT_BETWEEN_DAYS = "%d 天以前";
   private static final String FORMAT_BETWEEN_HOURS = "%d 小时前";
   private static final String FORMAT_BETWEEN_MINUTES = "%d 分钟前";
   private static final String NOW = "刚刚";
 
   /**
-   * 时间戳间隔。
+   * 时间戳与现在的间隔。
    * <p>
    * 表示目标时间戳距离现在，已过去多长时间。
    *
    * @param value 目标时间戳。
    * @return 对时间间隔的文字描述，比如：刚刚、1 分钟前。
    */
-  public static String between(Date value) {
+  public static String betweenNow(Date value) {
     Objects.requireNonNull(value);
     LocalDateTime nowTime = LocalDateTime.now();
     LocalDateTime valueTime = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
     long betweenYears = ChronoUnit.YEARS.between(valueTime, nowTime);
     if (betweenYears != 0) {
       return String.format(FORMAT_BETWEEN_YEARS, betweenYears);
+    }
+    long betweenMonth = ChronoUnit.MONTHS.between(valueTime, nowTime);
+    if (betweenMonth != 0) {
+      return String.format(FORMAT_BETWEEN_MONTHS, betweenYears);
     }
     long betweenDays = ChronoUnit.DAYS.between(valueTime, nowTime);
     if (betweenDays != 0) {
@@ -56,10 +60,12 @@ public final class TimeHelper {
    * 显示时间戳。
    * <p>
    * 规则：
-   * 当时间超过现在，显示正常格式；
-   * 当时间在今天以内，显示粒度细化到 HH:mm；
-   * 当时间在今年以内，显示粒度细化到 MM-dd HH:mm；
-   * 其他时间范围，显示粒度细化到 yyyy-MM-dd HH:mm。
+   * 超过现在，显示正常格式；
+   * 今天以内，显示粒度 HH:mm；
+   * 今月以内，显示粒度 MM-dd HH:mm；
+   * 今年以内，显示粒度 MM-dd；
+   * 其他时间，显示粒度 yyyy-MM-dd；
+   * 错误时间，显示粒度 yyyy-MM-dd HH:mm:ss。
    *
    * @param value 目标时间戳。
    * @return 格式化过的时间戳字符串
@@ -74,8 +80,11 @@ public final class TimeHelper {
     if (valueTime.getYear() != nowTime.getYear()) {
       return DateHelper.formatOtherYear(value);
     }
-    if (valueTime.getDayOfYear() != nowTime.getDayOfYear()) {
+    if (valueTime.getMonthValue() != nowTime.getMonthValue()) {
       return DateHelper.formatThisYear(value);
+    }
+    if (valueTime.getDayOfMonth() != nowTime.getDayOfMonth()) {
+      return DateHelper.formatThisMonth(value);
     }
     return DateHelper.formatToday(value);
   }

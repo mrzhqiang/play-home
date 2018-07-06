@@ -30,17 +30,17 @@ public class TimeHelperTest {
   @Test
   public void between() {
     try {
-      String between = TimeHelper.between(null);
+      String between = TimeHelper.betweenNow(null);
       assertNotNull(between);
     } catch (NullPointerException ignore) {
     }
 
-    System.out.println(TimeHelper.between(Date.from(nowInstant)));
-    System.out.println(TimeHelper.between(Date.from(minutesInstant)));
-    System.out.println(TimeHelper.between(Date.from(hoursInstant)));
-    System.out.println(TimeHelper.between(Date.from(dayInstant)));
-    System.out.println(TimeHelper.between(Date.from(monthInstant)));
-    System.out.println(TimeHelper.between(Date.from(yearInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(nowInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(minutesInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(hoursInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(dayInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(monthInstant)));
+    System.out.println(TimeHelper.betweenNow(Date.from(yearInstant)));
   }
 
   @Test
