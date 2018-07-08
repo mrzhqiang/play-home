@@ -25,6 +25,14 @@ public abstract class ApplicationException extends RuntimeException {
     return new BadRequestException(cause.getMessage());
   }
 
+  public static ApplicationException unauthorized(String message) {
+    return new UnauthorizedException(message);
+  }
+
+  public static ApplicationException unauthorized(Throwable cause) {
+    return new UnauthorizedException(cause.getMessage());
+  }
+
   public static ApplicationException forbidden(String message) {
     return new ForbiddenException(message);
   }
@@ -48,6 +56,16 @@ public abstract class ApplicationException extends RuntimeException {
 
     @Override public int statusCode() {
       return 400;
+    }
+  }
+
+  private static class UnauthorizedException extends ApplicationException {
+    UnauthorizedException(String message) {
+      super(message);
+    }
+
+    @Override public int statusCode() {
+      return 401;
     }
   }
 
