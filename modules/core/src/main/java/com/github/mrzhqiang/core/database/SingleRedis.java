@@ -32,7 +32,8 @@ import redis.clients.jedis.exceptions.JedisException;
       host = config.getString(HOST);
       port = config.getInt(PORT);
       timeout = config.getInt(TIMEOUT);
-      password = config.getString(PASSWORD);
+      String temp = config.getString(PASSWORD);
+      password = temp.isEmpty() ? DEFAULT_PASSWORD : temp;
       database = config.getInt(DATABASE);
     }
 

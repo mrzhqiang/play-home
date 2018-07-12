@@ -22,11 +22,11 @@ import play.Logger;
 
   public SingleCassandra() {
     try {
-      Config config = ConfigFactory.load();
       String host = DEFAULT_HOST;
       int port = DEFAULT_PORT;
       int maxSeconds = DEFAULT_MAX_SECONDS;
 
+      Config config = ConfigFactory.load();
       if (config.hasPath(ROOT_PATH)) {
         host = config.getString(HOST);
         port = config.getInt(PORT);
