@@ -70,6 +70,11 @@
     <appender-ref ref="ACCESS_FILE"/>
   </logger>
 
+  <!-- if you want watch cassandra logger ? -->
+  <logger name="com.datastax.driver.core.QueryLogger.SLOW" level="DEBUG"/>
+  <logger name="com.datastax.driver.core.QueryLogger.ERROR" level="DEBUG"/>
+  <!--<logger name="com.datastax.driver.core.QueryLogger.NORMAL" level="DEBUG"/>-->
+
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF"/>
   <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF"/>
