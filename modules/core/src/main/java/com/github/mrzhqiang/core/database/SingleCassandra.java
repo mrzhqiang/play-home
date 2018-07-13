@@ -2,7 +2,7 @@ package com.github.mrzhqiang.core.database;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.QueryLogger;
-import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
@@ -16,7 +16,7 @@ import play.Logger;
  */
 @Singleton final class SingleCassandra implements Cassandra {
   private static final Logger.ALogger logger = Logger.of("core");
-  private static final String CASSANDRA_VERSION = "cassandra version {}";
+  private static final String CASSANDRA_VERSION = "cassandra cluster_name:{} release_version:{}.";
 
   private final MappingManager mappingManager;
 
@@ -39,8 +39,8 @@ import play.Logger;
           .withMaxSchemaAgreementWaitSeconds(maxSeconds)
           .build();
       this.mappingManager = new MappingManager(cluster.connect());
-      ResultSet rs = mappingManager.getSession().execute(QUERY_RELEASE_VERSION);
-      logger.info(CASSANDRA_VERSION, rs.one().getString(RELEASE_VERSION));
+      Row row = mappingManager.getSession().execute(QUERY_RELEASE_VERSION).one();
+      logger.info(CASSANDRA_VERSION, row.getString(CLUSTER_NAME), row.getString(RELEASE_VERSION));
 
       cluster.register(QueryLogger.builder().build());
     } catch (Exception e) {

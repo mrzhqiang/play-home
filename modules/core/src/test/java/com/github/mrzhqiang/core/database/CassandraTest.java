@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * @author mrzhqiang
  */
-public class CassandraTest {
+public final class CassandraTest {
   private Cassandra cassandra;
   private Config config;
 

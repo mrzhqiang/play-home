@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * @author mrzhqiang
  */
-public class RedisTest {
+public final class RedisTest {
   private Redis redis;
 
   @Before

@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.core.database;
 
 import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.ImplementedBy;
 
@@ -20,8 +21,10 @@ public interface Cassandra {
   int DEFAULT_PORT = ProtocolOptions.DEFAULT_PORT;
   int DEFAULT_MAX_SECONDS = ProtocolOptions.DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
 
+  String CLUSTER_NAME = "cluster_name";
   String RELEASE_VERSION = "release_version";
-  String QUERY_RELEASE_VERSION = "select " + RELEASE_VERSION + " from system.local";
+  String QUERY_RELEASE_VERSION =
+      QueryBuilder.select(CLUSTER_NAME, RELEASE_VERSION).from("system.local").toString();
 
   /**
    * Examples:
