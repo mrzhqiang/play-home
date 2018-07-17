@@ -1,5 +1,49 @@
 @()
 
-@main("Randall 主页") {
-
+@main("Woof") {
+  <div id="wrapper">
+    <div class="vertical-align-wrap">
+      <div class="vertical-align-middle">
+        <div class="auth-box ">
+          <div class="left">
+            <div class="content">
+              <div class="header">
+                <div class="logo text-center"><img src="@routes.Assets.versioned("images/logo-light.png")" alt="Randall Logo"></div>
+              </div>
+              <form class="form-auth-small" action="">
+                <div class="form-group">
+                  <label for="signin-username" class="control-label sr-only">Username</label>
+                  <input type="text" class="form-control" id="signin-username" minlength="4" maxlength="24" value="" placeholder="用户名/uid">
+                </div>
+                <div class="form-group">
+                  <label for="signin-password" class="control-label sr-only">Password</label>
+                  <input type="text" class="form-control" id="signin-password" minlength="6" maxlength="16" value="" placeholder="用户密码（6-16 位数字/字母）">
+                </div>
+                <div class="form-group clearfix">
+                  <label class="fancy-checkbox element-left">
+                    <input type="checkbox">
+                    <span>一周内自动登录</span>
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+                <div class="bottom">
+                  @* TODO *@
+                  <span class="helper-text"><i class="fa fa-lock"></i> <a href="#">
+                    Forgot password?</a></span>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="right">
+            <div class="overlay"></div>
+            <div class="content text">
+              <h1 class="heading">Free Bootstrap dashboard template</h1>
+              <p>by The Develovers</p>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 }
