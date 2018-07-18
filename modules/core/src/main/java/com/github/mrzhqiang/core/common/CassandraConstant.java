@@ -48,9 +48,16 @@ public final class CassandraConstant {
       createTable(KEYSPACE_WOOF, TABLE_TREASURE)
           .ifNotExists()
           .addPartitionKey(TREASURE_ID, DataType.cint())
-          .addPartitionKey(COMMON_COLUMN_NAME, DataType.text())
-          .addPartitionKey(COMMON_COLUMN_LINK, DataType.text())
-          .addPartitionKey(COMMON_COLUMN_DESCRIPTION, DataType.text())
-          .addPartitionKey(COMMON_COLUMN_CREATED, DataType.timestamp())
-          .addPartitionKey(COMMON_COLUMN_UPDATED, DataType.timestamp());
+          .addColumn(COMMON_COLUMN_NAME, DataType.text())
+          .addColumn(COMMON_COLUMN_LINK, DataType.text())
+          .addColumn(COMMON_COLUMN_DESCRIPTION, DataType.text())
+          .addColumn(COMMON_COLUMN_CREATED, DataType.timestamp())
+          .addColumn(COMMON_COLUMN_UPDATED, DataType.timestamp());
+  private static final String INDEX_TREASURE_NAME = "index_treasure_name";
+  public static final Statement CREATE_TREASURE_NAME_INDEX =
+      createIndex(INDEX_TREASURE_NAME)
+          .ifNotExists()
+          .onTable(KEYSPACE_WOOF, TABLE_TREASURE)
+          .andColumn(COMMON_COLUMN_NAME);
+  // TODO: 2018/7/18 其他的建表语句
 }

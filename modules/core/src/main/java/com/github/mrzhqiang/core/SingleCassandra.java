@@ -3,6 +3,7 @@ package com.github.mrzhqiang.core;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.QueryLogger;
+
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.MappingManager;
@@ -20,8 +21,7 @@ import static com.github.mrzhqiang.core.common.CassandraConstant.*;
  */
 @Singleton final class SingleCassandra implements Cassandra {
   private static final Logger.ALogger logger = Logger.of("core");
-
-  private static final String CASSANDRA_VERSION = "cassandra cluster_name:{} release_version:{}.";
+  public static final String MSG_RELEASE_VERSION = "cassandra cluster_name:{} release_version:{}.";
 
   private final Cluster cluster;
 
@@ -56,8 +56,16 @@ import static com.github.mrzhqiang.core.common.CassandraConstant.*;
   @Override public void check() {
     try (Session session = cluster.connect()) {
       Row row = session.execute(QUERY_RELEASE_VERSION).one();
-      logger.info(CASSANDRA_VERSION, row.getString(CLUSTER_NAME), row.getString(RELEASE_VERSION));
+      logger.info(MSG_RELEASE_VERSION, row.getString(CLUSTER_NAME), row.getString(RELEASE_VERSION));
 
+      session.execute(CREATE_WOOF);
+      session.execute(CREATE_TREASURE);
+      session.execute(CREATE_TREASURE_NAME_INDEX);
+
+      logger.info("Cassandra is normal.");
+    } catch (Exception e) {
+      logger.error("Check cassandra failed!", e);
+      throw new RuntimeException("Cassandra schema error!", e);
     }
   }
 
