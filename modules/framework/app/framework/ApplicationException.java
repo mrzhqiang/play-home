@@ -1,4 +1,6 @@
-package com.github.mrzhqiang.util.exception;
+package framework;
+
+import play.mvc.Http;
 
 /**
  * 应用异常。
@@ -55,7 +57,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
 
     @Override public int statusCode() {
-      return 400;
+      return Http.Status.BAD_REQUEST;
     }
   }
 
@@ -65,7 +67,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
 
     @Override public int statusCode() {
-      return 401;
+      return Http.Status.UNAUTHORIZED;
     }
   }
 
@@ -75,7 +77,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
 
     @Override public int statusCode() {
-      return 403;
+      return Http.Status.FORBIDDEN;
     }
   }
 
@@ -85,7 +87,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
 
     @Override public int statusCode() {
-      return 404;
+      return Http.Status.NOT_FOUND;
     }
   }
 }

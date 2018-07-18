@@ -1,7 +1,8 @@
-package com.github.mrzhqiang.core.database;
+package com.github.mrzhqiang.core;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
+import com.github.mrzhqiang.core.Cassandra;
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;

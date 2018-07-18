@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.core.database;
+package com.github.mrzhqiang.core;
 
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
@@ -7,8 +7,11 @@ import play.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
+
+import static com.github.mrzhqiang.core.common.RedisConstant.*;
 
 /**
  * Redis of single host。
@@ -21,11 +24,11 @@ import redis.clients.jedis.exceptions.JedisException;
   private final JedisPool jedisPool;
 
   public SingleRedis() {
-    String host = DEFAULT_HOST;
-    int port = DEFAULT_PORT;
-    int timeout = DEFAULT_TIMEOUT;
-    String password = DEFAULT_PASSWORD;
-    int database = DEFAULT_DATABASE;
+    String host = Protocol.DEFAULT_HOST;
+    int port = Protocol.DEFAULT_PORT;
+    int timeout = Protocol.DEFAULT_TIMEOUT;
+    String password = null;
+    int database = Protocol.DEFAULT_DATABASE;
 
     Config config = ConfigFactory.load();
     if (config.hasPath(ROOT_PATH)) {
@@ -33,7 +36,7 @@ import redis.clients.jedis.exceptions.JedisException;
       port = config.getInt(PORT);
       timeout = config.getInt(TIMEOUT);
       String temp = config.getString(PASSWORD);
-      password = temp.isEmpty() ? DEFAULT_PASSWORD : temp;
+      password = temp.isEmpty() ? null : temp;
       database = config.getInt(DATABASE);
     }
 

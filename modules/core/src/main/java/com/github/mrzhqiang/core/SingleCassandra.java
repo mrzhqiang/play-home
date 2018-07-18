@@ -1,13 +1,17 @@
-package com.github.mrzhqiang.core.database;
+package com.github.mrzhqiang.core;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.QueryLogger;
 import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import play.Logger;
+
+import static com.github.mrzhqiang.core.common.CassandraConstant.*;
 
 /**
  * Cassandra of single host.
@@ -16,15 +20,18 @@ import play.Logger;
  */
 @Singleton final class SingleCassandra implements Cassandra {
   private static final Logger.ALogger logger = Logger.of("core");
+
   private static final String CASSANDRA_VERSION = "cassandra cluster_name:{} release_version:{}.";
 
-  private final MappingManager mappingManager;
+  private final Cluster cluster;
+
+  private MappingManager mappingManager = null;
 
   public SingleCassandra() {
     try {
       String host = DEFAULT_HOST;
-      int port = DEFAULT_PORT;
-      int maxSeconds = DEFAULT_MAX_SECONDS;
+      int port = ProtocolOptions.DEFAULT_PORT;
+      int maxSeconds = ProtocolOptions.DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
 
       Config config = ConfigFactory.load();
       if (config.hasPath(ROOT_PATH)) {
@@ -33,16 +40,12 @@ import play.Logger;
         maxSeconds = config.getInt(MAX_SECONDS);
       }
 
-      Cluster cluster = Cluster.builder()
+      this.cluster = Cluster.builder()
           .addContactPoint(host)
           .withPort(port)
           .withMaxSchemaAgreementWaitSeconds(maxSeconds)
-          .build();
-      this.mappingManager = new MappingManager(cluster.connect());
-      Row row = mappingManager.getSession().execute(QUERY_RELEASE_VERSION).one();
-      logger.info(CASSANDRA_VERSION, row.getString(CLUSTER_NAME), row.getString(RELEASE_VERSION));
-
-      cluster.register(QueryLogger.builder().build());
+          .build()
+          .register(QueryLogger.builder().build());
     } catch (Exception e) {
       String message = "Create cassandra cluster failed.";
       logger.error(message, e);
@@ -50,7 +53,18 @@ import play.Logger;
     }
   }
 
+  @Override public void check() {
+    try (Session session = cluster.connect()) {
+      Row row = session.execute(QUERY_RELEASE_VERSION).one();
+      logger.info(CASSANDRA_VERSION, row.getString(CLUSTER_NAME), row.getString(RELEASE_VERSION));
+
+    }
+  }
+
   @Override public MappingManager getMappingManager() {
+    if (mappingManager == null) {
+      mappingManager = new MappingManager(cluster.newSession());
+    }
     return mappingManager;
   }
 }

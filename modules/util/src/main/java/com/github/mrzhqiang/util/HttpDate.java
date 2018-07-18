@@ -25,8 +25,8 @@ import java.util.TimeZone;
 /**
  * Best-effort parser for HTTP dates.
  * <p>
- * 拷贝自：<a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">HttpDate</a>。
- * 这个类针对的是 HTTP 中的 GMT 时间，由于都在 0 时区，所以 UTC 和 GMT 没有区别。
+ * Copy from：
+ * <a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">HttpDate</a>。
  *
  * @author square/okhttp
  */

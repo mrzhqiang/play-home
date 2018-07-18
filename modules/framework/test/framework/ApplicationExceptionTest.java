@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.util.exception;
+package framework;
 
 import org.junit.Test;
 
@@ -29,5 +29,4 @@ public class ApplicationExceptionTest {
     assertEquals(ApplicationException.notFound("Not found.").statusCode(), 404);
     assertEquals(ApplicationException.notFound(new RuntimeException()).statusCode(), 404);
   }
-
 }

@@ -15,7 +15,6 @@ import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
-import com.github.mrzhqiang.util.exception.ApplicationException;
 
 /**
  * 错误处理程序。

@@ -1,8 +1,7 @@
-package com.github.mrzhqiang.core.database;
+package com.github.mrzhqiang.core;
 
 import com.google.inject.ImplementedBy;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Protocol;
 
 /**
  * Redis client interface.
@@ -11,19 +10,6 @@ import redis.clients.jedis.Protocol;
  */
 @ImplementedBy(SingleRedis.class)
 public interface Redis {
-  String ROOT_PATH = "core.redis";
-  String HOST = ROOT_PATH + ".host";
-  String PORT = ROOT_PATH + ".port";
-  String TIMEOUT = ROOT_PATH + ".timeout";
-  String PASSWORD = ROOT_PATH + ".password";
-  String DATABASE = ROOT_PATH + ".database";
-
-  String DEFAULT_HOST = Protocol.DEFAULT_HOST;
-  int DEFAULT_PORT = Protocol.DEFAULT_PORT;
-  int DEFAULT_TIMEOUT = Protocol.DEFAULT_TIMEOUT;
-  String DEFAULT_PASSWORD = null;
-  int DEFAULT_DATABASE = Protocol.DEFAULT_DATABASE;
-
   /**
    * In JDK 1.6 and lower:
    * <pre>
@@ -46,5 +32,6 @@ public interface Redis {
    *   }
    * </pre>
    */
+  // TODO: 2018/7/18 考虑未来的集群集成，需要一个兼容的返回类型
   Jedis getJedis();
 }

@@ -14,4 +14,4 @@ libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-core" % "3.5
 // https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-mapping
 libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-mapping" % "3.5.1"
 // https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-extras
-libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-extras" % "3.5.1"
+//libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-extras" % "3.5.1"
