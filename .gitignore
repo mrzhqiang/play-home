@@ -15,3 +15,5 @@ RUNNING_PID
 .g8
 bin
 project/plugins/project/
+MANIFEST.MF
+META-INF
