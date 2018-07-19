@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.util;
 
 import java.util.Objects;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 
 /**
  * 名字辅助工具。
@@ -10,6 +12,9 @@ import java.util.Objects;
  * @author mrzhqiang
  */
 public final class NameHelper {
+  private NameHelper() {
+  }
+
   /** 默认颜色常量。 */
   private static final int DEFAULT_COLOR = 0xFF202020;
 
@@ -27,6 +32,8 @@ public final class NameHelper {
    * @param name 一个名字或其他字符串类型的值
    * @return 传入字符串的首字母，如果传入一个空串，将使用默认字符："m"。
    */
+  @Nonnull
+  @CheckReturnValue
   public static String firstLetter(String name) {
     Objects.requireNonNull(name);
     for (Character c : name.toCharArray()) {
@@ -47,6 +54,7 @@ public final class NameHelper {
    * @param name 名字字符串，不能为 null，如果是空串，则返回默认常量。
    * @return ARGB 颜色常量数值。
    */
+  @CheckReturnValue
   public static int color(String name) {
     Objects.requireNonNull(name);
     if (name.isEmpty()) {
@@ -55,8 +63,5 @@ public final class NameHelper {
     // 计算名字的hashCode，位与0xFFFFFFFF——相当于取得最后的8位
     // 然后根据数组长度取模，得到随机的下标位置，返回预定义的颜色值
     return COLORS[(int) ((name.hashCode() & 0xffffffffL) % COLORS.length)];
-  }
-
-  private NameHelper() {
   }
 }

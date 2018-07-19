@@ -2,14 +2,15 @@ package com.github.mrzhqiang.util;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static java.time.format.DateTimeFormatter.*;
 
 public class TimeHelperTest {
-
   private Instant nowInstant;
   private Instant minutesInstant;
   private Instant hoursInstant;
@@ -23,7 +24,7 @@ public class TimeHelperTest {
     minutesInstant = nowInstant.minus(Duration.ofMinutes(1));
     hoursInstant = nowInstant.minus(Duration.ofHours(1));
     dayInstant = nowInstant.minus(Duration.ofDays(1));
-    monthInstant = nowInstant.minus(Duration.ofDays(31));
+    monthInstant = nowInstant.minus(Duration.ofDays(61));
     yearInstant = nowInstant.minus(Duration.ofDays(365));
   }
 
@@ -35,12 +36,12 @@ public class TimeHelperTest {
     } catch (NullPointerException ignore) {
     }
 
-    System.out.println(TimeHelper.betweenNow(Date.from(nowInstant)));
-    System.out.println(TimeHelper.betweenNow(Date.from(minutesInstant)));
-    System.out.println(TimeHelper.betweenNow(Date.from(hoursInstant)));
-    System.out.println(TimeHelper.betweenNow(Date.from(dayInstant)));
-    System.out.println(TimeHelper.betweenNow(Date.from(monthInstant)));
-    System.out.println(TimeHelper.betweenNow(Date.from(yearInstant)));
+    assertEquals("刚刚", TimeHelper.betweenNow(Date.from(nowInstant)));
+    assertEquals("1 分钟前", TimeHelper.betweenNow(Date.from(minutesInstant)));
+    assertEquals("1 小时前", TimeHelper.betweenNow(Date.from(hoursInstant)));
+    assertEquals("1 天前", TimeHelper.betweenNow(Date.from(dayInstant)));
+    assertEquals("2 个月前", TimeHelper.betweenNow(Date.from(monthInstant)));
+    assertEquals("1 年前", TimeHelper.betweenNow(Date.from(yearInstant)));
   }
 
   @Test
@@ -51,11 +52,17 @@ public class TimeHelperTest {
     } catch (NullPointerException ignore) {
     }
 
-    System.out.println(TimeHelper.display(Date.from(nowInstant)));
-    System.out.println(TimeHelper.display(Date.from(minutesInstant)));
-    System.out.println(TimeHelper.display(Date.from(hoursInstant)));
-    System.out.println(TimeHelper.display(Date.from(dayInstant)));
-    System.out.println(TimeHelper.display(Date.from(monthInstant)));
-    System.out.println(TimeHelper.display(Date.from(yearInstant)));
+    assertEquals(ISO_LOCAL_TIME.format(nowInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(nowInstant)));
+    assertEquals(ISO_LOCAL_TIME.format(minutesInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(minutesInstant)));
+    assertEquals(ISO_LOCAL_TIME.format(hoursInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(hoursInstant)));
+    assertEquals(ISO_LOCAL_DATE.format(dayInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(dayInstant)));
+    assertEquals(ISO_LOCAL_DATE.format(monthInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(monthInstant)));
+    assertEquals(ISO_LOCAL_DATE.format(yearInstant.atZone(ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(yearInstant)));
   }
 }

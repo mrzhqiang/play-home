@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.util;
 
-import java.awt.Color;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -17,11 +16,11 @@ public class NameHelperTest {
 
     String defaultLetter = NameHelper.firstLetter("");
     assertNotNull(defaultLetter);
-    System.out.println(defaultLetter);
+    assertEquals("m", defaultLetter);
 
     String mrzhqiang = NameHelper.firstLetter("play-home");
     assertNotNull(mrzhqiang);
-    System.out.println(mrzhqiang);
+    assertEquals("p", mrzhqiang);
   }
 
   @Test
@@ -33,7 +32,6 @@ public class NameHelperTest {
     }
 
     int color = NameHelper.color("mrzhqiang");
-    Color decode = Color.decode(color + "");
-    System.out.println(decode);
+    assertEquals(-12627531, color);
   }
 }

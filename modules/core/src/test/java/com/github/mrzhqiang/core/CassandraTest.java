@@ -2,7 +2,6 @@ package com.github.mrzhqiang.core;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
-import com.github.mrzhqiang.core.Cassandra;
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -11,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static com.github.mrzhqiang.core.common.CassandraConstant.*;
 
 /**
  * @author mrzhqiang
@@ -21,8 +21,8 @@ public final class CassandraTest {
 
   @Before
   public void setUp() {
-    cassandra = Guice.createInjector().getInstance(Cassandra.class);
     config = ConfigFactory.load();
+    cassandra = Guice.createInjector().getInstance(Cassandra.class);
   }
 
   @After
@@ -34,8 +34,8 @@ public final class CassandraTest {
   @Test
   public void getMappingManager() {
     Session session = cassandra.getMappingManager().getSession();
-    ResultSet rs = session.execute(Cassandra.QUERY_RELEASE_VERSION);
-    String releaseVersion = config.getString(Cassandra.ROOT_PATH + "." + Cassandra.RELEASE_VERSION);
-    assertEquals(rs.one().getString(Cassandra.RELEASE_VERSION), releaseVersion);
+    ResultSet rs = session.execute(QUERY_RELEASE_VERSION);
+    String releaseVersion = config.getString(ROOT_PATH + "." + RELEASE_VERSION);
+    assertEquals(rs.one().getString(RELEASE_VERSION), releaseVersion);
   }
 }

@@ -8,13 +8,12 @@ import com.google.inject.ImplementedBy;
  *
  * @author mrzhqiang
  */
-@ImplementedBy(SingleCassandra.class)
+@ImplementedBy(StandaloneCassandra.class)
 public interface Cassandra {
   /**
-   * You should call this method if cassandra for the first time to run.
-   * It is will create all schema, include KEYSPACE, TABLE, INDEX and UTD(User-Defined Types), etc.
+   * You should call this method in [3rd] module if the woof application for the first time to run.
    */
-  void check();
+  void init();
 
   /**
    * Examples:

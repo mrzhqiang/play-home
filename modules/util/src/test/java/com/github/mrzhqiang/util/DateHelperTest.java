@@ -1,21 +1,35 @@
 package com.github.mrzhqiang.util;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static java.time.temporal.ChronoUnit.*;
+import static java.time.format.DateTimeFormatter.*;
 
 public class DateHelperTest {
+
+  private Instant instant;
+
+  @Before
+  public void setUp() {
+    instant = Instant.now();
+  }
 
   @Test
   public void format() {
     try {
       String format = DateHelper.format(null);
+      // 如果没有抛出空指针异常，那么下面这个检查会抛出 AssertionError 异常
       assertNotNull(format);
     } catch (NullPointerException ignore) {
     }
-    // Thu, 05 Jul 2018 14:50:45 GMT
-    System.out.println(DateHelper.format(new Date()));
+    // RFC_1123_DATE_TIME such as 'Tue, 3 Jun 2008 11:05:30 GMT'.
+    String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
+    assertEquals(instantFormat, DateHelper.format(Date.from(instant)));
   }
 
   @Test
@@ -26,62 +40,9 @@ public class DateHelperTest {
     } catch (NullPointerException ignore) {
     }
     // 2018-07-05 22:56:40
-    System.out.println(DateHelper.formatNormal(new Date()));
-  }
-
-  @Test
-  public void formatUTC() {
-    try {
-      String format = DateHelper.formatUTC(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
-    // 2018-07-05T22:57:12+0800
-    System.out.println(DateHelper.formatUTC(new Date()));
-  }
-
-  @Test
-  public void formatToday() {
-    try {
-      String format = DateHelper.formatToday(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
-    // 22:57
-    System.out.println(DateHelper.formatToday(new Date()));
-  }
-
-  @Test
-  public void formatThisMonth() {
-    try {
-      String format = DateHelper.formatThisMonth(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
-    // 07-05 22:58
-    System.out.println(DateHelper.formatThisMonth(new Date()));
-  }
-
-  @Test
-  public void formatThisYear() {
-    try {
-      String format = DateHelper.formatThisYear(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
-    // 07-05
-    System.out.println(DateHelper.formatThisYear(new Date()));
-  }
-
-  @Test
-  public void formatOtherYear() {
-    try {
-      String format = DateHelper.formatOtherYear(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
-    // 2018-07-05
-    System.out.println(DateHelper.formatOtherYear(new Date()));
+    String instantFormat =
+        ofPattern("yyyy-MM-dd HH:mm:ss").format(instant.atZone(ZoneId.systemDefault()));
+    assertEquals(instantFormat, DateHelper.formatNormal(Date.from(instant)));
   }
 
   @Test
@@ -91,10 +52,10 @@ public class DateHelperTest {
       assertNotNull(date);
     } catch (NullPointerException ignore) {
     }
-    // 实际上就是 HttpDate.parse 方法
-    String standardSource = "Thu, 05 Jul 2018 14:50:45 GMT";
-    Date standardDate = DateHelper.parse(standardSource);
-    assertNotNull(standardDate);
+    Date date = DateHelper.parse(RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.systemDefault())));
+    assertNotNull(date);
+    // Instant 是一个瞬间时刻，而 DateHelper.parse 方法只解析到秒，所以要进行比较必须截断到秒
+    assertEquals(Date.from(instant.truncatedTo(SECONDS)), date);
   }
 
   @Test
@@ -104,20 +65,9 @@ public class DateHelperTest {
       assertNotNull(date);
     } catch (NullPointerException ignore) {
     }
-    String normalSource = "2018-07-05 22:56:40";
-    Date normalDate = DateHelper.parseNormal(normalSource);
+    Date normalDate = DateHelper.parseNormal(
+        ofPattern("yyyy-MM-dd HH:mm:ss").format(instant.atZone(ZoneId.systemDefault())));
     assertNotNull(normalDate);
-  }
-
-  @Test
-  public void parseUTC() {
-    try {
-      Date date = DateHelper.parseUTC(null);
-      assertNotNull(date);
-    } catch (NullPointerException ignore) {
-    }
-    String utcSource = "2018-07-05T22:57:12+0800";
-    Date utcDate = DateHelper.parseUTC(utcSource);
-    assertNotNull(utcDate);
+    assertEquals(Date.from(instant.truncatedTo(SECONDS)), normalDate);
   }
 }

@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.core;
 
-import com.github.mrzhqiang.core.Redis;
 import com.google.inject.Guice;
 import org.junit.After;
 import org.junit.Before;

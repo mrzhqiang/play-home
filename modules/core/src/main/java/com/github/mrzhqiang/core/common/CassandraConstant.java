@@ -27,7 +27,7 @@ public final class CassandraConstant {
   public static final String RELEASE_VERSION = "release_version";
   public static final Statement QUERY_RELEASE_VERSION =
       select(CLUSTER_NAME, RELEASE_VERSION)
-          .from("system.local");
+          .from("system", "local");
 
   public static final String COMMON_COLUMN_NAME = "name";
   public static final String COMMON_COLUMN_LINK = "link";

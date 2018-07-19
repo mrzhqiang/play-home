@@ -1,9 +1,12 @@
 package com.github.mrzhqiang.util;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static java.time.format.DateTimeFormatter.*;
 
 public final class HttpDateTest {
 
@@ -40,7 +43,9 @@ public final class HttpDateTest {
 
   @Test
   public void format() {
-    // Thu, 05 Jul 2018 14:49:24 GMT
-    System.out.println(HttpDate.format(new Date()));
+    Instant instant = Instant.now();
+    // RFC_1123_DATE_TIME such as 'Tue, 3 Jun 2008 11:05:30 GMT'.
+    String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
+    assertEquals(instantFormat, DateHelper.format(Date.from(instant)));
   }
 }

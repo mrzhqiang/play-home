@@ -8,8 +8,13 @@ import redis.clients.jedis.Jedis;
  *
  * @author mrzhqiang
  */
-@ImplementedBy(SingleRedis.class)
+@ImplementedBy(StandaloneRedis.class)
 public interface Redis {
+  /**
+   * You should call this method in [3rd] module if the woof application for the first time to run.
+   */
+  void init();
+
   /**
    * In JDK 1.6 and lower:
    * <pre>
@@ -31,7 +36,9 @@ public interface Redis {
    *     // do something...
    *   }
    * </pre>
+   *
+   * <p>
+   * Note: The method return Jedis is not cluster object, so it can not apply to multi cluster node.
    */
-  // TODO: 2018/7/18 考虑未来的集群集成，需要一个兼容的返回类型
   Jedis getJedis();
 }
