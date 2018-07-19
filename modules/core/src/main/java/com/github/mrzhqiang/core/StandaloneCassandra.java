@@ -64,7 +64,7 @@ import static com.github.mrzhqiang.core.common.CassandraConstant.*;
 
       logger.info("Cassandra is normal.");
     } catch (Exception e) {
-      String message = "Cassandra check failed!";
+      String message = "Cassandra init failed!";
       logger.error(message, e);
       throw new RuntimeException(message, e);
     }
