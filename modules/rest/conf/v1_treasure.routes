@@ -1,0 +1,2 @@
+# Treasure api
+GET        /        rest.v1.treasure.TreasureController.list()

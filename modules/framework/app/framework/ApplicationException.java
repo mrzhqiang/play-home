@@ -19,36 +19,52 @@ public abstract class ApplicationException extends RuntimeException {
 
   public abstract int statusCode();
 
-  public static ApplicationException badRequest(String message) {
-    return new BadRequestException(message);
+  public static void badRequest(boolean expression, String message) {
+    if (!expression) {
+      throw new BadRequestException(message);
+    }
   }
 
-  public static ApplicationException badRequest(Throwable cause) {
-    return new BadRequestException(cause.getMessage());
+  public static void badRequest(boolean expression, Throwable cause) {
+    if (!expression) {
+      throw new BadRequestException(cause.getMessage());
+    }
   }
 
-  public static ApplicationException unauthorized(String message) {
-    return new UnauthorizedException(message);
+  public static void unauthorized(boolean expression, String message) {
+    if (!expression) {
+      throw new UnauthorizedException(message);
+    }
   }
 
-  public static ApplicationException unauthorized(Throwable cause) {
-    return new UnauthorizedException(cause.getMessage());
+  public static void unauthorized(boolean expression, Throwable cause) {
+    if (!expression) {
+      throw new UnauthorizedException(cause.getMessage());
+    }
   }
 
-  public static ApplicationException forbidden(String message) {
-    return new ForbiddenException(message);
+  public static void forbidden(boolean expression, String message) {
+    if (!expression) {
+      throw new ForbiddenException(message);
+    }
   }
 
-  public static ApplicationException forbidden(Throwable cause) {
-    return new ForbiddenException(cause.getMessage());
+  public static void forbidden(boolean expression, Throwable cause) {
+    if (!expression) {
+      throw new ForbiddenException(cause.getMessage());
+    }
   }
 
-  public static ApplicationException notFound(String message) {
-    return new NotFoundException(message);
+  public static void notFound(boolean expression, String message) {
+    if (!expression) {
+      throw new NotFoundException(message);
+    }
   }
 
-  public static ApplicationException notFound(Throwable cause) {
-    return new NotFoundException(cause.getMessage());
+  public static void notFound(boolean expression, Throwable cause) {
+    if (!expression) {
+      throw new NotFoundException(cause.getMessage());
+    }
   }
 
   private static class BadRequestException extends ApplicationException {

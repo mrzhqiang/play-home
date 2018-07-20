@@ -60,8 +60,8 @@
   <logger name="application" level="DEBUG"/>
 
   <logger name="util" level="INFO"/>
-  <logger name="framework" level="INFO"/>
   <logger name="core" level="INFO"/>
+  <logger name="framework" level="INFO"/>
   <logger name="service" level="INFO"/>
   <logger name="rest" level="INFO"/>
 
@@ -71,8 +71,8 @@
   </logger>
 
   <!-- if you want watch cassandra logger ? -->
-  <logger name="com.datastax.driver.core.QueryLogger.SLOW" level="DEBUG"/>
-  <logger name="com.datastax.driver.core.QueryLogger.ERROR" level="DEBUG"/>
+  <logger name="com.datastax.driver.core.QueryLogger.SLOW" level="INFO"/>
+  <logger name="com.datastax.driver.core.QueryLogger.ERROR" level="INFO"/>
   <!--<logger name="com.datastax.driver.core.QueryLogger.NORMAL" level="DEBUG"/>-->
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->

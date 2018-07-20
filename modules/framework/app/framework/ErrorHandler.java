@@ -25,7 +25,6 @@ import play.mvc.Results;
  */
 @Singleton
 public final class ErrorHandler extends DefaultHttpErrorHandler {
-
   private final Environment environment;
 
   @Inject
@@ -60,6 +59,6 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
 
   private CompletionStage<Result> convertAs(ErrorResponse errorResponse) {
     return CompletableFuture.completedFuture(
-        Results.status(errorResponse.httpStatus, Json.toJson(errorResponse)));
+        Results.status(errorResponse.getHttpStatus(), Json.toJson(errorResponse)));
   }
 }

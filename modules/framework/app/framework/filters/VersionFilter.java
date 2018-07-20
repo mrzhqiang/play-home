@@ -19,7 +19,6 @@ import play.mvc.Result;
  */
 @Singleton
 public final class VersionFilter extends Filter {
-
   private final String apiVersion;
 
   @Inject

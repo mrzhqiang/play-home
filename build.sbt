@@ -34,6 +34,6 @@ lazy val root = (project in file("."))
   .dependsOn(rest)
   .aggregate(util, core, framework, service, rest)
 
-lazy val woof = (project in file("modules/3rd"))
+lazy val third = (project in file("modules/3rd"))
   .settings(commonSetting)
   .dependsOn(core)

@@ -19,10 +19,8 @@ import play.mvc.Result;
  */
 @Singleton
 public final class AccessLogFilter extends Filter {
-
-  private static final String MESSAGE = "IP={} method={} uri={} status={} elapsed={}ms";
-
   private final Logger.ALogger logger = Logger.of("access");
+  private static final String MESSAGE = "IP={} method={} uri={} status={} elapsed={}ms";
 
   @Inject
   public AccessLogFilter(Materializer mat) {

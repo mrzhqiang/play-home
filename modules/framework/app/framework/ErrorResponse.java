@@ -10,7 +10,6 @@ import java.util.Locale;
  * @author mrzhqiang
  */
 final class ErrorResponse {
-
   private static final int HTTP_STATUS = 500;
   private static final int CODE = -1;
   private static final String MESSAGE = "A unknown error occurred.";
@@ -18,13 +17,13 @@ final class ErrorResponse {
   private static final String MORE_INFO = "http://developer.randall.top";
 
   private static final String APP_PACKAGES_REGEX =
-      "^(controllers|models|util|framework|core|service|rest).*";
+      "^(controllers|models|util|core|framework|service|rest).*";
 
-  final int httpStatus;
-  final int code;
-  final String message;
-  final String developerMessage;
-  final String moreInfo;
+  private final int httpStatus;
+  private final int code;
+  private final String message;
+  private final String developerMessage;
+  private final String moreInfo;
 
   private ErrorResponse(int httpStatus, int code, String message, String developerMessage,
       String moreInfo) {
@@ -33,6 +32,26 @@ final class ErrorResponse {
     this.message = message;
     this.developerMessage = developerMessage;
     this.moreInfo = moreInfo;
+  }
+
+  public int getHttpStatus() {
+    return httpStatus;
+  }
+
+  public int getCode() {
+    return code;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public String getDeveloperMessage() {
+    return developerMessage;
+  }
+
+  public String getMoreInfo() {
+    return moreInfo;
   }
 
   static ErrorResponse unknownError(int code) {
