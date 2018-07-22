@@ -3,7 +3,6 @@ package core.dao;
 import core.entity.Treasure;
 import com.google.inject.ImplementedBy;
 import java.util.List;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**

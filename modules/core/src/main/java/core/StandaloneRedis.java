@@ -56,12 +56,12 @@ import redis.clients.jedis.exceptions.JedisException;
   }
 
   @Override public void init() {
-    try (Jedis jedis = getJedis()) {
+    try (Jedis jedis = getRedis()) {
       logger.info("Redis connect status: {}", "PONG".equals(jedis.ping()));
     }
   }
 
-  @Override public Jedis getJedis() {
+  @Override public Jedis getRedis() {
     try {
       return jedisPool.getResource();
     } catch (JedisConnectionException e) {

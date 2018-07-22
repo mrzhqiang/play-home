@@ -25,7 +25,7 @@ public class TreasureDAOTest {
   public void setUp() {
     Injector injector = Guice.createInjector();
     redis = injector.getInstance(Redis.class);
-    Long lastId = redis.getJedis().hincrBy(KEYSPACE_WOOF, TREASURE_ID, 1);
+    Long lastId = redis.getRedis().hincrBy(KEYSPACE_WOOF, TREASURE_ID, 1);
 
     dao = injector.getInstance(TreasureDAO.class);
     data = new Treasure();
@@ -40,7 +40,7 @@ public class TreasureDAOTest {
 
   @After
   public void tearDown() {
-    redis.getJedis().hdel(KEYSPACE_WOOF, TREASURE_ID);
+    redis.getRedis().hdel(KEYSPACE_WOOF, TREASURE_ID);
     dao.remove(data);
     redis = null;
     dao = null;
@@ -49,7 +49,7 @@ public class TreasureDAOTest {
 
   @Test
   public void findByName() {
-    String currentId = redis.getJedis().hget(KEYSPACE_WOOF, TREASURE_ID);
+    String currentId = redis.getRedis().hget(KEYSPACE_WOOF, TREASURE_ID);
     List<Treasure> optionalTreasure = dao.findByName("test" + currentId);
     assertEquals(data, optionalTreasure.get(0));
   }

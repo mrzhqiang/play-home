@@ -26,7 +26,7 @@ public final class RedisTest {
 
   @Test
   public void getJedis() {
-    try (Jedis jedis = redis.getJedis()) {
+    try (Jedis jedis = redis.getRedis()) {
       assertEquals(jedis.ping(), "PONG");
     }
   }

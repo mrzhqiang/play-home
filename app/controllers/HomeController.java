@@ -1,6 +1,12 @@
 package controllers;
 
+import core.entity.Treasure;
+import framework.JsonList;
+import java.util.List;
+import java.util.concurrent.CompletionStage;
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import play.libs.ws.WSClient;
 import play.mvc.*;
 
 /**
@@ -9,6 +15,12 @@ import play.mvc.*;
  */
 @Singleton
 public final class HomeController extends Controller {
+  private final WSClient ws;
+
+  @Inject
+  public HomeController(WSClient ws) {
+    this.ws = ws;
+  }
 
   /**
    * An action that renders an HTML page with a welcome message.
@@ -16,7 +28,10 @@ public final class HomeController extends Controller {
    * this method will be called when the application receives a
    * <code>GET</code> request with a path of <code>/</code>.
    */
-  public Result index() {
-    return ok(views.html.index.render());
+  public CompletionStage<Result> index() {
+    return ws.url("http://localhost:9000/v1/treasures").get().thenApply(wsResponse -> {
+      List<Treasure> treasureList = JsonList.from(wsResponse.asJson(), Treasure.class);
+      return ok(views.html.index.render(treasureList));
+    });
   }
 }

@@ -17,13 +17,11 @@ import static com.google.common.base.Preconditions.*;
  */
 interface CassandraDAO<T> extends DAO<T> {
   default T add(T entity) {
-    requireNonNull(entity, "entity");
     getMapper().save(entity, Mapper.Option.ifNotExists(true));
     return entity;
   }
 
   default T remove(T entity) {
-    requireNonNull(entity, "entity");
     getMapper().delete(entity);
     return entity;
   }
@@ -35,7 +33,6 @@ interface CassandraDAO<T> extends DAO<T> {
   }
 
   default T modify(T entity) {
-    requireNonNull(entity, "entity");
     getMapper().save(entity);
     return entity;
   }

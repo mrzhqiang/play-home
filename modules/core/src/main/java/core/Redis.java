@@ -18,13 +18,13 @@ public interface Redis {
   /**
    * In JDK 1.6 and lower:
    * <pre>
-   *   Jedis jedis = null;
+   *   Jedis redis = null;
    *    try {
-   *     jedis = redis.getJedis();
+   *     redis = redis.getRedis();
    *     // do something...
    *   } finally {
-   *     if (jedis != null) {
-   *       jedis.close();
+   *     if (redis != null) {
+   *       redis.close();
    *     }
    *   }
    * </pre>
@@ -32,7 +32,7 @@ public interface Redis {
    * <p>
    * In JDK 1.7 and higher:
    * <pre>
-   *   try (Jedis jedis = redis.getJedis()) {
+   *   try (Jedis redis = redis.getRedis()) {
    *     // do something...
    *   }
    * </pre>
@@ -40,5 +40,5 @@ public interface Redis {
    * <p>
    * Note: The method return Jedis is not cluster object, so it can not apply to multi cluster node.
    */
-  Jedis getJedis();
+  Jedis getRedis();
 }

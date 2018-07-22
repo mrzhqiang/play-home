@@ -1,6 +1,7 @@
 package core.dao;
 
 import core.Cassandra;
+import core.common.Treasures;
 import core.entity.Treasure;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import javax.inject.Singleton;
 
 import static java.util.Objects.*;
 import static core.common.CassandraConstant.*;
-import static com.google.common.base.Strings.*;
 import static com.google.common.base.Preconditions.*;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
 
@@ -36,13 +36,12 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
   }
 
   @Override public Treasure add(Treasure entity) {
-    requireNonNull(entity, "entity");
-    checkArgument(entity.id != null && entity.id > 0, "id");
-    checkArgument(!isNullOrEmpty(entity.name), "name");
+    Treasures.check(entity);
     return cassandraDAO.add(entity);
   }
 
   @Override public Treasure remove(Treasure entity) {
+    Treasures.check(entity);
     return cassandraDAO.remove(entity);
   }
 
@@ -51,6 +50,7 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
   }
 
   @Override public Treasure modify(Treasure entity) {
+    Treasures.check(entity);
     return cassandraDAO.modify(entity);
   }
 

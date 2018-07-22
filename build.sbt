@@ -37,3 +37,8 @@ lazy val root = (project in file("."))
 lazy val third = (project in file("modules/3rd"))
   .settings(commonSetting)
   .dependsOn(core)
+
+libraryDependencies ++= Seq(
+  ws,
+  ehcache,
+)
