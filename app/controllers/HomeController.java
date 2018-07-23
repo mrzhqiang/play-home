@@ -1,7 +1,7 @@
 package controllers;
 
 import core.entity.Treasure;
-import framework.JsonList;
+import framework.JsonUtil;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
@@ -10,8 +10,10 @@ import play.libs.ws.WSClient;
 import play.mvc.*;
 
 /**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
+ * 主页控制器。
+ *
+ * @author playframework
+ * @author mrzhqiang
  */
 @Singleton
 public final class HomeController extends Controller {
@@ -22,16 +24,13 @@ public final class HomeController extends Controller {
     this.ws = ws;
   }
 
-  /**
-   * An action that renders an HTML page with a welcome message.
-   * The configuration in the <code>routes</code> file means that
-   * this method will be called when the application receives a
-   * <code>GET</code> request with a path of <code>/</code>.
-   */
+  /** 首页，展示宝藏列表。 */
   public CompletionStage<Result> index() {
-    return ws.url("http://localhost:9000/v1/treasures").get().thenApply(wsResponse -> {
-      List<Treasure> treasureList = JsonList.from(wsResponse.asJson(), Treasure.class);
-      return ok(views.html.index.render(treasureList));
-    });
+    return ws.url(rest.v1.treasure.routes.TreasureController.list().absoluteURL(request()))
+        .get()
+        .thenApply(wsResponse -> {
+          List<Treasure> treasureList = JsonUtil.fromList(wsResponse.asJson(), Treasure.class);
+          return ok(views.html.index.render(treasureList));
+        });
   }
 }

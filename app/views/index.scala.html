@@ -1,4 +1,7 @@
-@(datas: java.util.List[core.entity.Treasure])
+@import java.util
+@import service.treasure.TreasureResource
+
+@(dataList: util.List[TreasureResource])
 
   @main("Woof") {
     <div id="wrapper">
@@ -19,7 +22,7 @@
                 </tr>
               </thead>
               <tbody>
-              @for(data <- datas) {
+              @for(data <- dataList) {
                 <tr>
                   <td>@data.id</td>
                   <td>@data.name</td>

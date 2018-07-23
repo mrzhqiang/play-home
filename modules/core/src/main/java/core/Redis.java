@@ -1,44 +1,19 @@
 package core;
 
 import com.google.inject.ImplementedBy;
+import java.util.function.Function;
 import redis.clients.jedis.Jedis;
 
 /**
- * Redis client interface.
+ * Redis 客户端接口。
  *
  * @author mrzhqiang
  */
 @ImplementedBy(StandaloneRedis.class)
 public interface Redis {
-  /**
-   * You should call this method in [3rd] module if the woof application for the first time to run.
-   */
+  /** 应该在启动应用之前，通过其他程序调用一次，以保证数据库正常初始化。 */
   void init();
 
-  /**
-   * In JDK 1.6 and lower:
-   * <pre>
-   *   Jedis redis = null;
-   *    try {
-   *     redis = redis.getRedis();
-   *     // do something...
-   *   } finally {
-   *     if (redis != null) {
-   *       redis.close();
-   *     }
-   *   }
-   * </pre>
-   *
-   * <p>
-   * In JDK 1.7 and higher:
-   * <pre>
-   *   try (Jedis redis = redis.getRedis()) {
-   *     // do something...
-   *   }
-   * </pre>
-   *
-   * <p>
-   * Note: The method return Jedis is not cluster object, so it can not apply to multi cluster node.
-   */
-  Jedis getRedis();
+  /** 供给 Jedis 实例，以防止忘记关闭资源，浪费服务器性能。 */
+  <R> R apply(Function<Jedis, R> function);
 }

@@ -5,9 +5,12 @@ import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.QueryLogger;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +84,11 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
     }
   }
 
-  @Override public MappingManager getMappingManager() {
-    return mappingManager;
+  @Nonnull @CheckReturnValue @Override public <T> Mapper<T> mapper(Class<T> clazz) {
+    return mappingManager.mapper(clazz);
+  }
+
+  @Nonnull @CheckReturnValue @Override public Session getSession() {
+    return mappingManager.getSession();
   }
 }

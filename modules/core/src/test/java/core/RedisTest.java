@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.BinaryJedis;
 
 import static org.junit.Assert.*;
 
@@ -26,8 +26,6 @@ public final class RedisTest {
 
   @Test
   public void getJedis() {
-    try (Jedis jedis = redis.getRedis()) {
-      assertEquals(jedis.ping(), "PONG");
-    }
+    assertEquals(redis.apply(BinaryJedis::ping), "PONG");
   }
 }

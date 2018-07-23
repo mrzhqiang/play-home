@@ -1,10 +1,8 @@
 package service.treasure;
 
 import core.Redis;
-import core.common.Treasures;
 import core.dao.TreasureDAO;
 import core.entity.Treasure;
-import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
@@ -15,7 +13,6 @@ import service.DatabaseExecutionContext;
 import static java.util.Objects.*;
 import static core.common.CassandraConstant.*;
 import static framework.ApplicationException.*;
-import static service.treasure.TreasureResources.*;
 import static java.util.concurrent.CompletableFuture.*;
 
 /**
@@ -34,31 +31,27 @@ import static java.util.concurrent.CompletableFuture.*;
   }
 
   @Override public CompletionStage<Stream<TreasureResource>> list() {
-    return supplyAsync(() -> dao.findAll().stream().map(TreasureResources::from),
-        executionContext);
+    return supplyAsync(() -> dao.findAll().stream(), executionContext);
   }
 
-  @Override public CompletionStage<TreasureResource> create(TreasureResource resource) {
-    Treasure treasure = to(resource);
-    treasure.id = redis.getRedis().hincrBy(KEYSPACE_WOOF, TABLE_TREASURE, 1);
-    treasure.created = new Date();
-    treasure.updated = new Date();
-    return supplyAsync(() -> from(dao.add(treasure)), executionContext);
+  @Override public CompletionStage<Treasure> create(Treasure resource) {
+    resource.id = redis.apply(jedis -> jedis.hincrBy(KEYSPACE_WOOF, TABLE_TREASURE, 1));
+    return supplyAsync(() -> dao.add(resource), executionContext);
   }
 
-  @Override public CompletionStage<TreasureResource> delete(Long id) {
+  @Override public CompletionStage<Treasure> delete(Long id) {
     requireNonNull(id, "id");
     return supplyAsync(() -> {
       Optional<Treasure> optional = dao.find(id);
       notFound(optional.isPresent(), "treasure id " + id);
       dao.remove(id);
-      return from(optional.get());
+      return optional.get();
     }, executionContext);
   }
 
-  @Override public CompletionStage<TreasureResource> update(Long id, TreasureResource resource) {
+  @Override public CompletionStage<Treasure> update(Long id, Treasure resource) {
     requireNonNull(id, "id");
-    TreasureResources.check(resource);
+    check(resource);
     return supplyAsync(() -> {
       Optional<Treasure> optional = dao.find(id);
       notFound(optional.isPresent(), "treasure id " + id);

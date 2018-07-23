@@ -2,9 +2,11 @@ package core;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import java.util.function.Function;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -56,14 +58,13 @@ import redis.clients.jedis.exceptions.JedisException;
   }
 
   @Override public void init() {
-    try (Jedis jedis = getRedis()) {
-      logger.info("Redis connect status: {}", "PONG".equals(jedis.ping()));
-    }
+    String ping = apply(BinaryJedis::ping);
+    logger.info("Redis connect status: {}", "PONG".equals(ping));
   }
 
-  @Override public Jedis getRedis() {
-    try {
-      return jedisPool.getResource();
+  @Override public <R> R apply(Function<Jedis, R> function) {
+    try (Jedis resource = jedisPool.getResource()) {
+      return function.apply(resource);
     } catch (JedisConnectionException e) {
       String message = "Connection to redis failed.";
       logger.error(message, e);

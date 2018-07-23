@@ -4,7 +4,6 @@ import core.Redis;
 import core.entity.Treasure;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
@@ -25,23 +24,17 @@ public class TreasureDAOTest {
   public void setUp() {
     Injector injector = Guice.createInjector();
     redis = injector.getInstance(Redis.class);
-    Long lastId = redis.getRedis().hincrBy(KEYSPACE_WOOF, TREASURE_ID, 1);
-
+    Long lastId = redis.apply(resource -> resource.hincrBy(KEYSPACE_WOOF, TREASURE_ID, 1));
     dao = injector.getInstance(TreasureDAO.class);
-    data = new Treasure();
-    data.id = lastId;
-    data.name = "test" + lastId;
-    data.link = "http://randall.top";
-    data.description = "The treasure entity is test data that should delete.";
-    data.updated = new Date();
-    data.created = new Date();
+    data = Treasure.of(lastId, "test" + lastId,
+        "The treasure entity is test data that should delete.", "http://randall.top");
     dao.add(data);
   }
 
   @After
   public void tearDown() {
-    redis.getRedis().hdel(KEYSPACE_WOOF, TREASURE_ID);
-    dao.remove(data);
+    Long id = redis.apply(resource -> resource.hdel(KEYSPACE_WOOF, TREASURE_ID));
+    dao.remove(id);
     redis = null;
     dao = null;
     data = null;
@@ -49,7 +42,7 @@ public class TreasureDAOTest {
 
   @Test
   public void findByName() {
-    String currentId = redis.getRedis().hget(KEYSPACE_WOOF, TREASURE_ID);
+    String currentId = redis.apply(resource -> resource.hget(KEYSPACE_WOOF, TREASURE_ID));
     List<Treasure> optionalTreasure = dao.findByName("test" + currentId);
     assertEquals(data, optionalTreasure.get(0));
   }

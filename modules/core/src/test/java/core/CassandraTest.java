@@ -37,7 +37,7 @@ public final class CassandraTest {
 
   @Test
   public void getMappingManager() {
-    Session session = cassandra.getMappingManager().getSession();
+    Session session = cassandra.getSession();
     ResultSet rs = session.execute(
         select(CLUSTER_NAME, RELEASE_VERSION)
             .from("system", "local"));
