@@ -2,6 +2,8 @@ package core;
 
 import com.google.inject.ImplementedBy;
 import java.util.function.Function;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -15,5 +17,7 @@ public interface Redis {
   void init();
 
   /** 供给 Jedis 实例，以防止忘记关闭资源，浪费服务器性能。 */
+  @Nonnull
+  @CheckReturnValue
   <R> R apply(Function<Jedis, R> function);
 }

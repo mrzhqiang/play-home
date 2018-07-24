@@ -1,8 +1,7 @@
 package service.treasure;
 
 import com.google.common.base.MoreObjects;
-import core.entity.Treasure;
-import play.mvc.Http;
+import java.util.Objects;
 
 /**
  * 宝藏资源。
@@ -12,21 +11,17 @@ import play.mvc.Http;
  * @author mrzhqiang
  */
 public final class TreasureResource {
+  private String id;
   private String name;
   private String description;
   private String link;
-  private String href;
 
-  public static TreasureResource fromData(Treasure treasure) {
-    TreasureResource resource = new TreasureResource();
-    resource.name = treasure.name;
-    resource.description = treasure.description;
-    resource.link = treasure.link;
-    return resource;
+  public String getId() {
+    return id;
   }
 
-  public Treasure toData(Long id) {
-    return Treasure.of(id, name, description, link);
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -53,20 +48,29 @@ public final class TreasureResource {
     this.link = link;
   }
 
-  public String getHref() {
-    return href;
+  @Override public int hashCode() {
+    return Objects.hash(name);
   }
 
-  public void setHref(String href) {
-    this.href = href;
+  @Override public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (!(obj instanceof TreasureResource)) {
+      return false;
+    }
+
+    TreasureResource other = (TreasureResource) obj;
+    return Objects.equals(this.name, other.name);
   }
 
   @Override public String toString() {
     return MoreObjects.toStringHelper(this)
+        .add("id", id)
         .add("name", name)
         .add("description", description)
         .add("link", link)
-        .add("href", href)
         .toString();
   }
 }

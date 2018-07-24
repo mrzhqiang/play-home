@@ -70,7 +70,7 @@ public final class CassandraConstant {
   public static final Statement CREATE_TREASURE =
       createTable(KEYSPACE_WOOF, TABLE_TREASURE)
           .ifNotExists()
-          .addPartitionKey(TREASURE_ID, DataType.bigint())
+          .addPartitionKey(TREASURE_ID, DataType.uuid())
           .addColumn(COMMON_COLUMN_NAME, DataType.text())
           .addColumn(COMMON_COLUMN_LINK, DataType.text())
           .addColumn(COMMON_COLUMN_DESCRIPTION, DataType.text())

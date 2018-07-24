@@ -23,7 +23,7 @@ public interface Entity<T> {
    * 合并，对实体参数进行有选择地合并，null 值将被忽略。
    *
    * @param valueEntity 实体参数。
-   * @return 全新的实体类。
+   * @return 返回实体本身。
    */
   @Nonnull
   @CheckReturnValue

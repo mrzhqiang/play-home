@@ -26,6 +26,7 @@ import play.mvc.Results;
 @Singleton
 public final class ErrorHandler extends DefaultHttpErrorHandler {
   private final Environment environment;
+  private final String version;
 
   @Inject
   public ErrorHandler(Config config,
@@ -34,14 +35,18 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
       Provider<Router> routes) {
     super(config, environment, sourceMapper, routes);
     this.environment = environment;
+    this.version = config.getString("framework.support.version");
   }
 
   @Override public CompletionStage<Result> onClientError(Http.RequestHeader request, int statusCode,
       String message) {
     try {
-      return environment.isProd() ? convertAs(
-          ErrorResponse.clientError(statusCode, message.hashCode(), message))
-          : super.onClientError(request, statusCode, message);
+      // 如果是线上环境的移动端请求
+      if (environment.isProd() && request.uri().startsWith(version)) {
+        return convertAs(ErrorResponse.clientError(statusCode, message.hashCode(), message));
+      }
+      // TODO 自定义客户端错误页面
+      return super.onClientError(request, statusCode, message);
     } catch (Exception e) {
       return convertAs(ErrorResponse.unknownError(e.getMessage().hashCode()));
     }
@@ -54,7 +59,11 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
       ApplicationException appException = (ApplicationException) cause;
       return onClientError(request, appException.statusCode(), appException.getMessage());
     }
-    return convertAs(ErrorResponse.serverError(cause));
+    if (environment.isProd() && request.uri().startsWith(version)) {
+      return convertAs(ErrorResponse.serverError(cause));
+    }
+    // TODO 自定义服务器错误页面
+    return super.onProdServerError(request, exception);
   }
 
   private CompletionStage<Result> convertAs(ErrorResponse errorResponse) {

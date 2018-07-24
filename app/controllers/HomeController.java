@@ -1,13 +1,12 @@
 package controllers;
 
-import core.entity.Treasure;
-import framework.JsonUtil;
-import java.util.List;
+import framework.RequestParser;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import play.libs.ws.WSClient;
 import play.mvc.*;
+import service.treasure.TreasureResource;
 
 /**
  * 主页控制器。
@@ -28,9 +27,7 @@ public final class HomeController extends Controller {
   public CompletionStage<Result> index() {
     return ws.url(rest.v1.treasure.routes.TreasureController.list().absoluteURL(request()))
         .get()
-        .thenApply(wsResponse -> {
-          List<Treasure> treasureList = JsonUtil.fromList(wsResponse.asJson(), Treasure.class);
-          return ok(views.html.index.render(treasureList));
-        });
+        .thenApply(wsResponse -> ok(views.html.index.render(
+            RequestParser.fromListJson(wsResponse.asJson(), TreasureResource.class))));
   }
 }

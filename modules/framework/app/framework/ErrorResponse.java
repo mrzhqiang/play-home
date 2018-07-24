@@ -1,6 +1,8 @@
 package framework;
 
+import com.google.common.base.MoreObjects;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * 错误/异常响应。
@@ -24,6 +26,10 @@ final class ErrorResponse {
   private final String message;
   private final String developerMessage;
   private final String moreInfo;
+
+  public ErrorResponse() {
+    this(HTTP_STATUS, CODE, MESSAGE, DEVELOPER_MESSAGE, MORE_INFO);
+  }
 
   private ErrorResponse(int httpStatus, int code, String message, String developerMessage,
       String moreInfo) {
@@ -82,5 +88,34 @@ final class ErrorResponse {
       }
     }
     return throwable.toString();
+  }
+
+  @Override public int hashCode() {
+    return Objects.hash(httpStatus, code, message, developerMessage);
+  }
+
+  @Override public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (!(obj instanceof ErrorResponse)) {
+      return false;
+    }
+
+    ErrorResponse other = (ErrorResponse) obj;
+    return Objects.equals(this.httpStatus, other.httpStatus)
+        && Objects.equals(this.code, other.code)
+        && Objects.equals(this.message, other.message)
+        && Objects.equals(this.developerMessage, other.developerMessage);
+  }
+
+  @Override public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("httpStatus", httpStatus)
+        .add("code", code)
+        .add("message", message)
+        .add("developerMessage", developerMessage)
+        .toString();
   }
 }

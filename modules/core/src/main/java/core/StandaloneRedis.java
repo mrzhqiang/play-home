@@ -3,6 +3,8 @@ package core;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import java.util.function.Function;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +64,7 @@ import redis.clients.jedis.exceptions.JedisException;
     logger.info("Redis connect status: {}", "PONG".equals(ping));
   }
 
-  @Override public <R> R apply(Function<Jedis, R> function) {
+  @Nonnull @CheckReturnValue @Override public <R> R apply(Function<Jedis, R> function) {
     try (Jedis resource = jedisPool.getResource()) {
       return function.apply(resource);
     } catch (JedisConnectionException e) {

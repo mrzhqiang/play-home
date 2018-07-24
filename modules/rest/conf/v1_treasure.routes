@@ -1,2 +1,7 @@
 # Treasure api
-GET        /        rest.v1.treasure.TreasureController.list()
+GET           /           rest.v1.treasure.TreasureController.list()
+POST          /           rest.v1.treasure.TreasureController.create()
+
+GET           /:id        rest.v1.treasure.TreasureController.show(id)
+PUT           /:id        rest.v1.treasure.TreasureController.update(id)
+DELETE        /:id        rest.v1.treasure.TreasureController.delete(id)

@@ -19,6 +19,10 @@ public abstract class ApplicationException extends RuntimeException {
 
   public abstract int statusCode();
 
+  public static ApplicationException badRequest(String cause) {
+    return new BadRequestException(cause);
+  }
+
   public static void badRequest(boolean expression, String message) {
     if (!expression) {
       throw new BadRequestException(message);
@@ -29,6 +33,10 @@ public abstract class ApplicationException extends RuntimeException {
     if (!expression) {
       throw new BadRequestException(cause.getMessage());
     }
+  }
+
+  public static ApplicationException unauthorized(String cause) {
+    return new UnauthorizedException(cause);
   }
 
   public static void unauthorized(boolean expression, String message) {
@@ -43,6 +51,10 @@ public abstract class ApplicationException extends RuntimeException {
     }
   }
 
+  public static ApplicationException forbidden(String cause) {
+    return new ForbiddenException(cause);
+  }
+
   public static void forbidden(boolean expression, String message) {
     if (!expression) {
       throw new ForbiddenException(message);
@@ -53,6 +65,10 @@ public abstract class ApplicationException extends RuntimeException {
     if (!expression) {
       throw new ForbiddenException(cause.getMessage());
     }
+  }
+
+  public static ApplicationException notFound(String cause) {
+    return new NotFoundException(cause);
   }
 
   public static void notFound(boolean expression, String message) {

@@ -5,14 +5,15 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.MoreObjects;
 import core.common.Entity;
+import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static core.common.CassandraConstant.*;
-import static java.util.Objects.isNull;
 
 /**
  * 宝藏。
@@ -23,37 +24,17 @@ import static java.util.Objects.isNull;
 public final class Treasure implements Entity<Treasure> {
   @PartitionKey
   @Column(name = TREASURE_ID)
-  public final Long id;
+  public UUID id;
   @Column(name = COMMON_COLUMN_NAME)
-  public final String name;
+  public String name;
   @Column(name = COMMON_COLUMN_DESCRIPTION)
-  public final String description;
+  public String description;
   @Column(name = COMMON_COLUMN_LINK)
-  public final String link;
+  public String link;
   @Column(name = COMMON_COLUMN_CREATED)
-  public final Long created;
+  public Date created = new Date();
   @Column(name = COMMON_COLUMN_UPDATED)
-  public final Long updated;
-
-  @Nonnull
-  @CheckReturnValue
-  public static Treasure of(Long id, String name, String description, String link) {
-    return new Treasure(id, name, description, link);
-  }
-
-  private Treasure(Long id, String name, String description, String link) {
-    this(id, name, description, link, System.currentTimeMillis(), System.currentTimeMillis());
-  }
-
-  private Treasure(Long id, String name, String description, String link, Long created,
-      Long updated) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.link = link;
-    this.created = created;
-    this.updated = updated;
-  }
+  public Date updated = new Date();
 
   @Override public int hashCode() {
     return Objects.hashCode(id);
@@ -76,25 +57,29 @@ public final class Treasure implements Entity<Treasure> {
     return MoreObjects.toStringHelper(this)
         .add(TREASURE_ID, id)
         .add(COMMON_COLUMN_NAME, name)
+        .add(COMMON_COLUMN_DESCRIPTION, description)
+        .add(COMMON_COLUMN_LINK, link)
+        .add(COMMON_COLUMN_CREATED, created)
+        .add(COMMON_COLUMN_UPDATED, updated)
         .toString();
   }
 
   @Nonnull @Override public Treasure check() {
-    checkState(id != null && id > 0, TREASURE_ID);
+    checkState(id != null, TREASURE_ID);
     checkState(!isNullOrEmpty(name), COMMON_COLUMN_NAME);
     checkState(!isNullOrEmpty(description), COMMON_COLUMN_DESCRIPTION);
     checkState(!isNullOrEmpty(link), COMMON_COLUMN_LINK);
-    checkState(!isNull(created), COMMON_COLUMN_CREATED);
-    checkState(!isNull(updated), COMMON_COLUMN_UPDATED);
+    checkState(created != null, COMMON_COLUMN_CREATED);
+    checkState(updated != null, COMMON_COLUMN_UPDATED);
     return this;
   }
 
   @Nonnull @CheckReturnValue @Override public Treasure merge(Treasure valueEntity) {
     Objects.requireNonNull(valueEntity, "valueEntity");
-    String name = isNullOrEmpty(valueEntity.name) ? this.name : valueEntity.name;
-    String description =
-        isNullOrEmpty(valueEntity.description) ? this.description : valueEntity.description;
-    String link = isNullOrEmpty(valueEntity.link) ? this.link : valueEntity.link;
-    return new Treasure(this.id, name, description, link, this.created, System.currentTimeMillis());
+    name = isNullOrEmpty(valueEntity.name) ? name : valueEntity.name;
+    description = isNullOrEmpty(valueEntity.description) ? description : valueEntity.description;
+    link = isNullOrEmpty(valueEntity.link) ? link : valueEntity.link;
+    this.updated = new Date();
+    return this;
   }
 }
