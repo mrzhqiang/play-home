@@ -1,4 +1,4 @@
-# Treasure api
+# Treasure API
 GET           /           rest.v1.treasure.TreasureController.list()
 POST          /           rest.v1.treasure.TreasureController.create()
 

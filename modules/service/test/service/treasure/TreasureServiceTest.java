@@ -1,5 +1,6 @@
 package service.treasure;
 
+import core.entity.Treasure;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -16,20 +17,21 @@ import static org.junit.Assert.*;
  */
 public class TreasureServiceTest extends WithApplication {
   private TreasureService service;
-  private TreasureResource resource;
+  private Treasure treasure;
 
   @Before
   public void setUp() {
     service = instanceOf(TreasureService.class);
-    resource = new TreasureResource();
-    resource.setName("testName");
-    resource.setDescription("Just a test data.");
-    resource.setLink("http://randall.top");
+    treasure = new Treasure();
+    treasure.id = UUID.randomUUID();
+    treasure.name = "testService";
+    treasure.description = "Just a test data from service.";
+    treasure.link = "http://randall.top";
 
     try {
-      TreasureResource treasureResource = service.create(resource).toCompletableFuture().get();
-      resource.setId(treasureResource.getId());
-      assertEquals(resource, treasureResource);
+      Treasure treasureData = service.create(treasure).toCompletableFuture().get();
+      treasureData.id = treasure.id;
+      assertEquals(treasure, treasureData);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -38,22 +40,21 @@ public class TreasureServiceTest extends WithApplication {
   @After
   public void tearDown() {
     try {
-      TreasureResource treasureResource =
-          service.delete(UUID.fromString(resource.getId())).toCompletableFuture().get();
-      assertEquals(resource, treasureResource);
+      Treasure treasureData = service.delete(this.treasure.id).toCompletableFuture().get();
+      assertEquals(this.treasure, treasureData);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
-    resource = null;
+    treasure = null;
     service = null;
   }
 
   @Test
   public void list() {
     try {
-      List<TreasureResource> collect =
+      List<Treasure> treasureList =
           service.list().toCompletableFuture().get().collect(Collectors.toList());
-      assertNotNull(collect);
+      assertNotNull(treasureList);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -62,9 +63,8 @@ public class TreasureServiceTest extends WithApplication {
   @Test
   public void get() {
     try {
-      TreasureResource treasureResource =
-          service.get(UUID.fromString(resource.getId())).toCompletableFuture().get();
-      assertEquals(resource, treasureResource);
+      Treasure treasureData = service.get(treasure.id).toCompletableFuture().get();
+      assertEquals(treasure, treasureData);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -73,9 +73,9 @@ public class TreasureServiceTest extends WithApplication {
   @Test
   public void get1() {
     try {
-      List<TreasureResource> treasureResourceList =
-          service.get(resource.getName()).toCompletableFuture().get().collect(Collectors.toList());
-      assertTrue(treasureResourceList.contains(resource));
+      List<Treasure> treasureList =
+          service.get(treasure.name).toCompletableFuture().get().collect(Collectors.toList());
+      assertTrue(treasureList.contains(treasure));
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -83,13 +83,10 @@ public class TreasureServiceTest extends WithApplication {
 
   @Test
   public void update() {
-    resource.setDescription("update change here.");
+    treasure.description = "update change here.";
     try {
-      TreasureResource treasureResource =
-          service.update(UUID.fromString(resource.getId()), this.resource)
-              .toCompletableFuture()
-              .get();
-      assertEquals(resource, treasureResource);
+      Treasure treasureData = service.update(treasure.id, treasure).toCompletableFuture().get();
+      assertEquals(treasure, treasureData);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }

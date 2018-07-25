@@ -1,2 +1,2 @@
-# Search api
-GET        /treasure        rest.v1.treasure.TreasureController.search(name:String)
+# Search API
+GET        /treasures        rest.v1.treasure.TreasureController.search(name:String)

@@ -3,14 +3,12 @@ package core.dao;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Statement;
 import com.datastax.driver.mapping.Mapper;
-import core.common.Entity;
+import com.google.common.base.Preconditions;
+import core.Entity;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-
-import static com.google.common.base.Preconditions.*;
 
 /**
  * Cassandra DAO 接口。
@@ -33,32 +31,34 @@ interface CassandraDAO<T extends Entity<T>> extends BasicDAO<T> {
   Mapper<T> getMapper();
 
   @Nonnull default T add(T entity) {
-    getMapper().save(check(entity), Mapper.Option.ifNotExists(true));
+    Preconditions.checkNotNull(entity, "entity").check();
+    getMapper().save(entity, Mapper.Option.ifNotExists(true));
     return entity;
   }
 
   @Nonnull default T remove(T entity) {
-    getMapper().delete(check(entity));
+    Preconditions.checkNotNull(entity, "entity").check();
+    getMapper().delete(entity);
     return entity;
   }
 
   default void remove(Object... objects) {
-    Objects.requireNonNull(objects, "objects");
-    checkArgument(objects.length > 0, "objects length is 0");
+    Preconditions.checkNotNull(objects, "objects");
+    Preconditions.checkArgument(objects.length > 0, "objects length is 0");
     getMapper().delete(objects);
   }
 
   @Nonnull default T modify(T oldEntity, T newEntity) {
-    Objects.requireNonNull(newEntity, "newEntity");
-    T merge = check(oldEntity).merge(newEntity);
-    getMapper().save(merge);
-    return merge;
+    Preconditions.checkNotNull(oldEntity, "entity").check();
+    T entity = oldEntity.merge(newEntity);
+    getMapper().save(entity);
+    return entity;
   }
 
   @CheckReturnValue
   default Optional<T> find(Object... objects) {
-    Objects.requireNonNull(objects, "objects");
-    checkArgument(objects.length > 0, "objects length is 0");
+    Preconditions.checkNotNull(objects, "objects");
+    Preconditions.checkArgument(objects.length > 0, "objects length is 0");
     return Optional.ofNullable(getMapper().get(objects));
   }
 
@@ -71,7 +71,7 @@ interface CassandraDAO<T extends Entity<T>> extends BasicDAO<T> {
   @Nonnull
   @CheckReturnValue
   default List<T> find(Statement queryStatement) {
-    Objects.requireNonNull(queryStatement, "queryStatement");
+    Preconditions.checkNotNull(queryStatement, "queryStatement");
     ResultSet resultSet = getMapper().getManager().getSession().execute(queryStatement);
     return getMapper().map(resultSet).all();
   }

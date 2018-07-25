@@ -19,7 +19,7 @@ public abstract class ApplicationException extends RuntimeException {
 
   public abstract int statusCode();
 
-  public static ApplicationException badRequest(String cause) {
+  static ApplicationException badRequest(String cause) {
     return new BadRequestException(cause);
   }
 

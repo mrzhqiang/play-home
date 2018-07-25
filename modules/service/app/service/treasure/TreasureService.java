@@ -1,6 +1,7 @@
 package service.treasure;
 
 import com.google.inject.ImplementedBy;
+import core.entity.Treasure;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
@@ -10,15 +11,15 @@ import java.util.stream.Stream;
  */
 @ImplementedBy(TreasureServiceImpl.class)
 public interface TreasureService {
-  CompletionStage<Stream<TreasureResource>> list();
+  CompletionStage<Treasure> create(Treasure resource);
 
-  CompletionStage<TreasureResource> create(TreasureResource resource);
+  CompletionStage<Treasure> get(UUID id);
 
-  CompletionStage<TreasureResource> delete(UUID id);
+  CompletionStage<Stream<Treasure>> get(String name);
 
-  CompletionStage<TreasureResource> update(UUID id, TreasureResource resource);
+  CompletionStage<Stream<Treasure>> list();
 
-  CompletionStage<TreasureResource> get(UUID id);
+  CompletionStage<Treasure> update(UUID id, Treasure resource);
 
-  CompletionStage<Stream<TreasureResource>> get(String name);
+  CompletionStage<Treasure> delete(UUID id);
 }

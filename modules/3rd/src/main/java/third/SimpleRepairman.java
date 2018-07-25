@@ -2,8 +2,8 @@ package third;
 
 import core.Cassandra;
 import core.Redis;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

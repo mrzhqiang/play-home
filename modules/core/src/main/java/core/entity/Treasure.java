@@ -4,13 +4,12 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.MoreObjects;
-import core.common.Entity;
+import core.Entity;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static core.common.CassandraConstant.*;
@@ -64,7 +63,7 @@ public final class Treasure implements Entity<Treasure> {
         .toString();
   }
 
-  @Nonnull @Override public Treasure check() {
+  @Override public Treasure check() {
     checkState(id != null, TREASURE_ID);
     checkState(!isNullOrEmpty(name), COMMON_COLUMN_NAME);
     checkState(!isNullOrEmpty(description), COMMON_COLUMN_DESCRIPTION);
@@ -74,11 +73,11 @@ public final class Treasure implements Entity<Treasure> {
     return this;
   }
 
-  @Nonnull @CheckReturnValue @Override public Treasure merge(Treasure valueEntity) {
-    Objects.requireNonNull(valueEntity, "valueEntity");
-    name = isNullOrEmpty(valueEntity.name) ? name : valueEntity.name;
-    description = isNullOrEmpty(valueEntity.description) ? description : valueEntity.description;
-    link = isNullOrEmpty(valueEntity.link) ? link : valueEntity.link;
+  @Override public Treasure merge(Treasure newEntity) {
+    checkNotNull(newEntity, "newEntity");
+    name = isNullOrEmpty(newEntity.name) ? name : newEntity.name;
+    description = isNullOrEmpty(newEntity.description) ? description : newEntity.description;
+    link = isNullOrEmpty(newEntity.link) ? link : newEntity.link;
     this.updated = new Date();
     return this;
   }

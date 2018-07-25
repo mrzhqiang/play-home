@@ -7,7 +7,7 @@ libraryDependencies += "com.typesafe" % "config" % "1.3.2"
 // https://mvnrepository.com/artifact/com.google.inject/guice
 libraryDependencies += "com.google.inject" % "guice" % "4.1.0"
 // https://mvnrepository.com/artifact/com.google.guava/guava
-libraryDependencies += "com.google.guava" % "guava" % "22.0"
+libraryDependencies += "com.google.guava" % "guava" % "23.0"
 // https://mvnrepository.com/artifact/redis.clients/jedis
 libraryDependencies += "redis.clients" % "jedis" % "2.9.0"
 // https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core

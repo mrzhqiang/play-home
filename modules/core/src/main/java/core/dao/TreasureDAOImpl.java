@@ -4,7 +4,6 @@ import com.datastax.driver.mapping.Mapper;
 import core.Cassandra;
 import core.entity.Treasure;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,7 +21,7 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
   }
 
   @Nonnull @CheckReturnValue @Override public List<Treasure> findByName(String name) {
-    Objects.requireNonNull(name, "name");
+    checkNotNull(name, "name");
     checkArgument(!name.isEmpty(), "name must be not empty.");
     return find(select().from(KEYSPACE_WOOF, TABLE_TREASURE).where(eq(COMMON_COLUMN_NAME, name)));
   }

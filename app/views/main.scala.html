@@ -4,7 +4,7 @@
 * two arguments, a `String` for the title of the page and an `Html`
 * object to insert into the body of the page.
 *@
-@(title: String)(content: Html)
+@(title: String, links: Html = Html(""), scripts: Html = Html(""))(content: Html)
 
 <!DOCTYPE html>
 <html lang="en" class="fullscreen-bg">
@@ -29,6 +29,7 @@
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     <link rel="login-icon" type="image/png" href="@routes.Assets.versioned("images/logo-login.png")">
     <link rel="apple-touch-icon" type="image/png" href="@routes.Assets.versioned("images/logo-round.png")">
+    @links
   </head>
   <body>
     @* And here's where we render the `Html` object containing
@@ -42,5 +43,6 @@
     <script src="@routes.Assets.versioned("assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js")"></script>
     @* klorofil js *@
     <script src="@routes.Assets.versioned("assets/scripts/klorofil-common.js")"></script>
+    @scripts
   </body>
 </html>

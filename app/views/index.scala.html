@@ -1,9 +1,11 @@
-@import java.util
-@import service.treasure.TreasureResource
+@import rest.v1.treasure.TreasureResource
+@()
 
-@(dataList: util.List[TreasureResource])
+@scripts = {
+  <script src="@routes.Assets.versioned("javascripts/treasure.js")"></script>
+}
 
-@main("Woof") {
+@main(title = "Woof", scripts = scripts) {
   <div id="wrapper">
     <div class="container-fluid">
         <!-- TABLE HOVER -->
@@ -23,9 +25,9 @@
             <tbody>
             @for(data <- dataList) {
               <tr>
-                <td><a href="@data.href">@data.name</a></td>
-                <td>@data.description</td>
-                <td><a href="@data.link">@data.link</a></td>
+                <td><a href="@data.getHref()">@data.getName()</a></td>
+                <td>@data.getDescription()</td>
+                <td><a href="@data.getLink()">@data.getLink()</a></td>
               </tr>
             }
             </tbody>

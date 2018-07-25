@@ -1,7 +1,6 @@
 package core.dao;
 
-import core.common.Entity;
-import java.util.Objects;
+import core.Entity;
 import java.util.Optional;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -64,16 +63,4 @@ interface BasicDAO<T extends Entity<T>> {
    */
   @CheckReturnValue
   Optional<T> find(Object... objects);
-
-  /**
-   * 检查实体状态。
-   *
-   * @param entity 实体对象。
-   * @return 实体本身。
-   */
-  @Nonnull
-  default T check(T entity) {
-    Objects.requireNonNull(entity, "entity");
-    return entity.check();
-  }
 }
