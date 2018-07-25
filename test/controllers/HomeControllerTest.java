@@ -22,7 +22,7 @@ public class HomeControllerTest extends WithApplication {
 
   @Test
   public void testIndex() {
-    Http.RequestBuilder fakeRequest = fakeRequest(GET, "/");
+    Http.RequestBuilder fakeRequest = fakeRequest();
 
     Result result = route(app, fakeRequest);
     assertEquals(OK, result.status());

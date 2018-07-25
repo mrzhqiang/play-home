@@ -1,5 +1,6 @@
 package service.treasure;
 
+import com.typesafe.config.Config;
 import core.entity.Treasure;
 import java.util.List;
 import java.util.UUID;
@@ -16,14 +17,15 @@ import static org.junit.Assert.*;
  * @author mrzhqiang
  */
 public class TreasureServiceTest extends WithApplication {
+  private Config config;
   private TreasureService service;
-  private Treasure treasure;
 
   @Before
   public void setUp() {
+    config = instanceOf(Config.class);
     service = instanceOf(TreasureService.class);
-    treasure = new Treasure();
-    treasure.id = UUID.randomUUID();
+    Treasure treasure = new Treasure();
+    treasure.id = UUID.fromString(config.getString("service.treasure.testId"));
     treasure.name = "testService";
     treasure.description = "Just a test data from service.";
     treasure.link = "http://randall.top";
@@ -40,13 +42,14 @@ public class TreasureServiceTest extends WithApplication {
   @After
   public void tearDown() {
     try {
-      Treasure treasureData = service.delete(this.treasure.id).toCompletableFuture().get();
-      assertEquals(this.treasure, treasureData);
+      UUID id = UUID.fromString(config.getString("service.treasure.testId"));
+      Treasure treasureData = service.delete(id).toCompletableFuture().get();
+      assertEquals(id, treasureData.id);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
-    treasure = null;
     service = null;
+    config = null;
   }
 
   @Test
@@ -63,8 +66,9 @@ public class TreasureServiceTest extends WithApplication {
   @Test
   public void get() {
     try {
-      Treasure treasureData = service.get(treasure.id).toCompletableFuture().get();
-      assertEquals(treasure, treasureData);
+      UUID id = UUID.fromString(config.getString("service.treasure.testId"));
+      Treasure treasureData = service.get(id).toCompletableFuture().get();
+      assertEquals(id, treasureData.id);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -74,8 +78,8 @@ public class TreasureServiceTest extends WithApplication {
   public void get1() {
     try {
       List<Treasure> treasureList =
-          service.get(treasure.name).toCompletableFuture().get().collect(Collectors.toList());
-      assertTrue(treasureList.contains(treasure));
+          service.get("testService").toCompletableFuture().get().collect(Collectors.toList());
+      assertNotNull(treasureList);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
@@ -83,10 +87,12 @@ public class TreasureServiceTest extends WithApplication {
 
   @Test
   public void update() {
-    treasure.description = "update change here.";
+    UUID id = UUID.fromString(config.getString("service.treasure.testId"));
+    Treasure treasure = new Treasure();
+    treasure.description = "change from update method.";
     try {
-      Treasure treasureData = service.update(treasure.id, treasure).toCompletableFuture().get();
-      assertEquals(treasure, treasureData);
+      Treasure treasureData = service.update(id, treasure).toCompletableFuture().get();
+      assertEquals(id, treasureData.id);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
