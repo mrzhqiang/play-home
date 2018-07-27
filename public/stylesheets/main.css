@@ -1,22 +1,52 @@
 .home {
-  -moz-box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.1);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  width: 50%;
-  height: auto;
-  margin: 24px auto;
-  padding: 24px;
-  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  background: #e2e3e5;
+  position: absolute;
+  display: table;
 }
 
-.home .content {
-  display: inline-block;
+.home-content {
+  display: table-cell;
   vertical-align: middle;
-  *vertical-align: auto;
-  *zoom: 1;
-  *display: inline;
-  width: 99%;
+}
+
+.home-treasure {
+  width: 50%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.home-treasure-title {
+  margin-bottom: 24px;
+}
+
+@media screen and (min-width: 1920px) {
+  .home-treasure {
+    width: 20%;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .home-treasure {
+    width: 35%;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .home-treasure {
+    width: 65%;
+  }
+}
+
+@media screen and (max-width: 860px) {
+  .home-treasure {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .home-treasure {
+    width: 95%;
+  }
 }

@@ -1,35 +1,34 @@
-@(dataList: java.util.List[rest.v1.treasure.TreasureResource])
+@import rest.v1.treasure.TreasureResource
+@(dataList: java.util.List[TreasureResource])
 
-  @main("Woof") {
-    <div id="wrapper">
-      <div class="container-fluid">
-          <!-- TABLE HOVER -->
-        <div class="panel">
-          <div class="panel-heading">
-            <h3 class="panel-title">Woof 藏宝箱</h3>
-          </div>
-          <div class="panel-body">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>项目</th>
-                  <th>简介</th>
-                  <th>链接</th>
-                </tr>
-              </thead>
-              <tbody>
-              @for(data <- dataList) {
-                <tr>
-                  <td><a href="@data.getHref()">@data.getName()</a></td>
-                  <td>@data.getDescription()</td>
-                  <td><a href="@data.getLink()">@data.getLink()</a></td>
-                </tr>
-              }
-              </tbody>
-            </table>
-          </div>
+@main("Woof") {
+  <div class="home">
+    <div class="home-content">
+      <div class="home-treasure shadow p-3 mb-5 bg-white rounded clearfix">
+        <div class="home-treasure-title">
+          <h3 >Woof 藏宝箱</h3>
         </div>
-          <!-- END TABLE HOVER -->
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>宝藏</th>
+                <th>介绍</th>
+                <th>地址</th>
+              </tr>
+            </thead>
+            <tbody>
+            @for(data <- dataList) {
+              <tr>
+                <td><a href="@data.getHref()">@data.getName()</a></td>
+                <td>@data.getDescription()</td>
+                <td><a href="@data.getLink()">@data.getLink()</a></td>
+              </tr>
+            }
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  }
+  </div>
+}
