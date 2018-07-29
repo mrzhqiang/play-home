@@ -26,6 +26,6 @@ public final class RedisTest {
 
   @Test
   public void getJedis() {
-    assertEquals(redis.apply(BinaryJedis::ping), "PONG");
+    redis.get(BinaryJedis::ping).ifPresent(s -> assertEquals("PONG", s));
   }
 }

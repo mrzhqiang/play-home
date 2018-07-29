@@ -4,14 +4,10 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.MoreObjects;
-import core.Entity;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static core.common.CassandraConstant.*;
 
 /**
@@ -20,7 +16,7 @@ import static core.common.CassandraConstant.*;
  * @author mrzhqiang
  */
 @Table(keyspace = KEYSPACE_WOOF, name = TABLE_TREASURE)
-public final class Treasure implements Entity<Treasure> {
+public final class Treasure {
   @PartitionKey
   @Column(name = TREASURE_ID)
   public UUID id;
@@ -31,9 +27,9 @@ public final class Treasure implements Entity<Treasure> {
   @Column(name = COMMON_COLUMN_LINK)
   public String link;
   @Column(name = COMMON_COLUMN_CREATED)
-  public Date created = new Date();
+  public Date created;
   @Column(name = COMMON_COLUMN_UPDATED)
-  public Date updated = new Date();
+  public Date updated;
 
   @Override public int hashCode() {
     return Objects.hashCode(id);
@@ -61,24 +57,5 @@ public final class Treasure implements Entity<Treasure> {
         .add(COMMON_COLUMN_CREATED, created)
         .add(COMMON_COLUMN_UPDATED, updated)
         .toString();
-  }
-
-  @Override public Treasure check() {
-    checkState(id != null, TREASURE_ID);
-    checkState(!isNullOrEmpty(name), COMMON_COLUMN_NAME);
-    checkState(!isNullOrEmpty(description), COMMON_COLUMN_DESCRIPTION);
-    checkState(!isNullOrEmpty(link), COMMON_COLUMN_LINK);
-    checkState(created != null, COMMON_COLUMN_CREATED);
-    checkState(updated != null, COMMON_COLUMN_UPDATED);
-    return this;
-  }
-
-  @Override public Treasure merge(Treasure newEntity) {
-    checkNotNull(newEntity, "newEntity");
-    name = isNullOrEmpty(newEntity.name) ? name : newEntity.name;
-    description = isNullOrEmpty(newEntity.description) ? description : newEntity.description;
-    link = isNullOrEmpty(newEntity.link) ? link : newEntity.link;
-    this.updated = new Date();
-    return this;
   }
 }

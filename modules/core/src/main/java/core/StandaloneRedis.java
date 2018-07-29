@@ -2,9 +2,8 @@ package core;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import java.util.Optional;
 import java.util.function.Function;
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,13 +59,13 @@ import redis.clients.jedis.exceptions.JedisException;
   }
 
   @Override public void init() {
-    String ping = apply(BinaryJedis::ping);
-    logger.info("Redis connect status: {}", "PONG".equals(ping));
+    Optional<String> ping = get(BinaryJedis::ping);
+    ping.ifPresent(s -> logger.info("Redis connect status: {}", "PONG".equals(s)));
   }
 
-  @Nonnull @CheckReturnValue @Override public <R> R apply(Function<Jedis, R> function) {
+  @Override public <T> Optional<T> get(Function<Jedis, T> function) {
     try (Jedis resource = jedisPool.getResource()) {
-      return function.apply(resource);
+      return Optional.ofNullable(function.apply(resource));
     } catch (JedisConnectionException e) {
       String message = "Connection to redis failed.";
       logger.error(message, e);
@@ -74,7 +73,7 @@ import redis.clients.jedis.exceptions.JedisException;
     } catch (JedisException e) {
       String message = "Get instance of Jedis error.";
       logger.error(message, e);
-      throw new RuntimeException(message, e);
     }
+    return Optional.empty();
   }
 }

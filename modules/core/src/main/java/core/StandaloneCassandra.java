@@ -9,8 +9,7 @@ import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,39 +35,37 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
   private final MappingManager mappingManager;
 
   StandaloneCassandra() {
-    try {
-      String host = DEFAULT_HOST;
-      int port = ProtocolOptions.DEFAULT_PORT;
-      int maxSeconds = ProtocolOptions.DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
+    String host = DEFAULT_HOST;
+    int port = ProtocolOptions.DEFAULT_PORT;
+    int maxSeconds = ProtocolOptions.DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
 
-      Config config = ConfigFactory.load();
-      if (config.hasPath(ROOT_PATH)) {
-        host = config.getString(HOST);
-        port = config.getInt(PORT);
-        maxSeconds = config.getInt(MAX_SECONDS);
-      }
-
-      this.cluster = Cluster.builder()
-          .addContactPoint(host)
-          .withPort(port)
-          .withMaxSchemaAgreementWaitSeconds(maxSeconds)
-          .build()
-          .register(QueryLogger.builder().build());
-      this.mappingManager = new MappingManager(cluster.newSession());
-      logger.info("Cassandra cluster and mapping manager create successful.");
-    } catch (Exception e) {
-      String message = "Cassandra cluster create failed.";
-      logger.error(message, e);
-      throw new RuntimeException(message, e);
+    Config config = ConfigFactory.load();
+    if (config.hasPath(ROOT_PATH)) {
+      host = config.getString(HOST);
+      port = config.getInt(PORT);
+      maxSeconds = config.getInt(MAX_SECONDS);
     }
+
+    this.cluster = Cluster.builder()
+        .addContactPoint(host)
+        .withPort(port)
+        .withMaxSchemaAgreementWaitSeconds(maxSeconds)
+        .build()
+        .register(QueryLogger.builder().build());
+    MappingManager mappingManager = null;
+    try {
+      mappingManager = new MappingManager(cluster.newSession());
+      logger.info("Cassandra create successful.");
+    } catch (Exception e) {
+      logger.error("Cassandra create failed.", e);
+    }
+    this.mappingManager = mappingManager;
   }
 
   @Override public void init() {
     try (Session session = cluster.connect()) {
-      Row row = session.execute(
-          select(CLUSTER_NAME, RELEASE_VERSION)
-              .from("system", "local")
-      ).one();
+      Row row =
+          session.execute(select(CLUSTER_NAME, RELEASE_VERSION).from("system", "local")).one();
       logger.info("Cassandra cluster_name:{} release_version:{}.", row.getString(CLUSTER_NAME),
           row.getString(RELEASE_VERSION));
 
@@ -80,15 +77,13 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
     } catch (Exception e) {
       String message = "Cassandra init failed!";
       logger.error(message, e);
-      throw new RuntimeException(message, e);
     }
   }
 
-  @Nonnull @CheckReturnValue @Override public <T> Mapper<T> mapper(Class<T> clazz) {
-    return mappingManager.mapper(clazz);
-  }
-
-  @Nonnull @CheckReturnValue @Override public Session getSession() {
-    return mappingManager.getSession();
+  @Nullable @Override public <T> Mapper<T> mapper(Class<T> clazz) {
+    if (mappingManager != null) {
+      return mappingManager.mapper(clazz);
+    }
+    return null;
   }
 }

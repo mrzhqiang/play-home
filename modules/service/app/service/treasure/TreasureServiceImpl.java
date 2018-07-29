@@ -45,7 +45,7 @@ import static java.util.concurrent.CompletableFuture.*;
     return supplyAsync(() -> {
       Optional<Treasure> optional = dao.find(id);
       notFound(optional.isPresent(), "treasure id:" + id);
-      return dao.modify(optional.get(), resource);
+      return dao.update(optional.get(), resource);
     }, dbExecution);
   }
 
