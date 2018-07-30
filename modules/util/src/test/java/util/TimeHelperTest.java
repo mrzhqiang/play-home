@@ -10,7 +10,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static java.time.format.DateTimeFormatter.*;
 
-public class TimeHelperTest {
+/**
+ * @author mrzhqiang
+ */
+public final class TimeHelperTest {
   private Instant nowInstant;
   private Instant minutesInstant;
   private Instant hoursInstant;

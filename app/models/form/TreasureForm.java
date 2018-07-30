@@ -2,7 +2,7 @@ package models.form;
 
 import java.net.URL;
 import play.data.validation.ValidationError;
-import util.UrlHelper;
+import util.LinkHelper;
 
 import static play.data.validation.Constraints.*;
 
@@ -21,7 +21,7 @@ public final class TreasureForm implements Validatable<ValidationError> {
   @MaxLength(message = "介绍最多 120 个字符", value = 120)
   private String description;
   @Required(message = "宝藏链接必填")
-  @Pattern(message = "超链接验证失败", value = UrlHelper.SIMPLE_REGEX)
+  @Pattern(message = "超链接验证失败", value = LinkHelper.SIMPLE_REGEX)
   private String link;
 
   public String getName() {

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.BinaryJedis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author mrzhqiang

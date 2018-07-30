@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * 时间戳辅助工具。
@@ -16,7 +14,6 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  * @author mrzhqiang
  */
-@ThreadSafe
 public final class TimeHelper {
   private TimeHelper() {
   }
@@ -45,7 +42,6 @@ public final class TimeHelper {
    * @param value 目标时间戳。
    * @return 对时间间隔的文字描述，比如：刚刚、1 分钟前。
    */
-  @Nonnull
   public static String betweenNow(Date value) {
     Objects.requireNonNull(value);
     LocalDateTime nowTime = LocalDateTime.now();
@@ -84,7 +80,6 @@ public final class TimeHelper {
    * @param value 目标时间戳。
    * @return 格式化过的时间戳字符串
    */
-  @Nonnull
   public static String display(Date value) {
     Objects.requireNonNull(value);
     LocalDateTime nowTime = LocalDateTime.now();

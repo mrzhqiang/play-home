@@ -5,8 +5,7 @@ import com.typesafe.config.ConfigFactory;
 import java.util.Optional;
 import java.util.function.Function;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import play.Logger;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -16,10 +15,12 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 
 /**
+ * 单机版 Redis 客户端。
+ *
  * @author mrzhqiang
  */
 @Singleton final class StandaloneRedis implements Redis {
-  private static final Logger logger = LoggerFactory.getLogger("core");
+  private static final Logger.ALogger logger = Logger.of("core");
 
   private static final String ROOT_PATH = "core.redis";
   private static final String HOST = ROOT_PATH + ".host";
@@ -39,17 +40,16 @@ import redis.clients.jedis.exceptions.JedisException;
 
     Config config = ConfigFactory.load();
     if (config.hasPath(ROOT_PATH)) {
-      host = config.getString(HOST);
-      port = config.getInt(PORT);
-      timeout = config.getInt(TIMEOUT);
-      String temp = config.getString(PASSWORD);
-      password = temp.isEmpty() ? null : temp;
-      database = config.getInt(DATABASE);
+      host = config.hasPath(HOST) ? config.getString(HOST) : host;
+      port = config.hasPath(PORT) ? config.getInt(PORT) : port;
+      timeout = config.hasPath(TIMEOUT) ? config.getInt(TIMEOUT) : timeout;
+      password = config.hasPathOrNull(PASSWORD) && !config.getIsNull(PASSWORD)
+          ? config.getString(PASSWORD) : null;
+      database = config.hasPath(DATABASE) ? config.getInt(DATABASE) : database;
     }
 
     try {
-      this.jedisPool =
-          new JedisPool(new JedisPoolConfig(), host, port, timeout, password, database);
+      jedisPool = new JedisPool(new JedisPoolConfig(), host, port, timeout, password, database);
       logger.info("Jedis pool create successful.");
     } catch (Exception e) {
       String message = "Jedis pool create failed.";

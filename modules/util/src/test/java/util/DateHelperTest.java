@@ -10,8 +10,10 @@ import static org.junit.Assert.*;
 import static java.time.temporal.ChronoUnit.*;
 import static java.time.format.DateTimeFormatter.*;
 
-public class DateHelperTest {
-
+/**
+ * @author mrzhqiang
+ */
+public final class DateHelperTest {
   private Instant instant;
 
   @Before

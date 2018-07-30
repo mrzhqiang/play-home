@@ -11,6 +11,7 @@ lazy val util = (project in file("modules/util"))
 
 lazy val core = (project in file("modules/core"))
   .settings(commonSetting)
+  .enablePlugins(PlayMinimalJava, PlayEbean)
   .dependsOn(util)
 
 lazy val framework = (project in file("modules/framework"))

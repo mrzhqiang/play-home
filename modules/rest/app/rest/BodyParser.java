@@ -1,4 +1,4 @@
-package framework;
+package rest;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,24 +19,24 @@ import javax.annotation.Nonnull;
 import play.libs.Json;
 import util.DateHelper;
 
+import static framework.ApplicationException.badRequest;
+
 /**
- * 请求解析器。
+ * 请求 Body 解析器。
  * <p>
  * 只包含对一些基本类型以及 JsonNode 和 Json 字符串的解析。
- * <p>
- * 注意：这个工具只能在 Controller 扩展类中，对请求参数（表单参数、Body 参数）进行解析。
  *
  * @author mrzhqiang
  */
-public final class RequestParser {
-  private RequestParser() {
+public final class BodyParser {
+  private BodyParser() {
   }
 
   public static boolean asBool(String resource) {
     try {
       return Boolean.parseBoolean(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse boolean failed: " + e.getMessage());
+      throw badRequest("Parse boolean failed: " + e.getMessage());
     }
   }
 
@@ -44,7 +44,7 @@ public final class RequestParser {
     try {
       return Integer.parseInt(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse int failed: " + e.getMessage());
+      throw badRequest("Parse int failed: " + e.getMessage());
     }
   }
 
@@ -52,7 +52,7 @@ public final class RequestParser {
     try {
       return Long.parseLong(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse long failed: " + e.getMessage());
+      throw badRequest("Parse long failed: " + e.getMessage());
     }
   }
 
@@ -60,7 +60,7 @@ public final class RequestParser {
     try {
       return Float.parseFloat(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse float failed: " + e.getMessage());
+      throw badRequest("Parse float failed: " + e.getMessage());
     }
   }
 
@@ -68,19 +68,18 @@ public final class RequestParser {
     try {
       return Double.parseDouble(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse double failed: " + e.getMessage());
+      throw badRequest("Parse double failed: " + e.getMessage());
     }
   }
 
   @Nonnull
   @CheckReturnValue
   public static UUID asUUID(String resource) {
-    ApplicationException.badRequest(resource != null && !resource.isEmpty(),
-        "resource null or empty.");
+    badRequest(resource != null && !resource.isEmpty(), "resource null or empty.");
     try {
       return UUID.fromString(resource);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse int failed: " + e.getMessage());
+      throw badRequest("Parse int failed: " + e.getMessage());
     }
   }
 
@@ -93,9 +92,9 @@ public final class RequestParser {
         return date;
       }
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Parse date failed: " + e.getMessage());
+      throw badRequest("Parse date failed: " + e.getMessage());
     }
-    throw ApplicationException.badRequest("Parse date failed!");
+    throw badRequest("Parse date failed!");
   }
 
   /**
@@ -104,12 +103,11 @@ public final class RequestParser {
    * 本质上就是 {@link Json#fromJson(JsonNode, Class)}。
    */
   public static <T> T fromJson(JsonNode jsonNode, Class<T> clazz) {
-    ApplicationException.badRequest(jsonNode != null && jsonNode.isObject(),
-        "Json null or not object.");
+    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not object.");
     try {
       return Json.fromJson(jsonNode, clazz);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("Json parse failed: " + e.getMessage());
     }
   }
 
@@ -119,8 +117,7 @@ public final class RequestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   public static <E> List<E> fromListJson(JsonNode jsonNode, Class<E> clazz) {
-    ApplicationException.badRequest(jsonNode != null && jsonNode.isArray(),
-        "Json null or not array.");
+    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not array.");
     return fromCollectionJson(jsonNode.toString(), ArrayList.class, clazz);
   }
 
@@ -130,8 +127,7 @@ public final class RequestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   public static <E> Set<E> fromSetJson(JsonNode jsonNode, Class<E> clazz) {
-    ApplicationException.badRequest(jsonNode != null && jsonNode.isArray(),
-        "Json null or not array.");
+    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not array.");
     return fromCollectionJson(jsonNode.toString(), HashSet.class, clazz);
   }
 
@@ -149,7 +145,7 @@ public final class RequestParser {
           mapper.getTypeFactory().constructCollectionType(collectionClass, clazz);
       return mapper.readValue(resource, collectionType);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("Json parse failed: " + e.getMessage());
     }
   }
 
@@ -160,8 +156,7 @@ public final class RequestParser {
    */
   public static <K, V> Map<K, V> fromMapJson(JsonNode jsonNode, Class<K> keyClass,
       Class<V> valueClass) {
-    ApplicationException.badRequest(jsonNode != null && jsonNode.isObject(),
-        "Json null or not map.");
+    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not map.");
     return fromMapJson(jsonNode.toString(), HashMap.class, keyClass, valueClass);
   }
 
@@ -178,7 +173,7 @@ public final class RequestParser {
           mapper.getTypeFactory().constructMapType(mapClass, keyClass, valueClass);
       return mapper.readValue(resource, mapType);
     } catch (Exception e) {
-      throw ApplicationException.badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("Json parse failed: " + e.getMessage());
     }
   }
 }

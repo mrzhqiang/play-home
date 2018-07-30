@@ -1,11 +1,9 @@
 package third;
 
-import core.Cassandra;
 import core.Redis;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import play.Logger;
 
 /**
  * A simplest repairman.
@@ -13,20 +11,17 @@ import org.slf4j.LoggerFactory;
  * @author mrzhqiang
  */
 @Singleton final class SimpleRepairman implements Repairman {
-  private static final Logger logger = LoggerFactory.getLogger(SimpleRepairman.class);
+  private static final Logger.ALogger logger = Logger.of("third");
 
   private final Redis redis;
-  private final Cassandra cassandra;
 
-  @Inject SimpleRepairman(Redis redis, Cassandra cassandra) {
+  @Inject SimpleRepairman(Redis redis) {
     this.redis = redis;
-    this.cassandra = cassandra;
   }
 
   @Override public void repair() {
     logger.info("repair start...");
     redis.init();
-    cassandra.init();
     logger.info("repair end.");
   }
 }

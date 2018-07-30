@@ -1,3 +1,2 @@
 name := "framework"
 
-libraryDependencies += guice

@@ -8,8 +8,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static java.time.format.DateTimeFormatter.*;
 
+/**
+ * @author mrzhqiang
+ */
 public final class HttpDateTest {
-
   @Test
   public void parse() {
     String emptySource = "";

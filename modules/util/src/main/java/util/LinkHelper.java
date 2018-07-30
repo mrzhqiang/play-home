@@ -8,12 +8,12 @@ import java.util.regex.Pattern;
  *
  * @author mrzhqiang
  */
-public final class UrlHelper {
-  private UrlHelper() {
+public final class LinkHelper {
+  private LinkHelper() {
   }
 
   public static final String SIMPLE_REGEX = "^(http|https)://[a-z0-9A-Z\\u4e00-\\u9fa5?&/#=%_+-.]+";
-  public static final Pattern SIMPLE_PATTERN = Pattern.compile(SIMPLE_REGEX);
+  private static final Pattern SIMPLE_PATTERN = Pattern.compile(SIMPLE_REGEX);
 
   public static boolean simpleCheck(String link) {
     Objects.requireNonNull(link, "link");

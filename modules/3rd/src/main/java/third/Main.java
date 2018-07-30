@@ -1,14 +1,13 @@
 package third;
 
 import com.google.inject.Guice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import play.Logger;
 
 /**
  * @author mrzhqiang
  */
 public final class Main {
-  private static final Logger logger = LoggerFactory.getLogger(Main.class);
+  private static final Logger.ALogger logger = Logger.of("third");
 
   public static void main(String[] args) {
     Repairman repairman = Guice.createInjector().getInstance(Repairman.class);
