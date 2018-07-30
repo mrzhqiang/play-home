@@ -14,6 +14,6 @@ import play.libs.concurrent.CustomExecutionContext;
 public final class DatabaseExecutionContext extends CustomExecutionContext {
   @Inject
   public DatabaseExecutionContext(ActorSystem actorSystem) {
-    super(actorSystem, "service.database.dispatcher");
+    super(actorSystem, "database.dispatcher");
   }
 }
