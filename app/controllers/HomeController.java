@@ -16,7 +16,6 @@ import rest.v1.treasure.TreasureResource;
  */
 @Singleton
 public final class HomeController extends Controller {
-
   private final WSClient ws;
 
   @Inject

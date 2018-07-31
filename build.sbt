@@ -26,7 +26,7 @@ lazy val service = (project in file("modules/service"))
 
 lazy val rest = (project in file("modules/rest"))
   .settings(commonSetting)
-  .enablePlugins(PlayMinimalJava)
+  .enablePlugins(PlayJava)
   .dependsOn(service)
 
 lazy val root = (project in file("."))

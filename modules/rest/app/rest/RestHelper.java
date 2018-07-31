@@ -2,7 +2,6 @@ package rest;
 
 import com.palominolabs.http.url.UrlBuilder;
 import java.nio.charset.CharacterCodingException;
-import java.util.Arrays;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import play.mvc.Http;
@@ -34,5 +33,11 @@ public final class RestHelper {
     } catch (CharacterCodingException e) {
       throw new IllegalStateException(e);
     }
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public static String lastPath(String href) {
+    return href.substring(href.lastIndexOf("/") + 1);
   }
 }
