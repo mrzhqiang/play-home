@@ -1,12 +1,14 @@
 package framework;
 
 import com.typesafe.config.Config;
+import core.ApplicationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import play.Environment;
+import play.Logger;
 import play.api.OptionalSourceMapper;
 import play.api.UsefulException;
 import play.api.routing.Router;
@@ -25,8 +27,9 @@ import play.mvc.Results;
  */
 @Singleton
 public final class ErrorHandler extends DefaultHttpErrorHandler {
+  private static final Logger.ALogger logger = Logger.of("framework");
+
   private final Environment environment;
-  private final String version;
 
   @Inject
   public ErrorHandler(Config config,
@@ -35,14 +38,13 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
       Provider<Router> routes) {
     super(config, environment, sourceMapper, routes);
     this.environment = environment;
-    this.version = config.getString("framework.support.version");
   }
 
   @Override public CompletionStage<Result> onClientError(Http.RequestHeader request, int statusCode,
       String message) {
     try {
-      // 如果是线上环境的移动端请求
-      if (environment.isProd() && request.uri().startsWith(version)) {
+      // 如果是线上环境
+      if (environment.isProd()) {
         return convertAs(ErrorResponse.clientError(statusCode, message.hashCode(), message));
       }
       // TODO 自定义客户端错误页面
@@ -59,7 +61,8 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
       ApplicationException appException = (ApplicationException) cause;
       return onClientError(request, appException.statusCode(), appException.getMessage());
     }
-    if (environment.isProd() && request.uri().startsWith(version)) {
+    if (environment.isProd()) {
+      logger.error("Server error.", cause);
       return convertAs(ErrorResponse.serverError(cause));
     }
     // TODO 自定义服务器错误页面

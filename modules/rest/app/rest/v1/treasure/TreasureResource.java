@@ -1,50 +1,35 @@
 package rest.v1.treasure;
 
 import com.google.common.base.MoreObjects;
+import core.entity.Treasure;
+import rest.RestHelper;
 
 /**
  * 宝藏资源。
- * <p>
- * 用于 Form 表单数据绑定；或以 JSON 形式传递的 Body 参数。
  *
  * @author mrzhqiang
  */
 public final class TreasureResource {
-  private String name;
-  private String description;
-  private String link;
-  private String href;
+  public String name;
+  public String link;
+  public String description;
+  public String href;
 
-  public String getName() {
-    return name;
+  static TreasureResource of(Treasure treasure) {
+    TreasureResource resource = new TreasureResource();
+    resource.name = treasure.name;
+    resource.link = treasure.link;
+    resource.description = treasure.description;
+    resource.href = RestHelper.href("v1", "treasures", String.valueOf(treasure.id));
+    return resource;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
-  }
-
-  public String getHref() {
-    return href;
-  }
-
-  public void setHref(String href) {
-    this.href = href;
+  Treasure toTreasure() {
+    Treasure treasure = new Treasure();
+    treasure.name = name;
+    treasure.link = link;
+    treasure.description = description;
+    return treasure;
   }
 
   @Override public String toString() {

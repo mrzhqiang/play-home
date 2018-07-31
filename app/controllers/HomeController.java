@@ -1,15 +1,12 @@
 package controllers;
 
-import core.entity.Treasure;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import play.libs.concurrent.HttpExecutionContext;
+import play.libs.ws.WSClient;
 import play.mvc.*;
+import rest.RestParser;
 import rest.v1.treasure.TreasureResource;
-import service.treasure.TreasureService;
 
 /**
  * 主页控制器。
@@ -19,27 +16,19 @@ import service.treasure.TreasureService;
  */
 @Singleton
 public final class HomeController extends Controller {
-  private final TreasureService treasureService;
-  private final HttpExecutionContext httpExecution;
+
+  private final WSClient ws;
 
   @Inject
-  public HomeController(TreasureService treasureService,
-      HttpExecutionContext httpExecution) {
-    this.treasureService = treasureService;
-    this.httpExecution = httpExecution;
+  public HomeController(WSClient ws) {
+    this.ws = ws;
   }
 
   /** 首页，展示宝藏列表。 */
   public CompletionStage<Result> index() {
-    return treasureService.list()
-        .thenApplyAsync(treasureStream -> ok(views.html.index.render(treasureStream.map(
-            treasure -> {
-              TreasureResource treasureResource = new TreasureResource();
-              treasureResource.setName(treasure.name);
-              treasureResource.setLink(treasure.link);
-              treasureResource.setDescription(treasure.description);
-              return treasureResource;
-            }).collect(Collectors.toList()))),
-            httpExecution.current());
+    return ws.url(rest.v1.treasure.routes.TreasureController.list().absoluteURL(request()))
+        .get()
+        .thenApply(wsResponse -> ok(views.html.index.render(
+            RestParser.fromListJson(wsResponse.asJson(), TreasureResource.class))));
   }
 }

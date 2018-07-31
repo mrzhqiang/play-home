@@ -1,5 +1,6 @@
-package framework;
+package core;
 
+import com.google.common.base.Preconditions;
 import play.mvc.Http;
 
 /**
@@ -7,13 +8,13 @@ import play.mvc.Http;
  * <p>
  * 类似 {@link NullPointerException}、{@link IllegalArgumentException} 和
  * {@link IllegalStateException} 等等原生异常类，都是针对 Java 的对象和方法所建立的，
- * 开发者应该自定义应用级别的异常类，以免造成误解。
+ * 开发者应该自定义应用级别的异常类（比如当前类），以免造成误解。
  *
  * @author mrzhqiang
  */
 public abstract class ApplicationException extends RuntimeException {
 
-  ApplicationException(String message) {
+  private ApplicationException(String message) {
     super(message);
   }
 
@@ -30,6 +31,7 @@ public abstract class ApplicationException extends RuntimeException {
   }
 
   public static void badRequest(boolean expression, Throwable cause) {
+    Preconditions.checkNotNull(cause, "cause");
     if (!expression) {
       throw new BadRequestException(cause.getMessage());
     }
@@ -46,6 +48,7 @@ public abstract class ApplicationException extends RuntimeException {
   }
 
   public static void unauthorized(boolean expression, Throwable cause) {
+    Preconditions.checkNotNull(cause, "cause");
     if (!expression) {
       throw new UnauthorizedException(cause.getMessage());
     }
@@ -62,6 +65,7 @@ public abstract class ApplicationException extends RuntimeException {
   }
 
   public static void forbidden(boolean expression, Throwable cause) {
+    Preconditions.checkNotNull(cause, "cause");
     if (!expression) {
       throw new ForbiddenException(cause.getMessage());
     }
@@ -78,6 +82,7 @@ public abstract class ApplicationException extends RuntimeException {
   }
 
   public static void notFound(boolean expression, Throwable cause) {
+    Preconditions.checkNotNull(cause, "cause");
     if (!expression) {
       throw new NotFoundException(cause.getMessage());
     }

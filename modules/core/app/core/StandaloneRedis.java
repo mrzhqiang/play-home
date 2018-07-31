@@ -1,5 +1,6 @@
 package core;
 
+import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import java.util.Optional;
@@ -64,6 +65,7 @@ import redis.clients.jedis.exceptions.JedisException;
   }
 
   @Override public <T> Optional<T> get(Function<Jedis, T> function) {
+    Preconditions.checkNotNull(function, "function");
     try (Jedis resource = jedisPool.getResource()) {
       return Optional.ofNullable(function.apply(resource));
     } catch (JedisConnectionException e) {

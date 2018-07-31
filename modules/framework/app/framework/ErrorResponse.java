@@ -91,7 +91,7 @@ final class ErrorResponse {
   }
 
   @Override public int hashCode() {
-    return Objects.hash(httpStatus, code, message, developerMessage);
+    return Objects.hash(httpStatus, code, message, developerMessage, moreInfo);
   }
 
   @Override public boolean equals(Object obj) {
@@ -107,7 +107,8 @@ final class ErrorResponse {
     return Objects.equals(this.httpStatus, other.httpStatus)
         && Objects.equals(this.code, other.code)
         && Objects.equals(this.message, other.message)
-        && Objects.equals(this.developerMessage, other.developerMessage);
+        && Objects.equals(this.developerMessage, other.developerMessage)
+        && Objects.equals(this.moreInfo, other.moreInfo);
   }
 
   @Override public String toString() {
@@ -116,6 +117,7 @@ final class ErrorResponse {
         .add("code", code)
         .add("message", message)
         .add("developerMessage", developerMessage)
+        .add("moreInfo", moreInfo)
         .toString();
   }
 }

@@ -2,12 +2,13 @@ package rest;
 
 import com.palominolabs.http.url.UrlBuilder;
 import java.nio.charset.CharacterCodingException;
+import java.util.Arrays;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import play.mvc.Http;
 
 /**
- * Rest 帮手。
+ * Rest 辅助工具。
  *
  * @author mrzhqiang
  */
@@ -16,7 +17,7 @@ public final class RestHelper {
   }
 
   /**
-   * 根据相对路径片段生成超链接。
+   * 根据相对路径片段生成 Rest 资源链接。
    */
   @Nonnull
   @CheckReturnValue

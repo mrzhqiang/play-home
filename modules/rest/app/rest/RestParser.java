@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import play.libs.Json;
 import util.DateHelper;
 
-import static framework.ApplicationException.badRequest;
+import static core.ApplicationException.badRequest;
 
 /**
  * 请求 Body 解析器。
@@ -28,8 +28,8 @@ import static framework.ApplicationException.badRequest;
  *
  * @author mrzhqiang
  */
-public final class BodyParser {
-  private BodyParser() {
+public final class RestParser {
+  private RestParser() {
   }
 
   public static boolean asBool(String resource) {
@@ -75,7 +75,7 @@ public final class BodyParser {
   @Nonnull
   @CheckReturnValue
   public static UUID asUUID(String resource) {
-    badRequest(resource != null && !resource.isEmpty(), "resource null or empty.");
+    badRequest(resource != null && !resource.isEmpty(), "resource is null or empty");
     try {
       return UUID.fromString(resource);
     } catch (Exception e) {
@@ -94,7 +94,7 @@ public final class BodyParser {
     } catch (Exception e) {
       throw badRequest("Parse date failed: " + e.getMessage());
     }
-    throw badRequest("Parse date failed!");
+    throw badRequest("Date can not parse to java.util.Date");
   }
 
   /**
@@ -102,13 +102,19 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link Json#fromJson(JsonNode, Class)}。
    */
+  @Nonnull
+  @CheckReturnValue
   public static <T> T fromJson(JsonNode jsonNode, Class<T> clazz) {
-    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not object.");
+    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not be object");
     try {
-      return Json.fromJson(jsonNode, clazz);
+      T t = Json.fromJson(jsonNode, clazz);
+      if (t != null) {
+        return t;
+      }
     } catch (Exception e) {
       throw badRequest("Json parse failed: " + e.getMessage());
     }
+    throw badRequest("Json can not parse");
   }
 
   /**
@@ -116,8 +122,10 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
+  @Nonnull
+  @CheckReturnValue
   public static <E> List<E> fromListJson(JsonNode jsonNode, Class<E> clazz) {
-    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not array.");
+    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not be array.");
     return fromCollectionJson(jsonNode.toString(), ArrayList.class, clazz);
   }
 
@@ -126,8 +134,10 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
+  @Nonnull
+  @CheckReturnValue
   public static <E> Set<E> fromSetJson(JsonNode jsonNode, Class<E> clazz) {
-    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not array.");
+    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not be array.");
     return fromCollectionJson(jsonNode.toString(), HashSet.class, clazz);
   }
 
@@ -136,6 +146,8 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
+  @Nonnull
+  @CheckReturnValue
   public static <T> T fromCollectionJson(String resource,
       Class<? extends Collection> collectionClass,
       Class<?> clazz) {
@@ -143,10 +155,14 @@ public final class BodyParser {
       ObjectMapper mapper = Json.mapper();
       CollectionType collectionType =
           mapper.getTypeFactory().constructCollectionType(collectionClass, clazz);
-      return mapper.readValue(resource, collectionType);
+      T t = mapper.readValue(resource, collectionType);
+      if (t != null) {
+        return t;
+      }
     } catch (Exception e) {
       throw badRequest("Json parse failed: " + e.getMessage());
     }
+    throw badRequest("Json can not parse to collection");
   }
 
   /**
@@ -154,9 +170,11 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
+  @Nonnull
+  @CheckReturnValue
   public static <K, V> Map<K, V> fromMapJson(JsonNode jsonNode, Class<K> keyClass,
       Class<V> valueClass) {
-    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not map.");
+    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not be map.");
     return fromMapJson(jsonNode.toString(), HashMap.class, keyClass, valueClass);
   }
 
@@ -165,15 +183,21 @@ public final class BodyParser {
    * <p>
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
+  @Nonnull
+  @CheckReturnValue
   public static <K, V> Map<K, V> fromMapJson(String resource, Class<? extends Map> mapClass,
       Class<K> keyClass, Class<V> valueClass) {
     try {
       ObjectMapper mapper = Json.mapper();
       MapType mapType =
           mapper.getTypeFactory().constructMapType(mapClass, keyClass, valueClass);
-      return mapper.readValue(resource, mapType);
+      Map<K, V> map = mapper.readValue(resource, mapType);
+      if (map != null) {
+        return map;
+      }
     } catch (Exception e) {
       throw badRequest("Json parse failed: " + e.getMessage());
     }
+    throw badRequest("Json can not parse to map");
   }
 }

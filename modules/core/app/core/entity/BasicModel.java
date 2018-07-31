@@ -11,12 +11,12 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 /**
- * 基础的数据模型。
+ * 实体的基础模型。
  *
  * @author mrzhqiang
  */
 @MappedSuperclass
-abstract class BasicModel extends Model {
+public abstract class BasicModel extends Model {
   @Id
   public Long id;
   @Version
@@ -25,6 +25,8 @@ abstract class BasicModel extends Model {
   public Instant created;
   @WhenModified
   public Instant modified;
+
+  abstract public BasicModel check();
 
   MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)

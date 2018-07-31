@@ -6,7 +6,7 @@ import java.util.function.Function;
 import redis.clients.jedis.Jedis;
 
 /**
- * Redis 客户端接口。
+ * Redis 客户端。
  *
  * @author mrzhqiang
  */

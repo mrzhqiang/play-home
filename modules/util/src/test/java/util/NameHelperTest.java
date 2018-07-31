@@ -36,10 +36,4 @@ public final class NameHelperTest {
     int color = NameHelper.color("mrzhqiang");
     assertEquals(-12627531, color);
   }
-
-  @Test
-  public void notEmpty() {
-    assertFalse(NameHelper.notEmpty(""));
-    assertTrue(NameHelper.notEmpty("name"));
-  }
 }

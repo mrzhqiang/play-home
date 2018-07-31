@@ -20,7 +20,7 @@ public class TreasureControllerTest extends WithApplication {
 
   @Before
   public void create() {
-    TreasureResource resource = new TreasureResource();
+    TreasureResource resource = new TreasureResource(name, description, link, href);
     resource.setName("testRest");
     resource.setDescription("Just a test data from rest.");
     resource.setLink("http://randall.top");
@@ -59,7 +59,7 @@ public class TreasureControllerTest extends WithApplication {
 
   @Test
   public void update() {
-    TreasureResource resource = new TreasureResource();
+    TreasureResource resource = new TreasureResource(name, description, link, href);
     resource.setDescription("Just a test data from rest update.");
     Http.RequestBuilder builder = fakeRequest()
         .method(PUT)

@@ -59,14 +59,4 @@ public final class NameHelper {
     // 然后根据数组长度取模，得到随机的下标位置，返回预定义的颜色值
     return COLORS[(int) ((name.hashCode() & 0xffffffffL) % COLORS.length)];
   }
-
-  /**
-   * 非空，意味着 null 状态也会检查。
-   *
-   * @param name 名字。
-   * @return 如果是 true 则名字有效，否则无效。
-   */
-  public static boolean notEmpty(String name) {
-    return name != null && !name.isEmpty();
-  }
 }
