@@ -18,4 +18,8 @@ public final class AdminController extends Controller {
   public Result loginPost() {
     return ok();
   }
+
+  public Result suggest() {
+    return ok(views.html.admin.apply.render());
+  }
 }

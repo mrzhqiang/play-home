@@ -2,30 +2,28 @@
 @import util.TimeHelper
 @(dataList: java.util.List[TreasureResource])
 
-@main("汪") {
-  <div class="container-fluid h-100 bg-light position-absolute d-table">
-    <div class="d-table-cell align-middle">
-      <div class="container">
-        <div class="card h-auto m-auto shadow p-3 mb-5 bg-white rounded">
-          <img class="w-auto m-auto align-self-center" src="@routes.Assets.versioned("images/logo.png")" alt="Woof Logo">
-          <div class="list-group m-3">
-          @for(data <- dataList) {
-            <a href="@data.getLink()" class="list-group-item list-group-item-action flex-column align-items-center">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@data.getName()</h5>
-                <small>@TimeHelper.betweenNow(data.getTimestamp())</small>
-              </div>
-              <p class="mb-1">@data.getDescription()</p>
-            </a>
-          }
-          </div>
-          <div class="align-self-center"><a class="btn btn-primary" href="@controllers.admin.routes.AdminController.index">
-            登录后台</a>
+  @main("汪") {
+    <div class="container-fluid h-100 bg-light position-absolute d-table">
+      <div class="d-table-cell align-middle">
+        <div class="container">
+          <div class="card h-auto m-auto shadow p-3 mb-5 bg-white rounded">
+            <img class="w-auto m-auto align-self-center" src="@routes.Assets.versioned("images/logo.png")" alt="Woof Logo">
+            <div class="list-group m-3">
+            @for(data <- dataList) {
+              <a href="@data.getLink()" class="list-group-item list-group-item-action flex-column align-items-center">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">@data.getName()</h5>
+                  <small>@TimeHelper.betweenNow(data.getTimestamp())</small>
+                </div>
+                <p class="mb-1">@data.getDescription()</p>
+              </a>
+            }
+            </div>
+            <div class="align-self-center"><a class="btn btn-primary" href="@controllers.admin.routes.AdminController.index">
+              登录后台</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
-  </div>
-}
+  }

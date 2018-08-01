@@ -1,4 +1,6 @@
-GET         /             controllers.admin.AdminController.index
-GET         /login        controllers.admin.AdminController.login
+GET         /               controllers.admin.AdminController.index
+GET         /login          controllers.admin.AdminController.login
 
-POST        /login        controllers.admin.AdminController.loginPost
+POST        /login          controllers.admin.AdminController.loginPost
+
+GET         /suggest        controllers.admin.AdminController.suggest
