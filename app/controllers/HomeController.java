@@ -1,8 +1,8 @@
 package controllers;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import java.util.concurrent.CompletionStage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import play.libs.ws.WSClient;
 import play.mvc.*;
 import rest.RestParser;
@@ -27,7 +27,7 @@ public final class HomeController extends Controller {
   public CompletionStage<Result> index() {
     return ws.url(rest.v1.treasure.routes.TreasureController.list().absoluteURL(request()))
         .get()
-        .thenApply(wsResponse -> ok(views.html.index.render(
-            RestParser.fromListJson(wsResponse.asJson(), TreasureResource.class))));
+        .thenApply(response -> RestParser.fromListJson(response.asJson(), TreasureResource.class))
+        .thenApply(dataList -> ok(views.html.index.render(dataList)));
   }
 }

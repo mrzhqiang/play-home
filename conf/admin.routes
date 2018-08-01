@@ -1,0 +1,4 @@
+GET         /             controllers.admin.AdminController.index
+GET         /login        controllers.admin.AdminController.login
+
+POST        /login        controllers.admin.AdminController.loginPost

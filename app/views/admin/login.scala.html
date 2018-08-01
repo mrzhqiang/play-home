@@ -1,0 +1,24 @@
+@()
+
+  @main("后台登录") {
+    <div class="container">
+      <div class="bg-white-smoke">
+        <div class="content-middle">
+          <div class="content shadow p-3 mb-5 bg-white rounded clearfix">
+          @helper.form(controllers.admin.routes.AdminController.loginPost(), args = 'method -> "post", 'class -> "form-auth-small") {
+            @helper.CSRF.formField
+            <div class="form-group">
+              <label for="username" class="control-label sr-only">Username</label>
+              <input type="text" class="form-control" id="username" name="username" minlength="4" maxlength="24" value="" placeholder="用户名/uid">
+            </div>
+            <div class="form-group">
+              <label for="password" class="control-label sr-only">Password</label>
+              <input type="text" class="form-control" id="password" name="password" minlength="6" maxlength="16" value="" placeholder="用户密码（6-16 位数字/字母）">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+          }
+          </div>
+        </div>
+      </div>
+    </div>
+  }

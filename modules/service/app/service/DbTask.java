@@ -1,9 +1,9 @@
 package service;
 
 import akka.actor.ActorSystem;
+import com.google.inject.Inject;
 import core.Redis;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
 import play.Logger;
 import scala.concurrent.duration.Duration;
 

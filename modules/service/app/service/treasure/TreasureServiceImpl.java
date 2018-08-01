@@ -1,12 +1,11 @@
 package service.treasure;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import core.entity.Treasure;
 import core.repository.TreasureRepository;
-import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import service.DatabaseExecutionContext;
 
 import static core.ApplicationException.*;

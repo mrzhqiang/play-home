@@ -1,52 +1,146 @@
-.home {
+.bg-white-smoke {
   width: 100%;
   height: 100%;
-  background: #e2e3e5;
+  background: whitesmoke;
   position: absolute;
   display: table;
 }
 
-.home-content {
+.content-middle {
   display: table-cell;
   vertical-align: middle;
 }
 
-.home-treasure {
-  width: 50%;
+.treasure {
+  width: 100%;
   height: auto;
   margin: 0 auto;
 }
 
-.home-treasure-title {
+.treasure-title {
   margin-bottom: 24px;
 }
 
+.admin-login {
+  width: 75%;
+  height: 500px;
+  margin: 0 auto;
+}
+
+.admin-login .content {
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  width: 99%;
+}
+
+.admin-login .header {
+  margin-bottom: 30px;
+}
+
+.admin-login .left {
+  float: left;
+  width: 42%;
+  height: 100%;
+  padding: 0 30px;
+  text-align: center;
+}
+
+.admin-login .right {
+  float: right;
+  width: 58%;
+  height: 100%;
+  position: relative;
+  background: url("../images/logo-web.png") no-repeat;
+  background-size: cover;
+}
+
+.admin-login .right .text {
+  position: relative;
+  padding: 0 30px;
+  color: #fff;
+}
+
+.admin-login .right .heading {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 26px;
+  font-weight: 300;
+}
+
+.admin-login .right .overlay {
+  position: absolute;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(99, 156, 185, 0.92);
+}
+
 @media screen and (min-width: 1920px) {
-  .home-treasure {
-    width: 20%;
+  .treasure {
+    width: 40%;
   }
 }
 
-@media screen and (min-width: 1440px) {
-  .home-treasure {
-    width: 35%;
+@media screen and (min-width: 1600px) and (max-width: 1920px) {
+  .treasure {
+    width: 45%;
   }
 }
 
-@media screen and (max-width: 1080px) {
-  .home-treasure {
-    width: 65%;
+@media screen and (min-width: 1280px) and (max-width: 1600px) {
+  .treasure {
+    width: 50%;
   }
 }
 
-@media screen and (max-width: 860px) {
-  .home-treasure {
+@media screen and (min-width: 960px) and (max-width: 1280px) {
+  .treasure {
+    width: 55%;
+  }
+
+  .admin-login {
+    width: 90%;
+  }
+
+  .admin-login .left {
+    top: 3.3em;
+  }
+}
+
+@media screen and (min-width: 640px) and (max-width: 960px) {
+  .treasure {
+    width: 60%;
+  }
+
+  .admin-login {
+    width: 70%;
+  }
+
+  .admin-login .left {
+    width: 100%;
+    position: inherit;
+    padding: 30px;
+  }
+
+  .admin-login .right {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 640px) {
+  .treasure {
     width: 80%;
   }
-}
 
-@media screen and (max-width: 640px) {
-  .home-treasure {
+  .admin-login {
+    width: 90%;
+  }
+
+  .admin-login .content {
     width: 95%;
   }
 }

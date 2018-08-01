@@ -1,11 +1,11 @@
 package core;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.inject.Singleton;
 import play.Logger;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;

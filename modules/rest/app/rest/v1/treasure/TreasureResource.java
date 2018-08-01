@@ -3,8 +3,8 @@ package rest.v1.treasure;
 import com.google.common.base.MoreObjects;
 import core.entity.Treasure;
 import java.net.URL;
+import java.util.Date;
 import play.data.validation.ValidationError;
-import rest.RestHelper;
 import util.LinkHelper;
 
 import static play.data.validation.Constraints.*;
@@ -29,6 +29,7 @@ public final class TreasureResource implements Validatable<ValidationError> {
   @MaxLength(message = "简介最多 120 个字符", value = 120)
   private String description;
   private String href;
+  private Date timestamp;
 
   static TreasureResource of(Treasure treasure) {
     TreasureResource resource = new TreasureResource();
@@ -36,7 +37,8 @@ public final class TreasureResource implements Validatable<ValidationError> {
     resource.name = treasure.name;
     resource.link = treasure.link;
     resource.description = treasure.description;
-    resource.href = RestHelper.href("v1", "treasures", resource.id);
+    resource.href = "/v1/treasures/" + resource.id;
+    resource.timestamp = Date.from(treasure.modified);
     return resource;
   }
 
@@ -86,6 +88,14 @@ public final class TreasureResource implements Validatable<ValidationError> {
 
   public void setHref(String href) {
     this.href = href;
+  }
+
+  public Date getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
   }
 
   @Override public ValidationError validate() {

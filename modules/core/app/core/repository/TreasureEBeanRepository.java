@@ -1,11 +1,11 @@
 package core.repository;
 
+import com.google.inject.Singleton;
 import core.entity.Treasure;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 

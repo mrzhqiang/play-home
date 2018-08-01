@@ -6,3 +6,4 @@ libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.41"
 
 libraryDependencies += guice
 libraryDependencies += ws
+libraryDependencies += ehcache
