@@ -1,6 +1,7 @@
 package core;
 
 import com.google.inject.ImplementedBy;
+import core.internal.StandaloneRedis;
 import java.util.Optional;
 import java.util.function.Function;
 import redis.clients.jedis.Jedis;

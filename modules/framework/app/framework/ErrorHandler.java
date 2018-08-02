@@ -1,7 +1,7 @@
 package framework;
 
 import com.typesafe.config.Config;
-import core.ApplicationException;
+import core.exception.ApplicationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;

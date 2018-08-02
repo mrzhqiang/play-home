@@ -1,4 +1,4 @@
-package core.entity;
+package core;
 
 import com.google.common.base.MoreObjects;
 import io.ebean.Model;
@@ -11,12 +11,12 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 /**
- * 实体的基础模型。
+ * EBean 基础模型。
  *
  * @author mrzhqiang
  */
 @MappedSuperclass
-public abstract class BasicModel extends Model {
+public abstract class BaseModel extends Model {
   @Id
   public Long id;
   @Version
@@ -25,19 +25,21 @@ public abstract class BasicModel extends Model {
   public Instant created;
   @WhenModified
   public Instant modified;
+  public String description;
 
-  abstract public BasicModel check();
+  abstract public void check();
 
-  MoreObjects.ToStringHelper toStringHelper() {
+  protected MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)
         .add("id", id)
         .add("version", version)
         .add("created", created)
-        .add("modified", modified);
+        .add("modified", modified)
+        .add("description", description);
   }
 
   @Override public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(id, version, created, modified, description);
   }
 
   @Override public boolean equals(Object obj) {
@@ -45,11 +47,15 @@ public abstract class BasicModel extends Model {
       return true;
     }
 
-    if (!(obj instanceof BasicModel)) {
+    if (!(obj instanceof BaseModel)) {
       return false;
     }
 
-    BasicModel other = (BasicModel) obj;
-    return Objects.equals(id, other.id);
+    BaseModel other = (BaseModel) obj;
+    return Objects.equals(id, other.id)
+        && Objects.equals(version, other.version)
+        && Objects.equals(created, other.created)
+        && Objects.equals(modified, other.modified)
+        && Objects.equals(description, other.description);
   }
 }

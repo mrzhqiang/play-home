@@ -5,8 +5,18 @@
 @script = {
 }
 
-@main(title = "Woof 后台管理", links = link, scripts = script) {
+@main(title = "后台管理", links = link, scripts = script) {
   <header>
-    @views.html.admin.navbar()
+  @views.html.admin.navbar() {
+    <li class="nav-item active">
+      <a class="nav-link" href="@controllers.admin.routes.AdminController.index()">
+        主页 <span class="sr-only">(当前)</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="@controllers.admin.routes.AdminController.suggest()">建议</a>
+    </li>
+  }
   </header>
+
 }

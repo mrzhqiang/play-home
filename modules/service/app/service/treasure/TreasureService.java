@@ -22,5 +22,5 @@ public interface TreasureService {
 
   CompletionStage<Treasure> get(Long id);
 
-  CompletionStage<Treasure> get(String name);
+  CompletionStage<Stream<Treasure>> get(String name);
 }

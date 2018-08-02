@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import play.libs.Json;
 import util.DateHelper;
 
-import static core.ApplicationException.badRequest;
+import static core.exception.ApplicationException.badRequest;
 
 /**
  * 请求 Body 解析器。

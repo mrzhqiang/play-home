@@ -1,4 +1,4 @@
-package core;
+package core.exception;
 
 import com.google.common.base.Preconditions;
 import play.mvc.Http;

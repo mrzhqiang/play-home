@@ -8,7 +8,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 import service.DatabaseExecutionContext;
 
-import static core.ApplicationException.*;
+import static core.exception.ApplicationException.*;
 import static java.util.concurrent.CompletableFuture.*;
 
 /**
@@ -56,10 +56,10 @@ import static java.util.concurrent.CompletableFuture.*;
         dbExecution);
   }
 
-  @Override public CompletionStage<Treasure> get(String name) {
+  @Override public CompletionStage<Stream<Treasure>> get(String name) {
     return supplyAsync(
-        () -> repository.findByName(name)
-            .orElseThrow(() -> badRequest("get by name failed."))
+        () -> repository.search(name)
+            .orElseThrow(() -> notFound("name: " + name)).stream()
         , dbExecution);
   }
 }

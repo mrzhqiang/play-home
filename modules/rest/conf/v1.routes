@@ -1,3 +1,2 @@
 # Rest v1 API
 ->        /treasures        v1_treasure.Routes
-->        /search           v1_search.Routes

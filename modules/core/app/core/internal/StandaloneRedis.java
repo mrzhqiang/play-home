@@ -1,9 +1,10 @@
-package core;
+package core.internal;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import core.Redis;
 import java.util.Optional;
 import java.util.function.Function;
 import play.Logger;
@@ -20,7 +21,7 @@ import redis.clients.jedis.exceptions.JedisException;
  *
  * @author mrzhqiang
  */
-@Singleton final class StandaloneRedis implements Redis {
+@Singleton public final class StandaloneRedis implements Redis {
   private static final Logger.ALogger logger = Logger.of("core");
 
   private static final String ROOT_PATH = "core.redis";
@@ -32,7 +33,7 @@ import redis.clients.jedis.exceptions.JedisException;
 
   private final JedisPool jedisPool;
 
-  StandaloneRedis() {
+  public StandaloneRedis() {
     String host = Protocol.DEFAULT_HOST;
     int port = Protocol.DEFAULT_PORT;
     int timeout = Protocol.DEFAULT_TIMEOUT;
