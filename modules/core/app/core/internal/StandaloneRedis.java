@@ -1,9 +1,9 @@
 package core.internal;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import core.Redis;
 import java.util.Optional;
 import java.util.function.Function;
@@ -33,14 +33,14 @@ import redis.clients.jedis.exceptions.JedisException;
 
   private final JedisPool jedisPool;
 
-  public StandaloneRedis() {
+  @Inject
+  public StandaloneRedis(Config config) {
     String host = Protocol.DEFAULT_HOST;
     int port = Protocol.DEFAULT_PORT;
     int timeout = Protocol.DEFAULT_TIMEOUT;
     String password = null;
     int database = Protocol.DEFAULT_DATABASE;
 
-    Config config = ConfigFactory.load();
     if (config.hasPath(ROOT_PATH)) {
       host = config.hasPath(HOST) ? config.getString(HOST) : host;
       port = config.hasPath(PORT) ? config.getInt(PORT) : port;

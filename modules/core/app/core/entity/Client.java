@@ -18,14 +18,22 @@ import static core.exception.ApplicationException.badRequest;
 @Entity
 @Table(name = "clients")
 public final class Client extends BaseModel {
-  @Column(unique = true, nullable = false, length = 24)
+  @Column(unique = true, nullable = false, length = 24, columnDefinition = "客户端名，唯一，非 null，最长 24 个字符。")
   public String name;
-  @Column(unique = true, nullable = false)
+  @Column(nullable = false, columnDefinition = "接口秘钥，非 null，UUID 类型。")
   public UUID apikey;
 
   @Override public void check() {
-    badRequest(!Strings.isNullOrEmpty(name) && name.length() <= 24, "Invalid name: " + name);
-    badRequest(apikey != null, "Invalid apikey: " + apikey);
+    badRequest(checkName(), "Invalid name: " + name);
+    badRequest(apikey != null, "Null apikey");
+  }
+
+  private boolean checkName() {
+    return !Strings.isNullOrEmpty(name) && name.length() >= 2 && name.length() <= 24;
+  }
+
+  @Override public int hashCode() {
+    return Objects.hash(super.hashCode(), name, apikey);
   }
 
   @Override public boolean equals(Object obj) {

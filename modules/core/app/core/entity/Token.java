@@ -1,37 +1,50 @@
 package core.entity;
 
+import com.google.common.base.Strings;
 import core.BaseModel;
+import io.ebean.annotation.Index;
+import java.time.Instant;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import static core.exception.ApplicationException.badRequest;
+
+/**
+ * 令牌。
+ *
+ * @author mrzhqiang
+ */
 @Entity
 @Table(name = "tokens")
 public final class Token extends BaseModel {
   public static final String ACCESS_TOKEN = "access_token";
   public static final String REFRESH_TOKEN = "refresh_token";
 
-  @Column(name = ACCESS_TOKEN, unique = true, nullable = false)
+  @Index(name = "index_token_" + ACCESS_TOKEN)
+  @Column(name = ACCESS_TOKEN, unique = true, nullable = false, columnDefinition = "访问令牌，唯一，非 null。")
   public String accessToken;
-  @Column(name = REFRESH_TOKEN, unique = true, nullable = false)
+  @Index(name = "index_token_" + REFRESH_TOKEN)
+  @Column(name = REFRESH_TOKEN, unique = true, nullable = false, columnDefinition = "刷新令牌，唯一，非 null。")
   public String refreshToken;
-  @Column(name = "expires_in", nullable = false)
+  @Column(name = "expires_in", nullable = false, columnDefinition = "过期时间，非 null，单位秒。")
   public long expiresIn;
+
   @ManyToOne(optional = false)
   public Account account;
 
-  /** 是否已经过期。如果过期，那么就会返回401，客户端必须在有Token的情况下，调用刷新接口。 */
+  /** 是否已经过期。true 表示已经过期。*/
   public boolean isExpires() {
-    long lastTime = modified.after(created) ? modified.getTime() : created.getTime();
-    long nowTime = System.currentTimeMillis();
-    return TimeUnit.MILLISECONDS.toSeconds(nowTime - lastTime) >= expiresIn;
+    return modified.plusSeconds(expiresIn).isAfter(Instant.now());
   }
 
   @Override public void check() {
-
+    badRequest(!Strings.isNullOrEmpty(accessToken), "Invalid accessToken.");
+    badRequest(!Strings.isNullOrEmpty(refreshToken), "Invalid refreshToken.");
+    badRequest(expiresIn > 0, "ExpiresIn <= 0.");
+    badRequest(account != null, "Null account.");
   }
 
   @Override public int hashCode() {
@@ -56,7 +69,7 @@ public final class Token extends BaseModel {
   }
 
   @Override public String toString() {
-    return baseStringHelper()
+    return toStringHelper()
         .add("accessToken", accessToken)
         .add("refreshToken", refreshToken)
         .add("expiresIn", expiresIn)

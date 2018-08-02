@@ -6,6 +6,7 @@ import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import java.time.Instant;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
@@ -25,6 +26,7 @@ public abstract class BaseModel extends Model {
   public Instant created;
   @WhenModified
   public Instant modified;
+  @Column(columnDefinition = "介绍，说明。")
   public String description;
 
   abstract public void check();

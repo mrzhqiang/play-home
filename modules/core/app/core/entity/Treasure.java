@@ -20,14 +20,18 @@ import static core.exception.ApplicationException.*;
 @Table(name = "treasures")
 public final class Treasure extends BaseModel {
   @Index(name = "index_treasure_name")
-  @Column(unique = true, nullable = false, length = 12)
+  @Column(unique = true, nullable = false, length = 12, columnDefinition = "宝藏名，唯一，非 null，最长 12 个字符。")
   public String name;
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, columnDefinition = "宝藏链接，唯一，非 null。")
   public String link;
 
   @Override public void check() {
-    badRequest(!Strings.isNullOrEmpty(name) && name.length() <= 12, "Invalid name: " + name);
+    badRequest(checkName(), "Invalid name: " + name);
     badRequest(LinkHelper.simpleCheck(link), "Invalid link: " + link);
+  }
+
+  private boolean checkName() {
+    return !Strings.isNullOrEmpty(name) && name.length() >= 2 && name.length() <= 12;
   }
 
   @Override public int hashCode() {

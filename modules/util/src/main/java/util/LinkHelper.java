@@ -16,26 +16,16 @@ public final class LinkHelper {
   private static final Pattern SIMPLE_PATTERN = Pattern.compile(SIMPLE_REGEX);
 
   public static boolean simpleCheck(String link) {
-    Objects.requireNonNull(link, "link");
-    if (link.length() > 0) {
-      return SIMPLE_PATTERN.matcher(link).matches();
-    }
-    return false;
+    return link != null && !link.isEmpty() && SIMPLE_PATTERN.matcher(link).matches();
   }
 
   public static String autoComplete(String link) {
     Objects.requireNonNull(link, "link");
-    if (!link.startsWith("http")) {
-      return "http://" + link;
-    }
-    return link;
+    return !link.startsWith("http") ? "http://" + link : link;
   }
 
   public static String forceHttp(String link) {
     Objects.requireNonNull(link, "link");
-    if (link.startsWith("https://")) {
-      return "http://" + link.substring(8);
-    }
-    return autoComplete(link);
+    return link.startsWith("https://") ? "http://" + link.substring(8) : autoComplete(link);
   }
 }
