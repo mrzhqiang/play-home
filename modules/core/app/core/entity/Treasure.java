@@ -1,15 +1,11 @@
 package core.entity;
 
-import com.google.common.base.Strings;
 import core.BaseModel;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import util.LinkHelper;
-
-import static core.exception.ApplicationException.*;
 
 /**
  * 宝藏。
@@ -24,15 +20,6 @@ public final class Treasure extends BaseModel {
   public String name;
   @Column(unique = true, nullable = false, columnDefinition = "宝藏链接，唯一，非 null。")
   public String link;
-
-  @Override public void check() {
-    badRequest(checkName(), "Invalid name: " + name);
-    badRequest(LinkHelper.simpleCheck(link), "Invalid link: " + link);
-  }
-
-  private boolean checkName() {
-    return !Strings.isNullOrEmpty(name) && name.length() >= 2 && name.length() <= 12;
-  }
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(), name, link);

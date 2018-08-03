@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public interface Repository<I, T> {
   Optional<T> create(T entity);
 
-  Optional<T> update(T entity);
+  Optional<T> update(I primaryKey, T entity);
 
   Optional<T> get(I primaryKey);
 

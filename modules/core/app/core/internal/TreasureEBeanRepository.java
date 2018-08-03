@@ -1,6 +1,7 @@
 package core.internal;
 
 import com.google.inject.Singleton;
+import core.EBeanRepository;
 import core.entity.Treasure;
 import core.repository.TreasureRepository;
 import io.ebean.Finder;

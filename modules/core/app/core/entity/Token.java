@@ -1,16 +1,12 @@
 package core.entity;
 
-import com.google.common.base.Strings;
 import core.BaseModel;
 import io.ebean.annotation.Index;
-import java.time.Instant;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import static core.exception.ApplicationException.badRequest;
 
 /**
  * 令牌。
@@ -34,18 +30,6 @@ public final class Token extends BaseModel {
 
   @ManyToOne(optional = false)
   public Account account;
-
-  /** 是否已经过期。true 表示已经过期。*/
-  public boolean isExpires() {
-    return modified.plusSeconds(expiresIn).isAfter(Instant.now());
-  }
-
-  @Override public void check() {
-    badRequest(!Strings.isNullOrEmpty(accessToken), "Invalid accessToken.");
-    badRequest(!Strings.isNullOrEmpty(refreshToken), "Invalid refreshToken.");
-    badRequest(expiresIn > 0, "ExpiresIn <= 0.");
-    badRequest(account != null, "Null account.");
-  }
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, account);

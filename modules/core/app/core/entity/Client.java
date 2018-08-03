@@ -1,14 +1,11 @@
 package core.entity;
 
-import com.google.common.base.Strings;
 import core.BaseModel;
 import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import static core.exception.ApplicationException.badRequest;
 
 /**
  * 客户端。
@@ -22,15 +19,6 @@ public final class Client extends BaseModel {
   public String name;
   @Column(nullable = false, columnDefinition = "接口秘钥，非 null，UUID 类型。")
   public UUID apikey;
-
-  @Override public void check() {
-    badRequest(checkName(), "Invalid name: " + name);
-    badRequest(apikey != null, "Null apikey");
-  }
-
-  private boolean checkName() {
-    return !Strings.isNullOrEmpty(name) && name.length() >= 2 && name.length() <= 24;
-  }
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(), name, apikey);

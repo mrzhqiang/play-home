@@ -29,8 +29,6 @@ public abstract class BaseModel extends Model {
   @Column(columnDefinition = "介绍，说明。")
   public String description;
 
-  abstract public void check();
-
   protected MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)
         .add("id", id)

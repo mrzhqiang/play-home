@@ -1,6 +1,7 @@
 package core.internal;
 
 import com.google.inject.Singleton;
+import core.EBeanRepository;
 import core.entity.Client;
 import core.repository.ClientRepository;
 import java.util.List;

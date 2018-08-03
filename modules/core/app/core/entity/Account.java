@@ -1,6 +1,5 @@
 package core.entity;
 
-import com.google.common.base.Strings;
 import core.BaseModel;
 import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
@@ -9,9 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import util.NameHelper;
-
-import static core.exception.ApplicationException.badRequest;
 
 /**
  * 帐号。
@@ -32,19 +28,35 @@ public final class Account extends BaseModel {
   @OneToOne(optional = false)
   public User user;
 
-  @Override public void check() {
-    badRequest(checkUsername(), "Invalid username: " + username);
-    badRequest(checkPassword(), "Invalid password: " + password);
-    badRequest(level != null, "Null level");
-    badRequest(user != null, "Null user");
+  public enum Level {
+    @EnumValue("GUEST")
+    GUEST,
+    @EnumValue("USER")
+    USER,
+    @EnumValue("ADMIN")
+    ADMIN,
+    @EnumValue("AUTHOR")
+    AUTHOR,;
   }
 
-  private boolean checkUsername() {
-    return NameHelper.startLetter(username) && username.length() >= 6 && username.length() <= 16;
-  }
-
-  private boolean checkPassword() {
-    return !Strings.isNullOrEmpty(password) && password.length() >= 6 && password.length() <= 16;
+  public static Level levelOf(String value) {
+    Objects.requireNonNull(value);
+    switch (value.toUpperCase()) {
+      case "游客":
+      case "GUEST":
+        return Level.GUEST;
+      case "用户":
+      case "USER":
+        return Level.USER;
+      case "管理员":
+      case "ADMIN":
+        return Level.ADMIN;
+      case "创始人":
+      case "AUTHOR":
+        return Level.AUTHOR;
+      default:
+        return Level.GUEST;
+    }
   }
 
   @Override public int hashCode() {
@@ -75,36 +87,5 @@ public final class Account extends BaseModel {
         .add("level", level)
         .add("user", user)
         .toString();
-  }
-
-  public enum Level {
-    @EnumValue("GUEST")
-    GUEST,
-    @EnumValue("USER")
-    USER,
-    @EnumValue("ADMIN")
-    ADMIN,
-    @EnumValue("AUTHOR")
-    AUTHOR,;
-
-    public static Level of(String value) {
-      Objects.requireNonNull(value, "value");
-      switch (value.toUpperCase()) {
-        case "游客":
-        case "GUEST":
-          return GUEST;
-        case "用户":
-        case "USER":
-          return USER;
-        case "管理员":
-        case "ADMIN":
-          return ADMIN;
-        case "创始人":
-        case "AUTHOR":
-          return AUTHOR;
-        default:
-          return GUEST;
-      }
-    }
   }
 }
