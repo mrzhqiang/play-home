@@ -17,7 +17,7 @@ import javax.persistence.Version;
  * @author mrzhqiang
  */
 @MappedSuperclass
-public abstract class BaseModel extends Model {
+public abstract class EBeanModel extends Model {
   @Id
   public Long id;
   @Version
@@ -28,6 +28,17 @@ public abstract class BaseModel extends Model {
   public Instant modified;
   @Column(columnDefinition = "介绍，说明。")
   public String description;
+
+  /**
+   * 自检方法。
+   * <p>
+   * 用来检查必备字段是否有效，一般用于创建数据。
+   */
+  public boolean checkSelf() {
+    Objects.requireNonNull(created, "created");
+    Objects.requireNonNull(modified, "modified");
+    return true;
+  }
 
   protected MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)
@@ -47,11 +58,11 @@ public abstract class BaseModel extends Model {
       return true;
     }
 
-    if (!(obj instanceof BaseModel)) {
+    if (!(obj instanceof EBeanModel)) {
       return false;
     }
 
-    BaseModel other = (BaseModel) obj;
+    EBeanModel other = (EBeanModel) obj;
     return Objects.equals(id, other.id)
         && Objects.equals(version, other.version)
         && Objects.equals(created, other.created)
