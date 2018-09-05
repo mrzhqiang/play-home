@@ -34,7 +34,7 @@ import static java.util.concurrent.CompletableFuture.*;
 
   @Override public CompletionStage<Treasure> create(Treasure treasure) {
     return supplyAsync(
-        () -> repository.create(treasure),
+        () -> repository.create(treasure).orElseThrow(() -> badRequest("case: " + treasure)),
         dbExecution);
   }
 

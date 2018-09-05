@@ -4,16 +4,18 @@ import com.google.common.base.Preconditions;
 import core.EBeanModel;
 import io.ebean.annotation.Index;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  * 用户。
  * <p>
- * 持久化昵称、头像。
+ * 包含：昵称、头像、宝藏列表。
  * <p>
- * 这就是一个用户信息表。
+ * 通过用户可以拿到所收藏的宝藏列表；若是查看他人资料，则比较互相收藏的宝藏，进而知晓彼此兴趣爱好。
  *
  * @author qiang.zhang
  */
@@ -26,15 +28,21 @@ public final class User extends EBeanModel {
   @Column(nullable = false, columnDefinition = "头像，非空，不限长度。")
   public String avatar;
 
+  @OneToMany()
+  public Set<Treasure> treasures;
+
   @Override public boolean checkSelf() {
-    Objects.requireNonNull(nickname);
-    Objects.requireNonNull(avatar);
+    Preconditions.checkNotNull(nickname);
+    Preconditions.checkNotNull(avatar);
     Preconditions.checkState(nickname.length() <= 16);
+    Preconditions.checkNotNull(treasures);
+    Preconditions.checkState(
+        !treasures.isEmpty() && treasures.stream().allMatch(Treasure::checkSelf));
     return super.checkSelf();
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), nickname, avatar);
+    return Objects.hash(super.hashCode(), nickname, avatar, treasures);
   }
 
   @Override public boolean equals(Object obj) {
@@ -49,13 +57,15 @@ public final class User extends EBeanModel {
     User other = (User) obj;
     return super.equals(obj)
         && Objects.equals(nickname, other.nickname)
-        && Objects.equals(avatar, other.avatar);
+        && Objects.equals(avatar, other.avatar)
+        && Objects.deepEquals(treasures, other.treasures);
   }
 
   @Override public String toString() {
     return toStringHelper()
-        .add("nickname", nickname)
-        .add("avatar", avatar)
+        .add("昵称", nickname)
+        .add("头像", avatar)
+        .add("宝藏列表", treasures)
         .toString();
   }
 }

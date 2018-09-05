@@ -1,8 +1,8 @@
 package core;
 
+import com.google.common.base.Preconditions;
 import core.exception.DatabaseException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -49,8 +49,8 @@ public interface Repository<I, E> {
    * @throws DatabaseException 捕捉执行过程中的所有异常，抛出数据库异常。
    */
   default void execute(E entity, Consumer<E> consumer) {
-    Objects.requireNonNull(entity);
-    Objects.requireNonNull(consumer);
+    Preconditions.checkNotNull(entity);
+    Preconditions.checkNotNull(consumer);
     try {
       consumer.accept(entity);
     } catch (Exception e) {
@@ -66,7 +66,7 @@ public interface Repository<I, E> {
    * @throws DatabaseException 捕捉提供过程中的所有异常，抛出数据库异常。
    */
   default <T> T dispose(Supplier<T> supplier) {
-    Objects.requireNonNull(supplier);
+    Preconditions.checkNotNull(supplier);
     try {
       return supplier.get();
     } catch (Exception e) {

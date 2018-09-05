@@ -11,9 +11,9 @@ import javax.persistence.Table;
 /**
  * 宝藏。
  * <p>
- * 持久化名字和超链接。
+ * 包含：宝藏名字和宝藏链接。
  * <p>
- * 实际上就是一个网站收藏夹。
+ * 实际上就是用户的网站收藏夹。
  *
  * @author mrzhqiang
  */
@@ -27,8 +27,8 @@ public final class Treasure extends EBeanModel {
   public String link;
 
   @Override public boolean checkSelf() {
-    Objects.requireNonNull(name);
-    Objects.requireNonNull(link);
+    Preconditions.checkNotNull(name);
+    Preconditions.checkNotNull(link);
     Preconditions.checkState(name.length() <= 12);
     return super.checkSelf();
   }

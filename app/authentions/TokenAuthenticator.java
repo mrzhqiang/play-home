@@ -1,8 +1,8 @@
 package authentions;
 
 import java.util.Optional;
-import models.utils.ErrorResponses;
-import models.utils.Tokens;
+//import models.utils.ErrorResponses;
+//import models.utils.Tokens;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -22,14 +22,14 @@ public class TokenAuthenticator extends Security.Authenticator {
     Optional<String> optionalAuth = ctx.request().header(Http.HeaderNames.AUTHORIZATION);
     if (optionalAuth.isPresent()) {
       String auth = optionalAuth.get();
-      return Tokens.authenticate(auth).orElse(null);
+      //return Tokens.authenticate(auth).orElse(null);
     }
     return null;
   }
 
   @Override public Result onUnauthorized(Http.Context ctx) {
     return unauthorized(
-        ErrorResponses.of(ErrorResponses.AUTHENTICATOR_ERROR,
-            "Token过期，请刷新或重新登陆。", "正常错误。").toJsonNode());
+        //ErrorResponses.of(ErrorResponses.AUTHENTICATOR_ERROR,
+            /*"Token过期，请刷新或重新登陆。", "正常错误。").toJsonNode()*/);
   }
 }

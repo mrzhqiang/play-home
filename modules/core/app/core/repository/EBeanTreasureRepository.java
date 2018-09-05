@@ -1,13 +1,12 @@
-package core.internal;
+package core.repository;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 import core.EBeanRepository;
 import core.entity.Treasure;
-import core.repository.TreasureRepository;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -15,20 +14,21 @@ import java.util.Optional;
  *
  * @author qiang.zhang
  */
-@Singleton public final class TreasureEBeanRepository extends EBeanRepository<Long, Treasure>
+@Singleton final class EBeanTreasureRepository extends EBeanRepository<Long, Treasure>
     implements TreasureRepository {
-  public TreasureEBeanRepository() {
+  public EBeanTreasureRepository() {
     super(Treasure.class);
   }
 
   @Override public Optional<List<Treasure>> search(String name) {
     return Optional.ofNullable(name)
+        .filter(s -> !s.isEmpty() && s.length() <= 12)
         .map(s -> dispose(() -> finder.query().where().icontains("name", s).findList()));
   }
 
   @Override public Optional<Treasure> merge(Treasure entity, Treasure newEntity) {
-    Objects.requireNonNull(entity);
-    Objects.requireNonNull(newEntity);
+    Preconditions.checkNotNull(entity);
+    Preconditions.checkNotNull(newEntity);
     boolean changed = false;
     if (!Strings.isNullOrEmpty(newEntity.name)) {
       entity.name = newEntity.name;

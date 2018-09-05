@@ -1,12 +1,11 @@
-package core.internal;
+package core.repository;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 import core.EBeanRepository;
 import core.entity.Client;
-import core.repository.ClientRepository;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -14,16 +13,15 @@ import java.util.Optional;
  *
  * @author qiang.zhang
  */
-@Singleton
-public final class ClientEBeanRepository extends EBeanRepository<Long, Client>
+@Singleton final class EBeanClientRepository extends EBeanRepository<Long, Client>
     implements ClientRepository {
-  public ClientEBeanRepository() {
+  public EBeanClientRepository() {
     super(Client.class);
   }
 
   @Override public Optional<Client> merge(Client entity, Client newEntity) {
-    Objects.requireNonNull(entity);
-    Objects.requireNonNull(newEntity);
+    Preconditions.checkNotNull(entity);
+    Preconditions.checkNotNull(newEntity);
     boolean changed = false;
     if (!Strings.isNullOrEmpty(newEntity.name)) {
       entity.name = newEntity.name;
@@ -40,8 +38,8 @@ public final class ClientEBeanRepository extends EBeanRepository<Long, Client>
   }
 
   @Override public Optional<Client> verify(String username, String password) {
-    Objects.requireNonNull(username);
-    Objects.requireNonNull(password);
+    Preconditions.checkNotNull(username);
+    Preconditions.checkNotNull(password);
     return dispose(() -> finder.query().where()
         .eq("name", username)
         .eq("apikey", password)

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 /**
  * 客户端。
  * <p>
- * 持久化客户端名字和对应的请求秘钥。
+ * 包含：客户端名字和对应的请求秘钥。
  * <p>
  * 实际上这是一个白名单表，可以防止接口被一些脚本工具调用。
  * <p>
@@ -30,8 +30,8 @@ public final class Client extends EBeanModel {
   public UUID apikey;
 
   @Override public boolean checkSelf() {
-    Objects.requireNonNull(name);
-    Objects.requireNonNull(apikey);
+    Preconditions.checkNotNull(name);
+    Preconditions.checkNotNull(apikey);
     Preconditions.checkState(name.length() <= 24);
     return super.checkSelf();
   }

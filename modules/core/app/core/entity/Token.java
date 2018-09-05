@@ -6,15 +6,15 @@ import io.ebean.annotation.Index;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
  * 令牌。
  * <p>
- * 持久化访问令牌、刷新令牌和过期时间。
+ * 包含：访问令牌、刷新令牌和过期时间。
  * <p>
- * 另有账户信息，以多对一方式存在。
+ * 通过此令牌可以访问相应的用户资料。
  *
  * @author mrzhqiang
  */
@@ -32,20 +32,20 @@ public final class Token extends EBeanModel {
   @Column(name = "expires_in", nullable = false, columnDefinition = "过期时间，非空，单位秒。")
   public Long expiresIn;
 
-  @ManyToOne(optional = false)
-  public Account account;
+  @OneToOne(optional = false)
+  public User user;
 
   @Override public boolean checkSelf() {
-    Objects.requireNonNull(accessToken);
-    Objects.requireNonNull(refreshToken);
-    Objects.requireNonNull(expiresIn);
-    Objects.requireNonNull(account);
-    Preconditions.checkState(account.checkSelf());
+    Preconditions.checkNotNull(accessToken);
+    Preconditions.checkNotNull(refreshToken);
+    Preconditions.checkNotNull(expiresIn);
+    Preconditions.checkNotNull(user);
+    Preconditions.checkState(user.checkSelf());
     return super.checkSelf();
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, account);
+    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, user);
   }
 
   @Override public boolean equals(Object obj) {
@@ -62,15 +62,15 @@ public final class Token extends EBeanModel {
         && Objects.equals(accessToken, other.accessToken)
         && Objects.equals(refreshToken, other.refreshToken)
         && Objects.equals(expiresIn, other.expiresIn)
-        && Objects.equals(account, other.account);
+        && Objects.equals(user, other.user);
   }
 
   @Override public String toString() {
     return toStringHelper()
-        .add("accessToken", accessToken)
-        .add("refreshToken", refreshToken)
-        .add("expiresIn", expiresIn)
-        .add("account", account)
+        .add("访问令牌", accessToken)
+        .add("刷新令牌", refreshToken)
+        .add("过期期限", expiresIn)
+        .add("用户资料", user)
         .toString();
   }
 }

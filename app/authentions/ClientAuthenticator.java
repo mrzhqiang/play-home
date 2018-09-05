@@ -1,9 +1,9 @@
 package authentions;
 
 import java.util.Optional;
-import models.utils.Clients;
-import models.utils.ErrorResponses;
-import models.utils.Tokens;
+//import models.utils.Clients;
+//import models.utils.ErrorResponses;
+//import models.utils.Tokens;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -24,15 +24,15 @@ public class ClientAuthenticator extends Security.Authenticator {
     if (optionalAuth.isPresent()) {
       String basicAuth = optionalAuth.get();
       // 如果是Token权限，也可以通过认证，这是因为Token的安全级别更高。
-      return Clients.authenticate(basicAuth).orElse(
-          Tokens.authenticate(basicAuth).orElse(null));
+      //return Clients.authenticate(basicAuth).orElse(
+      //    Tokens.authenticate(basicAuth).orElse(null));
     }
     return null;
   }
 
   @Override public Result onUnauthorized(Http.Context ctx) {
-    return unauthorized(
+    return unauthorized(/*
         ErrorResponses.of(ErrorResponses.AUTHENTICATOR_ERROR,
-            "关于权限访问，请联系QQ：287431404。", "正常错误。").toJsonNode());
+            "关于权限访问，请联系QQ：287431404。", "正常错误。").toJsonNode()*/);
   }
 }

@@ -14,11 +14,15 @@ import javax.persistence.Table;
 /**
  * 帐号。
  * <p>
- * 持久化用户名、密码。
+ * 包含：用户名、密码、等级、上次登录时间、上次登录设备。
  * <p>
- * 另带有权限等级，区分游客、用户、管理员、创始人。
+ * 等级：区分游客、用户、管理员、创始人。
  * <p>
- * 每个等级的权限不一样。游客只有部分浏览权，用户则是正常权限，管理员拥有删除权限，创始人只是一个代号。
+ * 对应权限：游客浏览，用户发帖，管理员封印，创始人增减。
+ * <p>
+ * 上次登录时间、上次登录设备：这两个字段模仿的是 Linux 服务器 SSH 登录成功后的欢迎词。
+ * <p>
+ * 通常来说，只有登录才能拿到唯一的令牌；重复登录将替换令牌，并通知上一个设备重新登录。
  *
  * @author qiang.zhang
  */
@@ -38,24 +42,24 @@ public final class Account extends EBeanModel {
   public String lastLoginDevice;
 
   @OneToOne(optional = false)
-  public User user;
+  public Token token;
 
   @Override public boolean checkSelf() {
-    Objects.requireNonNull(username);
-    Objects.requireNonNull(password);
-    Objects.requireNonNull(level);
-    Objects.requireNonNull(lastLoginTime);
-    Objects.requireNonNull(lastLoginDevice);
-    Objects.requireNonNull(user);
+    Preconditions.checkNotNull(username);
+    Preconditions.checkNotNull(password);
+    Preconditions.checkNotNull(level);
+    Preconditions.checkNotNull(lastLoginTime);
+    Preconditions.checkNotNull(lastLoginDevice);
+    Preconditions.checkNotNull(token);
     Preconditions.checkState(username.length() <= 16);
     Preconditions.checkState(password.length() <= 16);
-    Preconditions.checkState(user.checkSelf());
+    Preconditions.checkState(token.checkSelf());
     return super.checkSelf();
   }
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(),
-        username, password, level, lastLoginTime, lastLoginDevice, user);
+        username, password, level, lastLoginTime, lastLoginDevice, token);
   }
 
   @Override public boolean equals(Object obj) {
@@ -74,7 +78,7 @@ public final class Account extends EBeanModel {
         && Objects.equals(level, other.level)
         && Objects.equals(lastLoginTime, other.lastLoginTime)
         && Objects.equals(lastLoginDevice, other.lastLoginDevice)
-        && Objects.equals(user, other.user);
+        && Objects.equals(token, other.token);
   }
 
   @Override public String toString() {
@@ -84,7 +88,7 @@ public final class Account extends EBeanModel {
         .add("权限等级", level)
         .add("上次登录时间", lastLoginTime)
         .add("上次登录设备", lastLoginDevice)
-        .add("用户资料", user)
+        .add("令牌", token)
         .toString();
   }
 
@@ -99,7 +103,7 @@ public final class Account extends EBeanModel {
     AUTHOR,;
 
     public static Level of(String value) {
-      Objects.requireNonNull(value);
+      Preconditions.checkNotNull(value);
       switch (value.toUpperCase()) {
         case "游客":
         case "GUEST":

@@ -32,11 +32,9 @@ public abstract class EBeanModel extends Model {
   /**
    * 自检方法。
    * <p>
-   * 用来检查必备字段是否有效，一般用于创建数据。
+   * 用来检查必备字段是否有效，一般用于创建数据时的数据自检。
    */
   public boolean checkSelf() {
-    Objects.requireNonNull(created, "created");
-    Objects.requireNonNull(modified, "modified");
     return true;
   }
 
