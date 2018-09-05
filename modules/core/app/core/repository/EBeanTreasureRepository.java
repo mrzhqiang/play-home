@@ -4,7 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 import core.EBeanRepository;
+import core.Paging;
 import core.entity.Treasure;
+import io.ebean.PagedList;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +22,34 @@ import java.util.Optional;
     super(Treasure.class);
   }
 
-  @Override public Optional<List<Treasure>> search(String name) {
+  @Override public Optional<Paging<Treasure>> search(String name, int firstRow, int maxRows) {
     return Optional.ofNullable(name)
         .filter(s -> !s.isEmpty() && s.length() <= 12)
-        .map(s -> dispose(() -> finder.query().where().icontains("name", s).findList()));
+        .map(s -> dispose(() -> {
+          PagedList<Treasure> pagedList = finder.query().where()
+              .icontains("name", s)
+              .setFirstRow(firstRow)
+              .setMaxRows(maxRows)
+              .findPagedList();
+          pagedList.loadCount();
+          return new Paging<Treasure>() {
+            @Override public int total() {
+              return pagedList.getTotalCount();
+            }
+
+            @Override public int from() {
+              return firstRow;
+            }
+
+            @Override public int size() {
+              return maxRows;
+            }
+
+            @Override public List<Treasure> datas() {
+              return pagedList.getList();
+            }
+          };
+        }));
   }
 
   @Override public Optional<Treasure> merge(Treasure entity, Treasure newEntity) {

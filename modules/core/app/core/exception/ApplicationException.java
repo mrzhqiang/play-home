@@ -7,8 +7,8 @@ import play.mvc.Http;
  * 应用异常。
  * <p>
  * 类似 {@link NullPointerException}、{@link IllegalArgumentException} 和
- * {@link IllegalStateException} 等等原生异常类，都是针对 Java 的对象和方法所建立的，
- * 开发者应该自定义应用级别的异常类（比如 ApplicationException），以免造成误解。
+ * {@link IllegalStateException} 等等原生异常类，都是针对 Java 的对象和方法所建立，
+ * 开发者应该自定义应用级别的异常类，以备识别服务器内部错误为客户端错误。
  *
  * @author mrzhqiang
  */
@@ -87,7 +87,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
   }
 
-  private static class BadRequestException extends ApplicationException {
+  private static final class BadRequestException extends ApplicationException {
     BadRequestException(String message) {
       super(message);
     }
@@ -97,7 +97,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
   }
 
-  private static class UnauthorizedException extends ApplicationException {
+  private static final class UnauthorizedException extends ApplicationException {
     UnauthorizedException(String message) {
       super(message);
     }
@@ -107,7 +107,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
   }
 
-  private static class ForbiddenException extends ApplicationException {
+  private static final class ForbiddenException extends ApplicationException {
     ForbiddenException(String message) {
       super(message);
     }
@@ -117,7 +117,7 @@ public abstract class ApplicationException extends RuntimeException {
     }
   }
 
-  private static class NotFoundException extends ApplicationException {
+  private static final class NotFoundException extends ApplicationException {
     NotFoundException(String message) {
       super(message);
     }

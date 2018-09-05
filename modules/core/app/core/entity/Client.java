@@ -23,16 +23,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "clients")
 public final class Client extends EBeanModel {
+  public static final String NAME = "name";
+  public static final String API_KEY = "apikey";
+
   @Index(name = "index_client_name")
-  @Column(unique = true, nullable = false, length = 24, columnDefinition = "客户端名字，唯一，非空，最长 24 个字符。")
+  @Column(name = NAME, unique = true, nullable = false, length = 24,
+      columnDefinition = "客户端名字，唯一，非空，最长 24 个字符。")
   public String name;
-  @Column(nullable = false, columnDefinition = "请求秘钥，非空，UUID 类型。")
-  public UUID apikey;
+  @Column(name = API_KEY, nullable = false,
+      columnDefinition = "请求秘钥，非空，UUID 类型。")
+  public UUID apikey = UUID.randomUUID();
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(apikey);
-    Preconditions.checkState(name.length() <= 24);
+    Preconditions.checkState(!name.isEmpty() && name.length() <= 24);
     return super.checkSelf();
   }
 
@@ -57,8 +62,8 @@ public final class Client extends EBeanModel {
 
   @Override public String toString() {
     return toStringHelper()
-        .add("name", name)
-        .add("apikey", apikey)
+        .add("客户端", name)
+        .add("秘钥", apikey)
         .toString();
   }
 }

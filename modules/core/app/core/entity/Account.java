@@ -29,17 +29,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "accounts")
 public final class Account extends EBeanModel {
+  public static final String USERNAME = "username";
+  public static final String PASSWORD = "password";
+  public static final String LEVEL = "level";
+  public static final String LAST_LOGIN_TIME = "last_login_time";
+  public static final String LAST_LOGIN_DEVICE = "last_login_device";
+  public static final String DEVICE_UNKNOWN = "Unknown";
+
   @Index(name = "index_account_username")
-  @Column(unique = true, nullable = false, length = 16, columnDefinition = "用户名，唯一，非空，最长 16 个字符。")
+  @Column(name = USERNAME, unique = true, nullable = false, length = 16,
+      columnDefinition = "用户名，唯一，非空，最长 16 个字符。")
   public String username;
-  @Column(nullable = false, length = 16, columnDefinition = "密码，Base64 加密，非空，最长 16 个字符。")
+  @Column(name = PASSWORD, nullable = false, length = 16,
+      columnDefinition = "密码，Base64 加密，非空，最长 16 个字符。")
   public String password;
-  @Column(nullable = false, columnDefinition = "权限等级：游客、用户、管理员、创始人，非空，枚举类型。")
-  public Level level;
-  @Column(name = "last_login_time", nullable = false, columnDefinition = "上次登录时间，非空。")
-  public Instant lastLoginTime;
-  @Column(name = "last_login_device", nullable = false, columnDefinition = "上次登录设备，非空。")
-  public String lastLoginDevice;
+  @Column(name = LEVEL, nullable = false,
+      columnDefinition = "权限等级：游客、用户、管理员、创始人，非空，枚举类型。")
+  public Level level = Level.GUEST;
+  @Column(name = LAST_LOGIN_TIME, nullable = false,
+      columnDefinition = "上次登录时间，非空。")
+  public Instant lastLoginTime = Instant.now();
+  @Column(name = LAST_LOGIN_DEVICE, nullable = false,
+      columnDefinition = "上次登录设备，非空。")
+  public String lastLoginDevice = DEVICE_UNKNOWN;
 
   @OneToOne(optional = false)
   public Token token;
@@ -51,8 +63,8 @@ public final class Account extends EBeanModel {
     Preconditions.checkNotNull(lastLoginTime);
     Preconditions.checkNotNull(lastLoginDevice);
     Preconditions.checkNotNull(token);
-    Preconditions.checkState(username.length() <= 16);
-    Preconditions.checkState(password.length() <= 16);
+    Preconditions.checkState(username.length() > 5 && username.length() <= 16);
+    Preconditions.checkState(password.length() > 5 && password.length() <= 16);
     Preconditions.checkState(token.checkSelf());
     return super.checkSelf();
   }

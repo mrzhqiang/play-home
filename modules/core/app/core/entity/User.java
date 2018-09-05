@@ -1,6 +1,7 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import core.EBeanModel;
 import io.ebean.annotation.Index;
 import java.util.Objects;
@@ -22,14 +23,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public final class User extends EBeanModel {
+  public static final String NICKNAME = "nickname";
+  public static final String AVATAR = "avatar";
+
   @Index(name = "index_user_nickname")
-  @Column(unique = true, nullable = false, length = 16, columnDefinition = "昵称，唯一，非空，最长 16 个字符。")
+  @Column(name = NICKNAME, unique = true, nullable = false, length = 16,
+      columnDefinition = "昵称，唯一，非空，最长 16 个字符。")
   public String nickname;
-  @Column(nullable = false, columnDefinition = "头像，非空，不限长度。")
+  @Column(name = AVATAR, nullable = false,
+      columnDefinition = "头像，非空，不限长度。")
   public String avatar;
 
   @OneToMany()
-  public Set<Treasure> treasures;
+  public Set<Treasure> treasures = Sets.newHashSet();
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(nickname);
@@ -58,7 +64,7 @@ public final class User extends EBeanModel {
     return super.equals(obj)
         && Objects.equals(nickname, other.nickname)
         && Objects.equals(avatar, other.avatar)
-        && Objects.deepEquals(treasures, other.treasures);
+        && Objects.equals(treasures, other.treasures);
   }
 
   @Override public String toString() {

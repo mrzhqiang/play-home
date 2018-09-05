@@ -20,10 +20,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "treasures")
 public final class Treasure extends EBeanModel {
-  @Index(name = "index_treasure_name")
-  @Column(unique = true, nullable = false, length = 12, columnDefinition = "宝藏名，唯一，非空，最长 12 个字符。")
+  public static final String NAME = "name";
+  public static final String LINK = "link";
+
+  @Index(name = "index_treasure_" + NAME)
+  @Column(name = NAME, unique = true, nullable = false, length = 12,
+      columnDefinition = "宝藏名，唯一，非空，最长 12 个字符。")
   public String name;
-  @Column(unique = true, nullable = false, columnDefinition = "宝藏链接，唯一，非空。")
+  @Column(name = LINK, unique = true, nullable = false,
+      columnDefinition = "宝藏链接，唯一，非空。")
   public String link;
 
   @Override public boolean checkSelf() {
@@ -54,8 +59,8 @@ public final class Treasure extends EBeanModel {
 
   @Override public String toString() {
     return toStringHelper()
-        .add("name", name)
-        .add("link", link)
+        .add("宝藏", name)
+        .add("地址", link)
         .toString();
   }
 }

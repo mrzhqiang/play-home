@@ -23,13 +23,17 @@ import javax.persistence.Table;
 public final class Token extends EBeanModel {
   public static final String ACCESS_TOKEN = "access_token";
   public static final String REFRESH_TOKEN = "refresh_token";
+  public static final String EXPIRES_IN = "expires_in";
 
   @Index(name = "index_token_" + ACCESS_TOKEN)
-  @Column(name = ACCESS_TOKEN, unique = true, nullable = false, columnDefinition = "访问令牌，唯一，非空。")
+  @Column(name = ACCESS_TOKEN, unique = true, nullable = false,
+      columnDefinition = "访问令牌，唯一，非空。")
   public String accessToken;
-  @Column(name = REFRESH_TOKEN, nullable = false, columnDefinition = "刷新令牌，非空。")
+  @Column(name = REFRESH_TOKEN, nullable = false,
+      columnDefinition = "刷新令牌，非空。")
   public String refreshToken;
-  @Column(name = "expires_in", nullable = false, columnDefinition = "过期时间，非空，单位秒。")
+  @Column(name = EXPIRES_IN, nullable = false,
+      columnDefinition = "过期时间，非空，单位秒。")
   public Long expiresIn;
 
   @OneToOne(optional = false)
