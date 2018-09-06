@@ -16,7 +16,7 @@ public final class LinkHelperTest {
 
   @Test
   public void autoComplete() {
-    assertEquals("http://www.baidu.com", LinkHelper.autoComplete("www.baidu.com"));
+    assertEquals("http://www.baidu.com", LinkHelper.autoComplete("www.baidu.com", false));
   }
 
   @Test

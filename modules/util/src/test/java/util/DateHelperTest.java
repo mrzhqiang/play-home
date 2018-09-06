@@ -3,6 +3,9 @@ package util;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,5 +74,18 @@ public final class DateHelperTest {
         ofPattern("yyyy-MM-dd HH:mm:ss").format(instant.atZone(ZoneId.systemDefault())));
     assertNotNull(normalDate);
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), normalDate);
+  }
+
+  @Test
+  public void multiThread() throws InterruptedException {
+    ExecutorService service = Executors.newFixedThreadPool(10);
+    Instant now = Instant.now();
+    for (int i = 0; i < 10; i++) {
+      service.execute(() -> {
+        String format = DateHelper.format(Date.from(now));
+        System.out.println(Thread.currentThread().getName() + ": " + DateHelper.parse(format));
+      });
+    }
+    Thread.sleep(1000);
   }
 }

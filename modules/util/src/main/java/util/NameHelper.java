@@ -1,16 +1,19 @@
 package util;
 
+import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * 名字辅助工具。
- * <p>
- * 用来获取名字的首字母，根据名字哈希值获取 ARGB 颜色常量。
+ * Name 助手。
  *
  * @author mrzhqiang
  */
+@ThreadSafe
 public final class NameHelper {
   private NameHelper() {
+    throw new AssertionError("No instance.");
   }
 
   /** 默认颜色常量。 */
@@ -33,13 +36,12 @@ public final class NameHelper {
    * @param name 一个名字或其他字符串类型的值
    * @return 传入字符串的首字母，如果传入一个空串，将使用默认字符："m"。
    */
+  @Nonnull
   public static String firstLetter(String name) {
-    if (name != null) {
-      for (Character c : name.toCharArray()) {
-        // 是否为字母或数字
-        if (Character.isLetterOrDigit(c)) {
-          return c.toString();
-        }
+    Preconditions.checkNotNull(name);
+    for (Character c : name.toCharArray()) {
+      if (Character.isLetterOrDigit(c)) {
+        return c.toString();
       }
     }
     // from mrzhqiang
@@ -55,11 +57,12 @@ public final class NameHelper {
    * @return ARGB 颜色常量数值。
    */
   public static int color(String name) {
-    if (name == null || name.isEmpty()) {
+    Preconditions.checkNotNull(name);
+    if (name.isEmpty()) {
       return DEFAULT_COLOR;
     }
-    // 计算名字的hashCode，位与0xFFFFFFFF——相当于取得最后的8位
-    // 然后根据数组长度取模，得到随机的下标位置，返回预定义的颜色值
+    // 获得 name 的 hashCode，位与 0xFFFFFFFF——即取后 8 位
+    // 再根据颜色数量取模，得到下标位置，返回对应的颜色值
     return COLORS[(int) ((name.hashCode() & 0xffffffffL) % COLORS.length)];
   }
 
@@ -70,6 +73,7 @@ public final class NameHelper {
    * @return true 匹配成功；false 空串或匹配失败。
    */
   public static boolean startLetter(String name) {
-    return name != null && !name.isEmpty() && Pattern.matches(REGEX_START_CHAR, name);
+    Preconditions.checkNotNull(name);
+    return !name.isEmpty() && Pattern.matches(REGEX_START_CHAR, name);
   }
 }

@@ -13,47 +13,33 @@ import javax.persistence.Table;
 
 /**
  * 帐号。
- * <p>
- * 包含：用户名、密码、等级、上次登录时间、上次登录设备。
- * <p>
- * 等级：区分游客、用户、管理员、创始人。
- * <p>
- * 对应权限：游客浏览，用户发帖，管理员封印，创始人增减。
- * <p>
- * 上次登录时间、上次登录设备：这两个字段模仿的是 Linux 服务器 SSH 登录成功后的欢迎词。
- * <p>
- * 通常来说，只有登录才能拿到唯一的令牌；重复登录将替换令牌，并通知上一个设备重新登录。
  *
  * @author qiang.zhang
  */
 @Entity
 @Table(name = "accounts")
 public final class Account extends EBeanModel {
-  public static final String USERNAME = "username";
-  public static final String PASSWORD = "password";
-  public static final String LEVEL = "level";
-  public static final String LAST_LOGIN_TIME = "last_login_time";
-  public static final String LAST_LOGIN_DEVICE = "last_login_device";
-  public static final String DEVICE_UNKNOWN = "Unknown";
+  public static final String COL_USERNAME = "username";
+  public static final String COL_PASSWORD = "password";
+  public static final String COL_LEVEL = "level";
+  public static final String COL_LAST_LOGIN_TIME = "last_login_time";
+  public static final String COL_LAST_LOGIN_DEVICE = "last_login_device";
+
+  public static final String DEFAULT_DEVICE_UNKNOWN = "Unknown";
 
   @Index(name = "index_account_username")
-  @Column(name = USERNAME, unique = true, nullable = false, length = 16,
-      columnDefinition = "用户名，唯一，非空，最长 16 个字符。")
+  @Column(name = COL_USERNAME, unique = true, nullable = false, length = 16)
   public String username;
-  @Column(name = PASSWORD, nullable = false, length = 16,
-      columnDefinition = "密码，Base64 加密，非空，最长 16 个字符。")
+  @Column(name = COL_PASSWORD, nullable = false, length = 16)
   public String password;
-  @Column(name = LEVEL, nullable = false,
-      columnDefinition = "权限等级：游客、用户、管理员、创始人，非空，枚举类型。")
+  @Column(name = COL_LEVEL, nullable = false)
   public Level level = Level.GUEST;
-  @Column(name = LAST_LOGIN_TIME, nullable = false,
-      columnDefinition = "上次登录时间，非空。")
+  @Column(name = COL_LAST_LOGIN_TIME, nullable = false)
   public Instant lastLoginTime = Instant.now();
-  @Column(name = LAST_LOGIN_DEVICE, nullable = false,
-      columnDefinition = "上次登录设备，非空。")
-  public String lastLoginDevice = DEVICE_UNKNOWN;
+  @Column(name = COL_LAST_LOGIN_DEVICE, nullable = false)
+  public String lastLoginDevice = DEFAULT_DEVICE_UNKNOWN;
 
-  @OneToOne(optional = false)
+  @OneToOne
   public Token token;
 
   @Override public boolean checkSelf() {
@@ -62,10 +48,11 @@ public final class Account extends EBeanModel {
     Preconditions.checkNotNull(level);
     Preconditions.checkNotNull(lastLoginTime);
     Preconditions.checkNotNull(lastLoginDevice);
-    Preconditions.checkNotNull(token);
     Preconditions.checkState(username.length() > 5 && username.length() <= 16);
     Preconditions.checkState(password.length() > 5 && password.length() <= 16);
-    Preconditions.checkState(token.checkSelf());
+    if (token != null) {
+      Preconditions.checkState(token.checkSelf());
+    }
     return super.checkSelf();
   }
 
