@@ -1,43 +1,51 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
-import core.EBeanModel;
 import io.ebean.annotation.Index;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
  * 令牌。
- * <p>
- * 包含：访问令牌、刷新令牌和过期时间。
- * <p>
- * 通过此令牌可以访问相应的用户资料。
  *
  * @author mrzhqiang
  */
 @Entity
 @Table(name = "tokens")
 public final class Token extends EBeanModel {
-  public static final String ACCESS_TOKEN = "access_token";
-  public static final String REFRESH_TOKEN = "refresh_token";
-  public static final String EXPIRES_IN = "expires_in";
+  private static final String BASE_INDEX = "index_token_";
 
-  @Index(name = "index_token_" + ACCESS_TOKEN)
-  @Column(name = ACCESS_TOKEN, unique = true, nullable = false,
-      columnDefinition = "访问令牌，唯一，非空。")
+  public static final String COL_ACCESS_TOKEN = "access_token";
+  public static final String COL_REFRESH_TOKEN = "refresh_token";
+  public static final String COL_EXPIRES_IN = "expires_in";
+
+  public static final String INDEX_ACCESS_TOKEN = BASE_INDEX + COL_ACCESS_TOKEN;
+
+  @Index(name = INDEX_ACCESS_TOKEN)
+  @Column(name = COL_ACCESS_TOKEN, unique = true, nullable = false)
   public String accessToken;
-  @Column(name = REFRESH_TOKEN, nullable = false,
-      columnDefinition = "刷新令牌，非空。")
+  @Column(name = COL_REFRESH_TOKEN, nullable = false)
   public String refreshToken;
-  @Column(name = EXPIRES_IN, nullable = false,
-      columnDefinition = "过期时间，非空，单位秒。")
+  @Column(name = COL_EXPIRES_IN, nullable = false)
   public Long expiresIn;
 
   @OneToOne(optional = false)
   public User user;
+
+  @OneToMany()
+  public Set<Treasure> treasures;
+
+  public boolean isValid() {
+    long until = created.until(Instant.now(), ChronoUnit.SECONDS);
+    return until < expiresIn;
+  }
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(accessToken);
@@ -45,11 +53,14 @@ public final class Token extends EBeanModel {
     Preconditions.checkNotNull(expiresIn);
     Preconditions.checkNotNull(user);
     Preconditions.checkState(user.checkSelf());
-    return super.checkSelf();
+    if (treasures != null) {
+      Preconditions.checkState(treasures.stream().allMatch(Treasure::checkSelf));
+    }
+    return true;
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, user);
+    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, user, treasures);
   }
 
   @Override public boolean equals(Object obj) {
@@ -66,7 +77,8 @@ public final class Token extends EBeanModel {
         && Objects.equals(accessToken, other.accessToken)
         && Objects.equals(refreshToken, other.refreshToken)
         && Objects.equals(expiresIn, other.expiresIn)
-        && Objects.equals(user, other.user);
+        && Objects.equals(user, other.user)
+        && Objects.equals(treasures, other.treasures);
   }
 
   @Override public String toString() {
@@ -75,6 +87,7 @@ public final class Token extends EBeanModel {
         .add("刷新令牌", refreshToken)
         .add("过期期限", expiresIn)
         .add("用户资料", user)
+        .add("宝藏集合", treasures)
         .toString();
   }
 }

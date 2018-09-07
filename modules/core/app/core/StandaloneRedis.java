@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
+import core.exception.DatabaseException;
 import java.util.Optional;
 import java.util.function.Function;
+import javax.annotation.WillClose;
 import play.Logger;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
@@ -64,18 +66,18 @@ import redis.clients.jedis.exceptions.JedisException;
     ping.ifPresent(s -> logger.info("Redis connect status: {}", "PONG".equals(s)));
   }
 
-  @Override public <T> Optional<T> get(Function<Jedis, T> function) {
-    Preconditions.checkNotNull(function, "function");
+  @Override public <T> Optional<T> get(@WillClose Function<Jedis, T> function) {
+    Preconditions.checkNotNull(function);
     try (Jedis resource = jedisPool.getResource()) {
       return Optional.ofNullable(function.apply(resource));
     } catch (JedisConnectionException e) {
       String message = "Connection to redis failed.";
       logger.error(message, e);
-      throw new RuntimeException(message, e);
+      throw new DatabaseException(message, e);
     } catch (JedisException e) {
-      String message = "Get instance of Jedis error.";
+      String message = "Redis client not available.";
       logger.error(message, e);
+      throw new DatabaseException(message, e);
     }
-    return Optional.empty();
   }
 }

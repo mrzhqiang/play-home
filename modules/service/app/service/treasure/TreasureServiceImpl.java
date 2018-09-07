@@ -58,8 +58,8 @@ import static java.util.concurrent.CompletableFuture.*;
 
   @Override public CompletionStage<Stream<Treasure>> get(String name) {
     return supplyAsync(
-        () -> repository.search(name)
-            .orElseThrow(() -> notFound("name: " + name)).stream()
+        () -> repository.search(name, 0, 10)
+            .orElseThrow(() -> notFound("name: " + name)).resource().stream()
         , dbExecution);
   }
 }

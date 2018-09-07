@@ -1,23 +1,24 @@
 package core.repository;
 
 import com.google.inject.ImplementedBy;
-import core.Repository;
 import core.entity.Account;
 import core.entity.Token;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
+ * 账户仓库。
+ *
  * @author mrzhqiang
  */
 @ImplementedBy(AccountEBeanRepository.class)
 public interface AccountRepository extends Repository<Long, Account> {
-  default Optional<Token> login(String username, String password) {
-    return Optional.ofNullable(username)
-        .filter(s -> !s.isEmpty())
-        .flatMap(this::searchBy)
-        .filter(account -> account.verify(password))
-        .map(account -> account.token);
-  }
-
-  Optional<Account> searchBy(String username);
+  /**
+   * 登录操作。
+   *
+   * @param username 用户名。
+   * @param password 密码，必须是已经编码过的密码。
+   * @return 令牌。
+   */
+  @Nonnull Optional<Token> login(String username, String password);
 }

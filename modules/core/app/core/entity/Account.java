@@ -1,7 +1,6 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
-import core.EBeanModel;
 import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
 import java.time.Instant;
@@ -19,41 +18,45 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "accounts")
 public final class Account extends EBeanModel {
+  private static final String BASE_INDEX = "index_account_";
+
   public static final String COL_USERNAME = "username";
   public static final String COL_PASSWORD = "password";
   public static final String COL_LEVEL = "level";
   public static final String COL_LAST_LOGIN_TIME = "last_login_time";
   public static final String COL_LAST_LOGIN_DEVICE = "last_login_device";
 
+  public static final String INDEX_USERNAME = BASE_INDEX + COL_USERNAME;
+
   public static final String DEFAULT_DEVICE_UNKNOWN = "Unknown";
 
-  @Index(name = "index_account_username")
+  @Index(name = INDEX_USERNAME)
   @Column(name = COL_USERNAME, unique = true, nullable = false, length = 16)
   public String username;
   @Column(name = COL_PASSWORD, nullable = false, length = 16)
   public String password;
   @Column(name = COL_LEVEL, nullable = false)
-  public Level level = Level.GUEST;
+  public Level level;
   @Column(name = COL_LAST_LOGIN_TIME, nullable = false)
-  public Instant lastLoginTime = Instant.now();
+  public Instant lastLoginTime;
   @Column(name = COL_LAST_LOGIN_DEVICE, nullable = false)
-  public String lastLoginDevice = DEFAULT_DEVICE_UNKNOWN;
+  public String lastLoginDevice;
 
   @OneToOne
   public Token token;
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(username);
+    Preconditions.checkState(username.length() > 5 && username.length() <= 16);
     Preconditions.checkNotNull(password);
+    Preconditions.checkState(password.length() > 5 && password.length() <= 16);
     Preconditions.checkNotNull(level);
     Preconditions.checkNotNull(lastLoginTime);
     Preconditions.checkNotNull(lastLoginDevice);
-    Preconditions.checkState(username.length() > 5 && username.length() <= 16);
-    Preconditions.checkState(password.length() > 5 && password.length() <= 16);
     if (token != null) {
       Preconditions.checkState(token.checkSelf());
     }
-    return super.checkSelf();
+    return true;
   }
 
   @Override public int hashCode() {

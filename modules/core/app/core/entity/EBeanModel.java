@@ -1,4 +1,4 @@
-package core;
+package core.entity;
 
 import com.google.common.base.MoreObjects;
 import io.ebean.Model;
@@ -17,7 +17,7 @@ import javax.persistence.Version;
  * @author mrzhqiang
  */
 @MappedSuperclass
-public abstract class EBeanModel extends Model {
+public abstract class EBeanModel extends Model implements Entity {
   @Id
   public Long id;
   @Version
@@ -29,16 +29,7 @@ public abstract class EBeanModel extends Model {
   @Column(columnDefinition = "介绍，说明。")
   public String description;
 
-  /**
-   * 自检方法。
-   * <p>
-   * 用来检查必备字段是否有效，一般用于创建数据时的数据自检。
-   */
-  public boolean checkSelf() {
-    return true;
-  }
-
-  protected MoreObjects.ToStringHelper toStringHelper() {
+  MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)
         .add("id", id)
         .add("version", version)

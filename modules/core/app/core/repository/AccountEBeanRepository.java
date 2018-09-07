@@ -1,25 +1,24 @@
 package core.repository;
 
 import com.google.inject.Singleton;
-import core.EBeanRepository;
 import core.entity.Account;
+import core.entity.Token;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
+ * 基于 EBean 的账户仓库。
+ *
  * @author mrzhqiang
  */
-@Singleton
-public final class AccountEBeanRepository extends EBeanRepository<Long, Account>
+@Singleton final class AccountEBeanRepository extends EBeanRepository<Long, Account>
     implements AccountRepository {
-  protected AccountEBeanRepository() {
+  AccountEBeanRepository() {
     super(Account.class);
   }
 
-  @Override public Optional<Account> searchBy(String username) {
-    return Optional.empty();
-  }
-
-  @Override public Optional<Account> merge(Account entity, Account newEntity) {
+  @Nonnull @Override public Optional<Token> login(String username, String password) {
+    // todo 登录操作。
     return Optional.empty();
   }
 }
