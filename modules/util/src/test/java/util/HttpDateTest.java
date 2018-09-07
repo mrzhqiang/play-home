@@ -3,6 +3,7 @@ package util;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -45,9 +46,10 @@ public final class HttpDateTest {
 
   @Test
   public void format() {
-    Instant instant = Instant.now();
+    Instant instant =
+        Objects.requireNonNull(HttpDate.parse("Tue, 03 Jun 2008 11:05:30 GMT")).toInstant();
     // RFC_1123_DATE_TIME such as 'Tue, 3 Jun 2008 11:05:30 GMT'.
-    String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
-    assertEquals(instantFormat, DateHelper.format(Date.from(instant)));
+    //String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
+    assertEquals("Tue, 03 Jun 2008 11:05:30 GMT", DateHelper.format(Date.from(instant)));
   }
 }

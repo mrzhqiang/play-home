@@ -8,13 +8,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Account 助手。
+ * Random 助手。
  *
  * @author qiang.zhang
  */
 @ThreadSafe
-public final class AccountHelper {
-  private AccountHelper() {
+public final class RandomHelper {
+  private RandomHelper() {
     throw new AssertionError("No instance.");
   }
 
@@ -34,10 +34,10 @@ public final class AccountHelper {
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
   @Nonnull
-  public static String usernameOf(int length) {
+  public static String stringOf(int length) {
     Preconditions.checkArgument(length > 0,
         "length %s must be > 0.", length);
-    return usernameOf(length, length);
+    return stringOf(length, length);
   }
 
   /**
@@ -48,7 +48,7 @@ public final class AccountHelper {
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
   @Nonnull
-  public static String usernameOf(int minLength, int maxLength) {
+  public static String stringOf(int minLength, int maxLength) {
     Preconditions.checkArgument(minLength > 0,
         "Min length %s must be > 0.", minLength);
     Preconditions.checkArgument(maxLength > 0,
@@ -99,6 +99,80 @@ public final class AccountHelper {
     builder.append(NUMBER.charAt(RANDOM.get().nextInt(NUMBER.length() - 1)));
     for (int i = 1; i < length; i++) {
       builder.append(NUMBER.charAt(RANDOM.get().nextInt(NUMBER.length())));
+    }
+    return builder.toString();
+  }
+
+  /**
+   * 通过指定长度生成随机的小写字母序列。
+   *
+   * @param length 指定长度，不能小于或等于 0。
+   * @return 随机字符串，仅包含：小写字母。
+   */
+  @Nonnull
+  public static String lowerCaseOf(int length) {
+    Preconditions.checkArgument(length > 0,
+        "length %s must be > 0.", length);
+    return lowerCaseOf(length, length);
+  }
+
+  /**
+   * 通过指定最小长度和最大长度，生成随机中间值长度的随机小写字母序列。
+   *
+   * @param minLength 最小长度，不能小于或等于 0。
+   * @param maxLength 最大长度，不能小于或等于 0，并且不能小于最小长度。
+   * @return 随机字符串，仅包含：小写字母。
+   */
+  @Nonnull
+  public static String lowerCaseOf(int minLength, int maxLength) {
+    Preconditions.checkArgument(minLength > 0,
+        "Min length %s must be > 0.", minLength);
+    Preconditions.checkArgument(maxLength > 0,
+        "Max length %s must be > 0.", maxLength);
+    Preconditions.checkArgument(maxLength >= minLength,
+        "Max length %s must be >= min length %s.", maxLength, minLength);
+
+    int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
+    StringBuilder builder = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      builder.append(LOWER_CASE.charAt(RANDOM.get().nextInt(LOWER_CASE.length())));
+    }
+    return builder.toString();
+  }
+
+  /**
+   * 通过指定长度生成随机的大写字母序列。
+   *
+   * @param length 指定长度，不能小于或等于 0。
+   * @return 随机字符串，仅包含：大写字母。
+   */
+  @Nonnull
+  public static String upperCaseOf(int length) {
+    Preconditions.checkArgument(length > 0,
+        "length %s must be > 0.", length);
+    return upperCaseOf(length, length);
+  }
+
+  /**
+   * 通过指定最小长度和最大长度，生成随机中间值长度的随机大写字母序列。
+   *
+   * @param minLength 最小长度，不能小于或等于 0。
+   * @param maxLength 最大长度，不能小于或等于 0，并且不能小于最小长度。
+   * @return 随机字符串，仅包含：大写字母。
+   */
+  @Nonnull
+  public static String upperCaseOf(int minLength, int maxLength) {
+    Preconditions.checkArgument(minLength > 0,
+        "Min length %s must be > 0.", minLength);
+    Preconditions.checkArgument(maxLength > 0,
+        "Max length %s must be > 0.", maxLength);
+    Preconditions.checkArgument(maxLength >= minLength,
+        "Max length %s must be >= min length %s.", maxLength, minLength);
+
+    int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
+    StringBuilder builder = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      builder.append(UPPER_CASE.charAt(RANDOM.get().nextInt(UPPER_CASE.length())));
     }
     return builder.toString();
   }

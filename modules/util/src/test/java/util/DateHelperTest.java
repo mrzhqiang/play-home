@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +20,7 @@ public final class DateHelperTest {
 
   @Before
   public void setUp() {
-    instant = Instant.now();
+    instant = Instant.parse("2008-06-03T11:05:30Z");
   }
 
   @Test
@@ -33,8 +32,8 @@ public final class DateHelperTest {
     } catch (NullPointerException ignore) {
     }
     // RFC_1123_DATE_TIME such as 'Tue, 3 Jun 2008 11:05:30 GMT'.
-    String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
-    assertEquals(instantFormat, DateHelper.format(Date.from(instant)));
+    //String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
+    assertEquals("Tue, 03 Jun 2008 11:05:30 GMT", DateHelper.format(Date.from(instant)));
   }
 
   @Test

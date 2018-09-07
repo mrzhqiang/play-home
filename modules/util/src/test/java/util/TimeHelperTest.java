@@ -27,7 +27,7 @@ public final class TimeHelperTest {
     minutesInstant = nowInstant.minus(Duration.ofMinutes(1));
     hoursInstant = nowInstant.minus(Duration.ofHours(1));
     dayInstant = nowInstant.minus(Duration.ofDays(1));
-    monthInstant = nowInstant.minus(Duration.ofDays(61));
+    monthInstant = nowInstant.minus(Duration.ofDays(62));
     yearInstant = nowInstant.minus(Duration.ofDays(365));
   }
 
