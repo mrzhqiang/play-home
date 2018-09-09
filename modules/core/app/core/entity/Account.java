@@ -6,8 +6,10 @@ import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,11 +29,9 @@ public final class Account extends EBeanModel {
   public static final String COL_LAST_TIME = "last_time";
   public static final String COL_LAST_DEVICE = "last_device";
 
-  public static final String INDEX_USERNAME = BASE_INDEX + COL_USERNAME;
-
   public static final String DEFAULT_DEVICE_UNKNOWN = "Unknown";
 
-  @Index(name = INDEX_USERNAME)
+  @Index(name = BASE_INDEX + COL_USERNAME)
   @Column(name = COL_USERNAME, unique = true, nullable = false, length = 16)
   public String username;
   @Column(name = COL_PASSWORD, nullable = false, length = 16)
@@ -44,7 +44,9 @@ public final class Account extends EBeanModel {
   public String lastDevice;
 
   @OneToOne
-  public Token token;
+  public User user;
+  @OneToMany
+  public Set<Treasure> treasures;
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(username);
@@ -54,15 +56,18 @@ public final class Account extends EBeanModel {
     Preconditions.checkNotNull(level);
     Preconditions.checkNotNull(lastTime);
     Preconditions.checkNotNull(lastDevice);
-    if (token != null) {
-      Preconditions.checkState(token.checkSelf());
+    if (user != null) {
+      Preconditions.checkState(user.checkSelf());
+    }
+    if (treasures != null) {
+      Preconditions.checkState(treasures.stream().allMatch(Treasure::checkSelf));
     }
     return true;
   }
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(),
-        username, password, level, lastTime, lastDevice, token);
+        username, password, level, lastTime, lastDevice, user, treasures);
   }
 
   @Override public boolean equals(Object obj) {
@@ -81,7 +86,8 @@ public final class Account extends EBeanModel {
         && Objects.equals(level, other.level)
         && Objects.equals(lastTime, other.lastTime)
         && Objects.equals(lastDevice, other.lastDevice)
-        && Objects.equals(token, other.token);
+        && Objects.equals(user, other.user)
+        && Objects.equals(treasures, other.treasures);
   }
 
   @Override public String toString() {
@@ -91,7 +97,8 @@ public final class Account extends EBeanModel {
         .add("权限等级", level)
         .add("上次登录时间", lastTime)
         .add("上次登录设备", lastDevice)
-        .add("令牌", token)
+        .add("用户资料", user)
+        .add("宝藏列表", treasures)
         .toString();
   }
 

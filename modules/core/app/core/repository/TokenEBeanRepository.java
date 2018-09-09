@@ -1,5 +1,6 @@
 package core.repository;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 import core.entity.Token;
 import java.util.Optional;
@@ -17,10 +18,10 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Optional<Token> find(String accessToken) {
-    return Optional.ofNullable(accessToken)
-        .flatMap(s -> dispose(() ->
-            finder.query().where()
-                .eq(Token.COL_ACCESS_TOKEN, s)
-                .findOneOrEmpty()));
+    Preconditions.checkNotNull(accessToken, "Null accessToken.");
+
+    return provide(() -> finder.query().where()
+        .eq(Token.COL_ACCESS_TOKEN, accessToken)
+        .findOneOrEmpty());
   }
 }

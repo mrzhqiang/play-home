@@ -1,6 +1,5 @@
-package core.repository;
+package core;
 
-import core.entity.Entity;
 import java.util.List;
 import javax.annotation.Nonnull;
 

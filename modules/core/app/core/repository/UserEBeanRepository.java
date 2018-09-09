@@ -2,7 +2,9 @@ package core.repository;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
+import core.Paging;
 import core.entity.User;
+import core.util.Users;
 import io.ebean.PagedList;
 import javax.annotation.Nonnull;
 
@@ -18,17 +20,18 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Paging<User> search(String nickname, int from, int size) {
-    Preconditions.checkNotNull(nickname);
-    Preconditions.checkArgument(!nickname.isEmpty() && nickname.length() <= 16);
+    Preconditions.checkNotNull(nickname, "Null nickname.");
+    Preconditions.checkArgument(Users.checkNickname(nickname), "Invalid nickname.");
 
     int firstRow = from < 0 ? 0 : from;
     int maxRows = size < 10 ? 10 : size;
-    PagedList<User> pagedList = dispose(() ->
-        finder.query().where()
-            .icontains(User.COL_NICKNAME, nickname)
-            .setFirstRow(firstRow)
-            .setMaxRows(maxRows)
-            .findPagedList());
-    return new EBeanPaging<>(pagedList);
+    return provide(() -> {
+      PagedList<User> pagedList = finder.query().where()
+          .icontains(User.COL_NICKNAME, nickname)
+          .setFirstRow(firstRow)
+          .setMaxRows(maxRows)
+          .findPagedList();
+      return new EBeanPaging<>(pagedList);
+    });
   }
 }

@@ -1,12 +1,12 @@
 package core.entity;
 
 import com.google.common.base.MoreObjects;
+import core.Entity;
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import java.time.Instant;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
@@ -26,20 +26,17 @@ public abstract class EBeanModel extends Model implements Entity {
   public Instant created;
   @WhenModified
   public Instant modified;
-  @Column(columnDefinition = "介绍，说明。")
-  public String description;
 
   MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this)
-        .add("id", id)
-        .add("version", version)
-        .add("created", created)
-        .add("modified", modified)
-        .add("description", description);
+        .add("编号", id)
+        .add("版本", version)
+        .add("创建时间", created)
+        .add("修改时间", modified);
   }
 
   @Override public int hashCode() {
-    return Objects.hash(id, version, created, modified, description);
+    return Objects.hash(id, version, created, modified);
   }
 
   @Override public boolean equals(Object obj) {
@@ -55,7 +52,6 @@ public abstract class EBeanModel extends Model implements Entity {
     return Objects.equals(id, other.id)
         && Objects.equals(version, other.version)
         && Objects.equals(created, other.created)
-        && Objects.equals(modified, other.modified)
-        && Objects.equals(description, other.description);
+        && Objects.equals(modified, other.modified);
   }
 }

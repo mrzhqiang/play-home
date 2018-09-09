@@ -1,6 +1,7 @@
 package core.repository;
 
 import com.google.inject.ImplementedBy;
+import core.Repository;
 import core.entity.Client;
 import java.util.Base64;
 import java.util.Optional;
@@ -20,7 +21,6 @@ public interface ClientRepository extends Repository<Long, Client> {
    *
    * @param name 客户端名字。
    * @param apikey 秘钥。
-   * @return 如果存在，说明是对的；不存在，那么验证失败。
    */
   @Nonnull Optional<Client> find(String name, String apikey);
 

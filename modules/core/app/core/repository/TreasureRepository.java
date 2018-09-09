@@ -1,6 +1,8 @@
 package core.repository;
 
 import com.google.inject.ImplementedBy;
+import core.Paging;
+import core.Repository;
 import core.entity.Treasure;
 import javax.annotation.Nonnull;
 

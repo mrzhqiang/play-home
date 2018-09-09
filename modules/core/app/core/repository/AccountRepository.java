@@ -1,8 +1,8 @@
 package core.repository;
 
 import com.google.inject.ImplementedBy;
+import core.Repository;
 import core.entity.Account;
-import core.entity.Token;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -14,11 +14,10 @@ import javax.annotation.Nonnull;
 @ImplementedBy(AccountEBeanRepository.class)
 public interface AccountRepository extends Repository<Long, Account> {
   /**
-   * 登录操作。
+   * 查找账号密码。
    *
    * @param username 用户名。
-   * @param password 密码，必须是已经编码过的密码。
-   * @return 令牌。
+   * @param password 密码，内部自动加密处理。
    */
-  @Nonnull Optional<Token> login(String username, String password);
+  @Nonnull Optional<Account> find(String username, String password);
 }

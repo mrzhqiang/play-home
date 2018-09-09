@@ -1,6 +1,7 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import core.util.Clients;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,9 +22,7 @@ public final class Client extends EBeanModel {
   public static final String COL_NAME = "name";
   public static final String COL_API_KEY = "apikey";
 
-  public static final String INDEX_NAME = BASE_INDEX + COL_NAME;
-
-  @Index(name = INDEX_NAME)
+  @Index(name = BASE_INDEX + COL_NAME)
   @Column(name = COL_NAME, unique = true, nullable = false, length = 24)
   public String name;
   @Column(name = COL_API_KEY, nullable = false)
@@ -31,7 +30,7 @@ public final class Client extends EBeanModel {
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(name);
-    Preconditions.checkState(!name.isEmpty() && name.length() <= 24);
+    Preconditions.checkState(Clients.checkName(name));
     Preconditions.checkNotNull(apikey);
     return true;
   }

@@ -1,6 +1,7 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import core.util.Treasures;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -21,9 +22,7 @@ public final class Treasure extends EBeanModel {
   public static final String COL_NAME = "name";
   public static final String COL_LINK = "link";
 
-  public static final String INDEX_NAME = BASE_INDEX + COL_NAME;
-
-  @Index(name = INDEX_NAME)
+  @Index(name = BASE_INDEX + COL_NAME)
   @Column(name = COL_NAME, unique = true, nullable = false, length = 12)
   public String name;
   @Column(name = COL_LINK, unique = true, nullable = false)
@@ -31,7 +30,7 @@ public final class Treasure extends EBeanModel {
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(name);
-    Preconditions.checkState(!name.isEmpty() && name.length() <= 12);
+    Preconditions.checkState(Treasures.checkName(name));
     Preconditions.checkNotNull(link);
     Preconditions.checkState(LinkHelper.simpleCheck(link));
     return true;

@@ -1,12 +1,12 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import core.util.Users;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import util.LinkHelper;
 
 /**
  * 用户。
@@ -21,19 +21,17 @@ public final class User extends EBeanModel {
   public static final String COL_NICKNAME = "nickname";
   public static final String COL_AVATAR = "avatar";
 
-  public static final String INDEX_NICKNAME = BASE_INDEX + COL_NICKNAME;
-
-  @Index(name = INDEX_NICKNAME)
-  @Column(name = COL_NICKNAME, unique = true, nullable = false, length = 24)
+  @Index(name = BASE_INDEX + COL_NICKNAME)
+  @Column(name = COL_NICKNAME, nullable = false, length = 24)
   public String nickname;
   @Column(name = COL_AVATAR)
   public String avatar;
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(nickname);
-    Preconditions.checkState(!nickname.isEmpty() && nickname.length() <= 24);
+    Preconditions.checkState(Users.checkNickname(nickname));
     if (avatar != null) {
-      Preconditions.checkState(LinkHelper.simpleCheck(avatar));
+      Preconditions.checkState(Users.checkAvatar(avatar));
     }
     return true;
   }
