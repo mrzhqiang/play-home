@@ -24,16 +24,17 @@ public final class User extends EBeanModel {
   public static final String INDEX_NICKNAME = BASE_INDEX + COL_NICKNAME;
 
   @Index(name = INDEX_NICKNAME)
-  @Column(name = COL_NICKNAME, unique = true, nullable = false, length = 16)
+  @Column(name = COL_NICKNAME, unique = true, nullable = false, length = 24)
   public String nickname;
-  @Column(name = COL_AVATAR, nullable = false)
+  @Column(name = COL_AVATAR)
   public String avatar;
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(nickname);
-    Preconditions.checkState(!nickname.isEmpty() && nickname.length() <= 16);
-    Preconditions.checkNotNull(avatar);
-    Preconditions.checkState(LinkHelper.simpleCheck(avatar));
+    Preconditions.checkState(!nickname.isEmpty() && nickname.length() <= 24);
+    if (avatar != null) {
+      Preconditions.checkState(LinkHelper.simpleCheck(avatar));
+    }
     return true;
   }
 

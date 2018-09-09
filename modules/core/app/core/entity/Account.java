@@ -1,6 +1,7 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import core.util.Accounts;
 import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
 import java.time.Instant;
@@ -23,8 +24,8 @@ public final class Account extends EBeanModel {
   public static final String COL_USERNAME = "username";
   public static final String COL_PASSWORD = "password";
   public static final String COL_LEVEL = "level";
-  public static final String COL_LAST_LOGIN_TIME = "last_login_time";
-  public static final String COL_LAST_LOGIN_DEVICE = "last_login_device";
+  public static final String COL_LAST_TIME = "last_time";
+  public static final String COL_LAST_DEVICE = "last_device";
 
   public static final String INDEX_USERNAME = BASE_INDEX + COL_USERNAME;
 
@@ -37,22 +38,22 @@ public final class Account extends EBeanModel {
   public String password;
   @Column(name = COL_LEVEL, nullable = false)
   public Level level;
-  @Column(name = COL_LAST_LOGIN_TIME, nullable = false)
-  public Instant lastLoginTime;
-  @Column(name = COL_LAST_LOGIN_DEVICE, nullable = false)
-  public String lastLoginDevice;
+  @Column(name = COL_LAST_TIME, nullable = false)
+  public Instant lastTime;
+  @Column(name = COL_LAST_DEVICE, nullable = false)
+  public String lastDevice;
 
   @OneToOne
   public Token token;
 
   @Override public boolean checkSelf() {
     Preconditions.checkNotNull(username);
-    Preconditions.checkState(username.length() > 5 && username.length() <= 16);
+    Preconditions.checkState(Accounts.checkUsername(username));
     Preconditions.checkNotNull(password);
-    Preconditions.checkState(password.length() > 5 && password.length() <= 16);
+    Preconditions.checkState(Accounts.checkPassword(password));
     Preconditions.checkNotNull(level);
-    Preconditions.checkNotNull(lastLoginTime);
-    Preconditions.checkNotNull(lastLoginDevice);
+    Preconditions.checkNotNull(lastTime);
+    Preconditions.checkNotNull(lastDevice);
     if (token != null) {
       Preconditions.checkState(token.checkSelf());
     }
@@ -61,7 +62,7 @@ public final class Account extends EBeanModel {
 
   @Override public int hashCode() {
     return Objects.hash(super.hashCode(),
-        username, password, level, lastLoginTime, lastLoginDevice, token);
+        username, password, level, lastTime, lastDevice, token);
   }
 
   @Override public boolean equals(Object obj) {
@@ -78,8 +79,8 @@ public final class Account extends EBeanModel {
         && Objects.equals(username, other.username)
         && Objects.equals(password, other.password)
         && Objects.equals(level, other.level)
-        && Objects.equals(lastLoginTime, other.lastLoginTime)
-        && Objects.equals(lastLoginDevice, other.lastLoginDevice)
+        && Objects.equals(lastTime, other.lastTime)
+        && Objects.equals(lastDevice, other.lastDevice)
         && Objects.equals(token, other.token);
   }
 
@@ -88,8 +89,8 @@ public final class Account extends EBeanModel {
         .add("用户名", username)
         .add("密码", password)
         .add("权限等级", level)
-        .add("上次登录时间", lastLoginTime)
-        .add("上次登录设备", lastLoginDevice)
+        .add("上次登录时间", lastTime)
+        .add("上次登录设备", lastDevice)
         .add("令牌", token)
         .toString();
   }

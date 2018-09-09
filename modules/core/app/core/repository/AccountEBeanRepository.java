@@ -1,8 +1,11 @@
 package core.repository;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 import core.entity.Account;
 import core.entity.Token;
+import java.util.Base64;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -18,7 +21,19 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Optional<Token> login(String username, String password) {
-    // todo 登录操作。
-    return Optional.empty();
+    Preconditions.checkNotNull(username, "Null username.");
+    Preconditions.checkNotNull(password, "Null password.");
+    Preconditions.checkArgument(        username.length() > 5 && username.length() < 16, "Invalid username.");
+    Preconditions.checkArgument(        password.length() > 5 && password.length() < 16, "Invalid password.");
+    return Optional.ofNullable(username)
+        .filter(s -> Strings.isNullOrEmpty(password))
+        .flatMap(s -> dispose(() -> finder.query().where()
+            .eq(Account.COL_USERNAME, s)
+            .findOneOrEmpty()))
+        .filter(account -> {
+          String pswd = new String(Base64.getDecoder().decode(password));
+          return account.password.equals(pswd);
+        })
+        .map(account -> account.token);
   }
 }
