@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
     Preconditions.checkNotNull(apikey, "Null apikey.");
 
     return provide(() -> finder.query().where()
-        .eq("name", name)
-        .eq("apikey", apikey)
+        .eq(Client.COL_NAME, name)
+        .eq(Client.COL_API_KEY, apikey)
         .findOneOrEmpty());
   }
 }

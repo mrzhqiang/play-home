@@ -21,6 +21,9 @@ public final class Clients {
     return !value.isEmpty() && value.length() <= 24;
   }
 
+  /**
+   * 客户端。
+   */
   @Nonnull
   public static Client of(@Nonnull String name) {
     Client client = new Client();

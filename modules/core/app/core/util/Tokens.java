@@ -1,5 +1,6 @@
 package core.util;
 
+import core.entity.Account;
 import core.entity.Token;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -21,16 +22,23 @@ public final class Tokens {
   private static final int OAUTH_ACCESS_TOKEN_LENGTH = 32;
   private static final int OAUTH_REFRESH_TOKEN_LENGTH = 34;
 
-  public static boolean checkExpiresIn(Long value) {
+  /**
+   * 检查过期时间。
+   */
+  public static boolean checkExpiresIn(@Nonnull Long value) {
     return value == TOKEN_EXPIRES_IN;
   }
 
+  /**
+   * 令牌。
+   */
   @Nonnull
-  public static Token of() {
+  public static Token of(@Nonnull Account account) {
     Token token = new Token();
     token.accessToken = RandomHelper.stringOf(OAUTH_ACCESS_TOKEN_LENGTH);
     token.refreshToken = RandomHelper.stringOf(OAUTH_REFRESH_TOKEN_LENGTH);
     token.expiresIn = TOKEN_EXPIRES_IN;
+    token.account = account;
     return token;
   }
 }

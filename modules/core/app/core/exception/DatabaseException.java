@@ -1,7 +1,9 @@
 package core.exception;
 
 /**
- * 底层数据库执行异常。
+ * 数据库异常。
+ * <p>
+ * 通常是底层执行时，抛出的各种异常，这里将它们融为一体。
  *
  * @author qiang.zhang
  */

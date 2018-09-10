@@ -24,17 +24,23 @@ public interface Repository<I, E extends Entity> {
   /**
    * 保存实体数据。
    * <p>
-   * 如果不存在，那么创建；如果已存在，那么更新。
+   * 不存在，插入；存在，更新。
    */
   void save(E entity);
 
-  /** 删除实体数据。 */
+  /**
+   * 删除实体数据。
+   */
   void delete(E entity);
 
-  /** 通过主键删除实体数据。 */
+  /**
+   * 通过主键删除实体数据。
+   */
   void delete(I primaryKey);
 
-  /** 获取实体数据。 */
+  /**
+   * 获取实体数据。
+   */
   @Nonnull Optional<E> get(I primaryKey);
 
   /**

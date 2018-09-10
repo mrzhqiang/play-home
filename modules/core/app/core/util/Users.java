@@ -40,6 +40,9 @@ public final class Users {
     return of(nickname, avatar);
   }
 
+  /**
+   * 正常用户。
+   */
   @Nonnull
   public static User of(@Nonnull String nickname, @Nonnull String avatar) {
     User user = new User();

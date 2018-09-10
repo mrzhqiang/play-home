@@ -20,12 +20,11 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Paging<Treasure> search(String name, int from, int size) {
-    Preconditions.checkNotNull(name, "Null name.");
-    Preconditions.checkArgument(Treasures.checkName(name), "Invalid name.");
-
     int firstRow = from < 0 ? 0 : from;
     int maxRows = size < 10 ? 10 : size;
     return provide(() -> {
+      Preconditions.checkNotNull(name, "Null name.");
+      Preconditions.checkArgument(Treasures.checkName(name), "Invalid name.");
       PagedList<Treasure> pagedList = finder.query().where()
           .icontains(Treasure.COL_NAME, name)
           .setFirstRow(firstRow)

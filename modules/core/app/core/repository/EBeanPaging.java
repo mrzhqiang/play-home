@@ -34,7 +34,7 @@ final class EBeanPaging<E extends EBeanModel> implements Paging<E> {
     return pagedList.getPageSize();
   }
 
-  @Nonnull @Override public List<E> resource() {
+  @Nonnull @Override public List<E> resources() {
     return pagedList.getList();
   }
 
@@ -43,7 +43,7 @@ final class EBeanPaging<E extends EBeanModel> implements Paging<E> {
         .add("资源总计", total())
         .add("页面索引", index())
         .add("页面大小", size())
-        .add("页面资源", resource())
+        .add("页面资源", resources())
         .toString();
   }
 }

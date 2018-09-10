@@ -1,6 +1,5 @@
 package core.util;
 
-import com.google.common.collect.Sets;
 import core.entity.Account;
 import java.time.Instant;
 import javax.annotation.Nonnull;
@@ -34,14 +33,13 @@ public final class Accounts {
    * 游客账号。
    */
   @Nonnull
-  public static Account guestOf() {
+  public static Account ofGuest() {
     Account account = new Account();
     account.username = RandomHelper.stringOf(16);
     account.password = RandomHelper.numberOf(6);
     account.level = Account.Level.GUEST;
     account.lastTime = Instant.now();
     account.lastDevice = Account.DEFAULT_DEVICE_UNKNOWN;
-    account.treasures = Sets.newHashSet();
     return account;
   }
 
@@ -56,7 +54,6 @@ public final class Accounts {
     account.level = Account.Level.USER;
     account.lastTime = Instant.now();
     account.lastDevice = Account.DEFAULT_DEVICE_UNKNOWN;
-    account.treasures = Sets.newHashSet();
     return account;
   }
 }

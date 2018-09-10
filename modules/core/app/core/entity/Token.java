@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -32,6 +33,9 @@ public final class Token extends EBeanModel {
   @Column(name = COL_EXPIRES_IN, nullable = false)
   public Long expiresIn;
 
+  @ManyToOne(optional = false)
+  public Account account;
+
   public boolean isValid() {
     long until = created.until(Instant.now(), ChronoUnit.SECONDS);
     return until < expiresIn;
@@ -42,11 +46,13 @@ public final class Token extends EBeanModel {
     Preconditions.checkNotNull(refreshToken);
     Preconditions.checkNotNull(expiresIn);
     Preconditions.checkState(Tokens.checkExpiresIn(expiresIn));
+    Preconditions.checkNotNull(account);
+    Preconditions.checkState(account.checkSelf());
     return true;
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn);
+    return Objects.hash(super.hashCode(), accessToken, refreshToken, expiresIn, account);
   }
 
   @Override public boolean equals(Object obj) {
@@ -62,7 +68,8 @@ public final class Token extends EBeanModel {
     return super.equals(obj)
         && Objects.equals(accessToken, other.accessToken)
         && Objects.equals(refreshToken, other.refreshToken)
-        && Objects.equals(expiresIn, other.expiresIn);
+        && Objects.equals(expiresIn, other.expiresIn)
+        && Objects.equals(account, other.account);
   }
 
   @Override public String toString() {
@@ -70,6 +77,7 @@ public final class Token extends EBeanModel {
         .add("访问令牌", accessToken)
         .add("刷新令牌", refreshToken)
         .add("过期时长", expiresIn)
+        .add("个人账户", account)
         .toString();
   }
 }

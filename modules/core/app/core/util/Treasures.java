@@ -20,6 +20,9 @@ public final class Treasures {
     return !value.isEmpty() && value.length() <= 12;
   }
 
+  /**
+   * 宝藏。
+   */
   @Nonnull
   public static Treasure of(@Nonnull String name, @Nonnull String link) {
     Treasure treasure = new Treasure();

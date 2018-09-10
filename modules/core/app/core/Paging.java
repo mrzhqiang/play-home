@@ -9,15 +9,23 @@ import javax.annotation.Nonnull;
  * @author mrzhqiang
  */
 public interface Paging<E extends Entity> {
-  /** 实体可获得的总数量。 */
+  /**
+   * 实体可获得的总数量。
+   */
   int total();
 
-  /** 当前页面的索引位置。 */
+  /**
+   * 当前页面的索引位置。
+   */
   int index();
 
-  /** 当前页面的大小。 */
+  /**
+   * 当前页面的大小。
+   */
   int size();
 
-  /** 当前页面的资源列表。 */
-  @Nonnull List<E> resource();
+  /**
+   * 当前页面的资源列表。
+   */
+  @Nonnull List<E> resources();
 }
