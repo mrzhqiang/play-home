@@ -2,6 +2,7 @@ package core.util;
 
 import core.entity.Treasure;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 宝藏工具。
@@ -16,8 +17,8 @@ public final class Treasures {
   /**
    * 检查宝藏名字。
    */
-  public static boolean checkName(@Nonnull String value) {
-    return !value.isEmpty() && value.length() <= 12;
+  public static boolean checkName(@Nullable String value) {
+    return value != null && !value.trim().isEmpty() && value.length() <= 12;
   }
 
   /**

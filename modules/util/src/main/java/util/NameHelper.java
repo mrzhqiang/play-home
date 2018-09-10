@@ -37,7 +37,7 @@ public final class NameHelper {
    * @return 传入字符串的首字母，如果传入一个空串，将使用默认字符："m"。
    */
   @Nonnull
-  public static String firstLetter(String name) {
+  public static String firstLetter(@Nonnull String name) {
     Preconditions.checkNotNull(name);
     for (Character c : name.toCharArray()) {
       if (Character.isLetterOrDigit(c)) {
@@ -56,9 +56,9 @@ public final class NameHelper {
    * @param name 名字字符串，不能为 null，如果是空串，则返回默认常量。
    * @return ARGB 颜色常量数值。
    */
-  public static int color(String name) {
+  public static int color(@Nonnull String name) {
     Preconditions.checkNotNull(name);
-    if (name.isEmpty()) {
+    if (name.trim().isEmpty()) {
       return DEFAULT_COLOR;
     }
     // 获得 name 的 hashCode，位与 0xFFFFFFFF——即取后 8 位
@@ -72,8 +72,8 @@ public final class NameHelper {
    * @param name 用户名等字符串。
    * @return true 匹配成功；false 空串或匹配失败。
    */
-  public static boolean startLetter(String name) {
+  public static boolean startLetter(@Nonnull String name) {
     Preconditions.checkNotNull(name);
-    return !name.isEmpty() && Pattern.matches(REGEX_START_CHAR, name);
+    return !name.trim().isEmpty() && Pattern.matches(REGEX_START_CHAR, name);
   }
 }

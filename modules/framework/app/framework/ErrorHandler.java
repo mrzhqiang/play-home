@@ -43,7 +43,6 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
   @Override public CompletionStage<Result> onClientError(Http.RequestHeader request, int statusCode,
       String message) {
     try {
-      // 如果是线上环境
       if (environment.isProd()) {
         return convertAs(ErrorResponse.clientError(statusCode, message.hashCode(), message));
       }

@@ -2,6 +2,7 @@ package core.util;
 
 import core.entity.User;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import util.LinkHelper;
 import util.RandomHelper;
 
@@ -18,14 +19,14 @@ public final class Users {
   /**
    * 检查昵称。
    */
-  public static boolean checkNickname(@Nonnull String value) {
-    return !value.isEmpty() && value.length() <= 24;
+  public static boolean checkNickname(@Nullable String value) {
+    return value != null && !value.isEmpty() && value.length() <= 24;
   }
 
   /**
    * 检查头像。
    */
-  public static boolean checkAvatar(@Nonnull String value) {
+  public static boolean checkAvatar(@Nullable String value) {
     return LinkHelper.simpleCheck(value);
   }
 

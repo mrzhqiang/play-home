@@ -18,7 +18,7 @@ public final class Clients {
    * 检查名字。
    */
   public static boolean checkName(@Nonnull String value) {
-    return !value.isEmpty() && value.length() <= 24;
+    return !value.trim().isEmpty() && value.length() <= 24;
   }
 
   /**

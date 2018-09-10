@@ -3,6 +3,7 @@ package util;
 import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -32,7 +33,7 @@ public final class LinkHelper {
    * @return true 符合简单规则；false 不符合。
    * @see #SIMPLE_REGEX
    */
-  public static boolean simpleCheck(String link) {
+  public static boolean simpleCheck(@Nullable String link) {
     return link != null && !link.isEmpty() && Pattern.matches(SIMPLE_REGEX, link);
   }
 
@@ -44,7 +45,7 @@ public final class LinkHelper {
    * @return 带 http 或 https 前缀的全新超链接。
    */
   @Nonnull
-  public static String autoComplete(String link, boolean isSSL) {
+  public static String autoComplete(@Nonnull String link, boolean isSSL) {
     Preconditions.checkNotNull(link);
     return isSSL ? (!link.startsWith("https://") ? "https://" + link : link)
         : (!link.startsWith("http://") ? "http://" + link : link);
@@ -57,7 +58,7 @@ public final class LinkHelper {
    * @return 如果超链接为 https 前缀，则将前缀替换为 http；否则，调用自动补全为 http。
    */
   @Nonnull
-  public static String forceHttp(String link) {
+  public static String forceHttp(@Nonnull String link) {
     Preconditions.checkNotNull(link);
     return link.startsWith("https://") ? "http://" + link.substring(8)
         : autoComplete(link, false);

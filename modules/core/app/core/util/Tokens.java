@@ -23,6 +23,20 @@ public final class Tokens {
   private static final int OAUTH_REFRESH_TOKEN_LENGTH = 34;
 
   /**
+   * 检查访问令牌。
+   */
+  public static boolean checkAccessToken(String accessToken) {
+    return !accessToken.trim().isEmpty() && accessToken.length() == OAUTH_ACCESS_TOKEN_LENGTH;
+  }
+
+  /**
+   * 检查刷新令牌。
+   */
+  public static boolean checkRefreshToken(String refreshToken) {
+    return !refreshToken.trim().isEmpty() && refreshToken.length() == OAUTH_REFRESH_TOKEN_LENGTH;
+  }
+
+  /**
    * 检查过期时间。
    */
   public static boolean checkExpiresIn(@Nonnull Long value) {
