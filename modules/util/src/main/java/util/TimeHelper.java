@@ -47,7 +47,7 @@ public final class TimeHelper {
    * @return 对时间间隔的文字描述，比如："刚刚"、"1 分钟前"。
    */
   @Nonnull
-  public static String betweenNow(@Nonnull Date value) {
+  public static String betweenNow(Date value) {
     Preconditions.checkNotNull(value);
 
     LocalDateTime nowTime = LocalDateTime.now();
@@ -87,7 +87,7 @@ public final class TimeHelper {
    * @return 格式化过的时间戳字符串
    */
   @Nonnull
-  public static String display(@Nonnull Date value) {
+  public static String display(Date value) {
     Preconditions.checkNotNull(value);
 
     LocalDateTime nowTime = LocalDateTime.now();

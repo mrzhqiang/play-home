@@ -5,6 +5,7 @@ import core.util.Users;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -27,11 +28,16 @@ public final class User extends EBeanModel {
   @Column(name = COL_AVATAR)
   public String avatar;
 
+  @Embedded
+  public Profiles profiles;
+
   @Override public boolean checkSelf() {
-    Preconditions.checkNotNull(nickname);
     Preconditions.checkState(Users.checkNickname(nickname));
     if (avatar != null) {
       Preconditions.checkState(Users.checkAvatar(avatar));
+    }
+    if (profiles != null) {
+      Preconditions.checkState(profiles.checkSelf());
     }
     return true;
   }

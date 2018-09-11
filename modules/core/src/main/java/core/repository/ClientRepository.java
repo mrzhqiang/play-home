@@ -5,6 +5,7 @@ import core.Repository;
 import core.entity.Client;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nonnull;
 
 /**
@@ -22,7 +23,7 @@ public interface ClientRepository extends Repository<Long, Client> {
    * @param name 客户端名字。
    * @param apikey 秘钥。
    */
-  @Nonnull Optional<Client> find(String name, String apikey);
+  @Nonnull Optional<Client> find(String name, UUID apikey);
 
   /**
    * 认证 HTTP 权限是否为客户端权限。
@@ -37,6 +38,6 @@ public interface ClientRepository extends Repository<Long, Client> {
         .map(s -> new String(Base64.getDecoder().decode(s)))
         .filter(s -> s.contains(":"))
         .map(s -> s.split(":", 2))
-        .flatMap(strings -> find(strings[0], strings[1]));
+        .flatMap(strings -> find(strings[0], UUID.fromString(strings[1])));
   }
 }

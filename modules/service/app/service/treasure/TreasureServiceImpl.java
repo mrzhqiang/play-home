@@ -2,8 +2,11 @@ package service.treasure;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import core.Paging;
 import core.entity.Treasure;
 import core.repository.TreasureRepository;
+import core.util.Treasures;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 import service.DatabaseExecutionContext;
@@ -34,7 +37,7 @@ import static java.util.concurrent.CompletableFuture.*;
 
   @Override public CompletionStage<Treasure> create(Treasure treasure) {
     return supplyAsync(
-        () -> repository.create(treasure).orElseThrow(() -> badRequest("case: " + treasure)),
+        () -> repository.save(treasure).orElseThrow(() -> badRequest("case: " + treasure)),
         dbExecution);
   }
 
@@ -44,9 +47,13 @@ import static java.util.concurrent.CompletableFuture.*;
         dbExecution);
   }
 
-  @Override public CompletionStage<Treasure> update(Long id, Treasure treasure) {
+  @Override public CompletionStage<Treasure> update(Long id, Treasure entity) {
     return supplyAsync(
-        () -> repository.update(id, treasure).orElseThrow(() -> notFound("id: " + id)),
+        () -> Optional.ofNullable(id)
+            .flatMap(repository::get)
+            .map(treasure1 -> Treasures.merge(treasure1, entity))
+            .flatMap(repository::save)
+            .orElseThrow(() -> notFound("id: " + id)),
         dbExecution);
   }
 
@@ -56,10 +63,15 @@ import static java.util.concurrent.CompletableFuture.*;
         dbExecution);
   }
 
-  @Override public CompletionStage<Stream<Treasure>> get(String name) {
+  @Override public CompletionStage<Paging<Treasure>> search(String name) {
     return supplyAsync(
-        () -> repository.search(name, 0, 10)
-            .orElseThrow(() -> notFound("name: " + name)).resource().stream()
+        () -> repository.search(name)
+        , dbExecution);
+  }
+
+  @Override public CompletionStage<Paging<Treasure>> search(String name, int index, int size) {
+    return supplyAsync(
+        () -> repository.search(name, index, size)
         , dbExecution);
   }
 }

@@ -26,8 +26,6 @@ public final class TreasureResource implements Validatable<ValidationError> {
   @Required(message = "宝藏链接必填")
   @Pattern(message = "超链接验证失败", value = LinkHelper.SIMPLE_REGEX)
   private String link;
-  @MaxLength(message = "简介最多 120 个字符", value = 120)
-  private String description;
   private String href;
   private Date timestamp;
 
@@ -36,7 +34,6 @@ public final class TreasureResource implements Validatable<ValidationError> {
     resource.id = String.valueOf(treasure.id);
     resource.name = treasure.name;
     resource.link = treasure.link;
-    resource.description = treasure.description;
     resource.href = "/v1/treasures/" + resource.id;
     resource.timestamp = Date.from(treasure.modified);
     return resource;
@@ -46,7 +43,6 @@ public final class TreasureResource implements Validatable<ValidationError> {
     Treasure treasure = new Treasure();
     treasure.name = name;
     treasure.link = link;
-    treasure.description = description;
     return treasure;
   }
 
@@ -72,14 +68,6 @@ public final class TreasureResource implements Validatable<ValidationError> {
 
   public void setLink(String link) {
     this.link = link;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   public String getHref() {
@@ -111,7 +99,6 @@ public final class TreasureResource implements Validatable<ValidationError> {
     return MoreObjects.toStringHelper(this)
         .add("id", id)
         .add("name", name)
-        .add("description", description)
         .add("link", link)
         .add("href", href)
         .toString();

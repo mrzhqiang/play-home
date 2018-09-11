@@ -1,6 +1,6 @@
 package core.repository;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.entity.Token;
 import core.util.Tokens;
@@ -19,8 +19,7 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Optional<Token> find(String accessToken) {
-    Preconditions.checkNotNull(accessToken, "Null accessToken.");
-    Preconditions.checkArgument(Tokens.checkAccessToken(accessToken), "Invalid accessToken.");
+    Verify.verify(Tokens.checkAccessToken(accessToken), "invalid accessToken: %s", accessToken);
 
     return provide(() -> finder.query().where()
         .eq(Token.COL_ACCESS_TOKEN, accessToken)

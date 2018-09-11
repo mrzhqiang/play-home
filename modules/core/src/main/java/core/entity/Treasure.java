@@ -25,14 +25,14 @@ public final class Treasure extends EBeanModel {
   @Index(name = BASE_INDEX + COL_NAME)
   @Column(name = COL_NAME, unique = true, nullable = false, length = 12)
   public String name;
-  @Column(name = COL_LINK, unique = true, nullable = false)
+  @Column(name = COL_LINK)
   public String link;
 
   @Override public boolean checkSelf() {
-    Preconditions.checkNotNull(name);
     Preconditions.checkState(Treasures.checkName(name));
-    Preconditions.checkNotNull(link);
-    Preconditions.checkState(LinkHelper.simpleCheck(link));
+    if (link != null) {
+      Preconditions.checkState(LinkHelper.simpleCheck(link));
+    }
     return true;
   }
 

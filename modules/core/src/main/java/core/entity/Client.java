@@ -29,9 +29,8 @@ public final class Client extends EBeanModel {
   public UUID apikey;
 
   @Override public boolean checkSelf() {
-    Preconditions.checkNotNull(name);
     Preconditions.checkState(Clients.checkName(name));
-    Preconditions.checkNotNull(apikey);
+    Preconditions.checkState(Clients.checkApiKey(apikey));
     return true;
   }
 

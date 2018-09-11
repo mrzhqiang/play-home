@@ -104,11 +104,11 @@ final class ErrorResponse {
     }
 
     ErrorResponse other = (ErrorResponse) obj;
-    return Objects.equals(this.httpStatus, other.httpStatus)
-        && Objects.equals(this.code, other.code)
-        && Objects.equals(this.message, other.message)
-        && Objects.equals(this.developerMessage, other.developerMessage)
-        && Objects.equals(this.moreInfo, other.moreInfo);
+    return Objects.equals(httpStatus, other.httpStatus)
+        && Objects.equals(code, other.code)
+        && Objects.equals(message, other.message)
+        && Objects.equals(developerMessage, other.developerMessage)
+        && Objects.equals(moreInfo, other.moreInfo);
   }
 
   @Override public String toString() {

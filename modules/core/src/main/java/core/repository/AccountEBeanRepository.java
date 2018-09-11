@@ -1,6 +1,6 @@
 package core.repository;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.entity.Account;
 import core.util.Accounts;
@@ -20,12 +20,10 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Optional<Account> find(String username, String password) {
-    Preconditions.checkNotNull(username, "Null username.");
-    Preconditions.checkNotNull(password, "Null password.");
-    Preconditions.checkArgument(Accounts.checkUsername(username), "Invalid username.");
-    Preconditions.checkArgument(Accounts.checkPassword(password), "Invalid password.");
+    Verify.verify(Accounts.checkUsername(username), "invalid username: %s", username);
+    Verify.verify(Accounts.checkPassword(password), "invalid password: %s", password);
 
-    String pswd = new String(Base64.getDecoder().decode(password));
+    String pswd = Base64.getEncoder().encodeToString(password.getBytes());
     return provide(() -> finder.query().where()
         .eq(Account.COL_USERNAME, username)
         .eq(Account.COL_PASSWORD, pswd)

@@ -14,28 +14,34 @@ import javax.annotation.Nonnull;
  * @author qiang.zhang
  */
 final class EBeanPaging<E extends EBeanModel> implements Paging<E> {
-  private final PagedList<E> pagedList;
+  private final int total;
+  private final int index;
+  private final int size;
+  private final List<E> resources;
 
   EBeanPaging(PagedList<E> pagedList) {
     Preconditions.checkNotNull(pagedList);
-    this.pagedList = pagedList;
     pagedList.loadCount();
+    total = pagedList.getTotalCount();
+    index = pagedList.getPageIndex();
+    size = pagedList.getPageSize();
+    resources = pagedList.getList();
   }
 
   @Override public int total() {
-    return pagedList.getTotalCount();
+    return total;
   }
 
   @Override public int index() {
-    return pagedList.getPageIndex();
+    return index;
   }
 
   @Override public int size() {
-    return pagedList.getPageSize();
+    return size;
   }
 
   @Nonnull @Override public List<E> resources() {
-    return pagedList.getList();
+    return resources;
   }
 
   @Override public String toString() {

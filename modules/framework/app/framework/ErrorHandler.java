@@ -1,5 +1,6 @@
 package framework;
 
+import com.google.common.base.VerifyException;
 import com.typesafe.config.Config;
 import core.exception.ApplicationException;
 import java.util.concurrent.CompletableFuture;
@@ -32,9 +33,7 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
   private final Environment environment;
 
   @Inject
-  public ErrorHandler(Config config,
-      Environment environment,
-      OptionalSourceMapper sourceMapper,
+  public ErrorHandler(Config config, Environment environment, OptionalSourceMapper sourceMapper,
       Provider<Router> routes) {
     super(config, environment, sourceMapper, routes);
     this.environment = environment;
@@ -43,28 +42,29 @@ public final class ErrorHandler extends DefaultHttpErrorHandler {
   @Override public CompletionStage<Result> onClientError(Http.RequestHeader request, int statusCode,
       String message) {
     try {
-      if (environment.isProd()) {
+      if (environment.isProd() && request.path().contains("/v1")) {
         return convertAs(ErrorResponse.clientError(statusCode, message.hashCode(), message));
       }
-      // TODO 自定义客户端错误页面
-      return super.onClientError(request, statusCode, message);
     } catch (Exception e) {
       return convertAs(ErrorResponse.unknownError(e.getMessage().hashCode()));
     }
+    return super.onClientError(request, statusCode, message);
   }
 
   @Override protected CompletionStage<Result> onProdServerError(Http.RequestHeader request,
       UsefulException exception) {
     Throwable cause = exception.cause;
+    if (cause instanceof VerifyException) {
+      return onClientError(request, Http.Status.BAD_REQUEST, cause.getMessage());
+    }
     if (cause instanceof ApplicationException) {
       ApplicationException appException = (ApplicationException) cause;
       return onClientError(request, appException.statusCode(), appException.getMessage());
     }
-    if (environment.isProd()) {
-      logger.error("Server error.", cause);
+    logger.error("internal server error.", exception);
+    if (environment.isProd() && request.path().contains("/v1")) {
       return convertAs(ErrorResponse.serverError(cause));
     }
-    // TODO 自定义服务器错误页面
     return super.onProdServerError(request, exception);
   }
 

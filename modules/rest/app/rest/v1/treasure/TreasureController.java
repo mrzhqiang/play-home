@@ -3,7 +3,6 @@ package rest.v1.treasure;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import core.exception.ApplicationException;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import play.libs.concurrent.HttpExecutionContext;
@@ -57,10 +56,8 @@ public final class TreasureController extends Controller {
   }
 
   public CompletionStage<Result> search(String name) {
-    ApplicationException.badRequest(!name.isEmpty(), "name must be not empty");
-    return treasureService.get(name)
-        .thenApplyAsync(dataStream -> ok(
-            toJson(dataStream.map(TreasureResource::of).collect(Collectors.toList()))),
+    return treasureService.search(name)
+        .thenApplyAsync(treasurePaging -> ok(toJson(treasurePaging)),
             httpExecution.current());
   }
 

@@ -29,15 +29,17 @@ public final class DateHelper {
 
   /** Thu, 05 Jul 2018 14:50:45 GMT */
   @Nonnull
-  public static String format(@Nonnull Date value) {
+  public static String format(Date value) {
     Preconditions.checkNotNull(value);
+
     return HttpDate.format(value);
   }
 
   /** 2018-07-05 22:56:40 */
   @Nonnull
-  public static String formatNormal(@Nonnull Date value) {
+  public static String formatNormal(Date value) {
     Preconditions.checkNotNull(value);
+
     return DATE_FORMAT_NORMAL.get().format(value);
   }
 
@@ -45,6 +47,7 @@ public final class DateHelper {
   @CheckForNull
   public static Date parse(String value) {
     Preconditions.checkNotNull(value);
+
     return HttpDate.parse(value);
   }
 
@@ -52,6 +55,7 @@ public final class DateHelper {
   @CheckForNull
   public static Date parseNormal(String value) {
     Preconditions.checkNotNull(value);
+
     ParsePosition position = new ParsePosition(0);
     Date result = DATE_FORMAT_NORMAL.get().parse(value, position);
     if (position.getIndex() == value.length()) {

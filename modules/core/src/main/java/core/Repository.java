@@ -26,17 +26,17 @@ public interface Repository<I, E extends Entity> {
    * <p>
    * 不存在，插入；存在，更新。
    */
-  void save(E entity);
+  Optional<E> save(E entity);
 
   /**
    * 删除实体数据。
    */
-  void delete(E entity);
+  Optional<E> delete(E entity);
 
   /**
    * 通过主键删除实体数据。
    */
-  void delete(I primaryKey);
+  Optional<E> delete(I primaryKey);
 
   /**
    * 获取实体数据。
@@ -54,22 +54,6 @@ public interface Repository<I, E extends Entity> {
    * 注意：如果数量太多，有可能导致查询超时，慎用。
    */
   @Nonnull List<E> list();
-
-  /**
-   * 将主键交给消费者执行，这是一个相对安全的方法。
-   *
-   * @throws DatabaseException 捕捉执行过程中的所有异常，抛出数据库异常。
-   */
-  default void execute(I primary, Consumer<I> consumer) {
-    Preconditions.checkNotNull(consumer);
-    try {
-      Optional.ofNullable(primary).ifPresent(consumer);
-    } catch (Exception e) {
-      String message = "Repository execute failed: " + e.getMessage();
-      logger.error(message);
-      throw new DatabaseException(message);
-    }
-  }
 
   /**
    * 将实体交给消费者执行，这是一个相对安全的方法。
@@ -101,5 +85,24 @@ public interface Repository<I, E extends Entity> {
       logger.error(message);
       throw new DatabaseException(message);
     }
+  }
+
+  /**
+   * 通过页面索引，计算当前页面第一行的序号。
+   */
+  default int firstRowByIndex(int from, int size) {
+    if (from < 1) {
+      return 1;
+    }
+    return (from - 1) * size + 1;
+  }
+
+  /**
+   * 通过传入的页面大小，返回一页的最大行数。
+   * <p>
+   * 注意：最大行数最小为 10。
+   */
+  default int maxRowsBySize(int size) {
+    return size < 10 ? 10 : size;
   }
 }

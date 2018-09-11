@@ -4,6 +4,7 @@ import core.entity.Account;
 import core.entity.Token;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import util.RandomHelper;
 
 /**
@@ -25,22 +26,22 @@ public final class Tokens {
   /**
    * 检查访问令牌。
    */
-  public static boolean checkAccessToken(String accessToken) {
-    return !accessToken.trim().isEmpty() && accessToken.length() == OAUTH_ACCESS_TOKEN_LENGTH;
+  public static boolean checkAccessToken(@Nullable String accessToken) {
+    return accessToken != null && accessToken.length() == OAUTH_ACCESS_TOKEN_LENGTH;
   }
 
   /**
    * 检查刷新令牌。
    */
-  public static boolean checkRefreshToken(String refreshToken) {
-    return !refreshToken.trim().isEmpty() && refreshToken.length() == OAUTH_REFRESH_TOKEN_LENGTH;
+  public static boolean checkRefreshToken(@Nullable String refreshToken) {
+    return refreshToken != null && refreshToken.length() == OAUTH_REFRESH_TOKEN_LENGTH;
   }
 
   /**
    * 检查过期时间。
    */
-  public static boolean checkExpiresIn(@Nonnull Long value) {
-    return value == TOKEN_EXPIRES_IN;
+  public static boolean checkExpiresIn(@Nullable Long value) {
+    return value != null && value == TOKEN_EXPIRES_IN;
   }
 
   /**
@@ -49,8 +50,8 @@ public final class Tokens {
   @Nonnull
   public static Token of(@Nonnull Account account) {
     Token token = new Token();
-    token.accessToken = RandomHelper.stringOf(OAUTH_ACCESS_TOKEN_LENGTH);
-    token.refreshToken = RandomHelper.stringOf(OAUTH_REFRESH_TOKEN_LENGTH);
+    token.accessToken = RandomHelper.ofString(OAUTH_ACCESS_TOKEN_LENGTH);
+    token.refreshToken = RandomHelper.ofString(OAUTH_REFRESH_TOKEN_LENGTH);
     token.expiresIn = TOKEN_EXPIRES_IN;
     token.account = account;
     return token;

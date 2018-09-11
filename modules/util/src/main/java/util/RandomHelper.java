@@ -1,11 +1,12 @@
 package util;
 
-import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Random 助手。
@@ -24,8 +25,7 @@ public final class RandomHelper {
   private static final String UPPER_CASE = LOWER_CASE.toUpperCase(Locale.ROOT);
   private static final String CHARS = SPECIAL + LOWER_CASE + UPPER_CASE + NUMBER;
 
-  private static final ThreadLocal<Random> RANDOM =
-      ThreadLocal.withInitial(SecureRandom::new);
+  private static final ThreadLocal<Random> RANDOM = ThreadLocal.withInitial(SecureRandom::new);
 
   /**
    * 通过指定长度生成随机的字符序列。
@@ -34,27 +34,24 @@ public final class RandomHelper {
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
   @Nonnull
-  public static String stringOf(int length) {
-    Preconditions.checkArgument(length > 0,
-        "length %s must be > 0.", length);
-    return stringOf(length, length);
+  public static String ofString(int length) {
+    checkArgument(length > 0, "length %s must be > 0.", length);
+    return ofString(length, length);
   }
 
   /**
-   * 通过指定最小长度和最大长度，生成随机中间值长度的随机字符序列。
+   * 通过指定最小长度和最大长度，生成随机长度的随机字符序列。
    *
    * @param minLength 最小长度，不能小于或等于 0。
    * @param maxLength 最大长度，不能小于或等于 0，并且不能小于最小长度。
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
   @Nonnull
-  public static String stringOf(int minLength, int maxLength) {
-    Preconditions.checkArgument(minLength > 0,
-        "Min length %s must be > 0.", minLength);
-    Preconditions.checkArgument(maxLength > 0,
-        "Max length %s must be > 0.", maxLength);
-    Preconditions.checkArgument(maxLength >= minLength,
-        "Max length %s must be >= min length %s.", maxLength, minLength);
+  public static String ofString(int minLength, int maxLength) {
+    checkArgument(minLength > 0, "min length %s must be > 0.", minLength);
+    checkArgument(maxLength > 0, "max length %s must be > 0.", maxLength);
+    checkArgument(maxLength >= minLength,
+        "max length %s must be >= min length %s.", maxLength, minLength);
 
     int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
     StringBuilder builder = new StringBuilder(length);
@@ -71,10 +68,9 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：数字。
    */
   @Nonnull
-  public static String numberOf(int length) {
-    Preconditions.checkArgument(length > 0,
-        "length %s must be > 0.", length);
-    return numberOf(length, length);
+  public static String ofNumber(int length) {
+    checkArgument(length > 0, "length %s must be > 0.", length);
+    return ofNumber(length, length);
   }
 
   /**
@@ -85,13 +81,11 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：数字。
    */
   @Nonnull
-  public static String numberOf(int minLength, int maxLength) {
-    Preconditions.checkArgument(minLength > 0,
-        "Min length %s must be > 0.", minLength);
-    Preconditions.checkArgument(maxLength > 0,
-        "Max length %s must be > 0.", maxLength);
-    Preconditions.checkArgument(maxLength >= minLength,
-        "Max length %s must be >= min length %s.", maxLength, minLength);
+  public static String ofNumber(int minLength, int maxLength) {
+    checkArgument(minLength > 0, "min length %s must be > 0.", minLength);
+    checkArgument(maxLength > 0, "max length %s must be > 0.", maxLength);
+    checkArgument(maxLength >= minLength,
+        "max length %s must be >= min length %s.", maxLength, minLength);
 
     int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
     StringBuilder builder = new StringBuilder(length);
@@ -110,10 +104,9 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：小写字母。
    */
   @Nonnull
-  public static String lowerCaseOf(int length) {
-    Preconditions.checkArgument(length > 0,
-        "length %s must be > 0.", length);
-    return lowerCaseOf(length, length);
+  public static String ofLowerCase(int length) {
+    checkArgument(length > 0, "length %s must be > 0.", length);
+    return ofLowerCase(length, length);
   }
 
   /**
@@ -124,13 +117,11 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：小写字母。
    */
   @Nonnull
-  public static String lowerCaseOf(int minLength, int maxLength) {
-    Preconditions.checkArgument(minLength > 0,
-        "Min length %s must be > 0.", minLength);
-    Preconditions.checkArgument(maxLength > 0,
-        "Max length %s must be > 0.", maxLength);
-    Preconditions.checkArgument(maxLength >= minLength,
-        "Max length %s must be >= min length %s.", maxLength, minLength);
+  public static String ofLowerCase(int minLength, int maxLength) {
+    checkArgument(minLength > 0, "min length %s must be > 0.", minLength);
+    checkArgument(maxLength > 0, "max length %s must be > 0.", maxLength);
+    checkArgument(maxLength >= minLength,
+        "max length %s must be >= min length %s.", maxLength, minLength);
 
     int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
     StringBuilder builder = new StringBuilder(length);
@@ -147,10 +138,9 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：大写字母。
    */
   @Nonnull
-  public static String upperCaseOf(int length) {
-    Preconditions.checkArgument(length > 0,
-        "length %s must be > 0.", length);
-    return upperCaseOf(length, length);
+  public static String ofUpperCase(int length) {
+    checkArgument(length > 0, "length %s must be > 0.", length);
+    return ofUpperCase(length, length);
   }
 
   /**
@@ -161,13 +151,11 @@ public final class RandomHelper {
    * @return 随机字符串，仅包含：大写字母。
    */
   @Nonnull
-  public static String upperCaseOf(int minLength, int maxLength) {
-    Preconditions.checkArgument(minLength > 0,
-        "Min length %s must be > 0.", minLength);
-    Preconditions.checkArgument(maxLength > 0,
-        "Max length %s must be > 0.", maxLength);
-    Preconditions.checkArgument(maxLength >= minLength,
-        "Max length %s must be >= min length %s.", maxLength, minLength);
+  public static String ofUpperCase(int minLength, int maxLength) {
+    checkArgument(minLength > 0, "min length %s must be > 0.", minLength);
+    checkArgument(maxLength > 0, "max length %s must be > 0.", maxLength);
+    checkArgument(maxLength >= minLength,
+        "max length %s must be >= min length %s.", maxLength, minLength);
 
     int length = Math.max(minLength, RANDOM.get().nextInt(maxLength));
     StringBuilder builder = new StringBuilder(length);

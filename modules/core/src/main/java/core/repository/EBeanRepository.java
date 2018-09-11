@@ -22,16 +22,20 @@ abstract class EBeanRepository<I, E extends EBeanModel> implements Repository<I,
     this.finder = new Finder<>(entityClass);
   }
 
-  @Override public void save(E entity) {
-    execute(entity, Model::save);
+  @Override public Optional<E> save(E entity) {
+    Optional<E> optional = Optional.ofNullable(entity);
+    optional.ifPresent(e -> execute(e, Model::save));
+    return optional;
   }
 
-  @Override public void delete(E entity) {
-    execute(entity, Model::delete);
+  @Override public Optional<E> delete(E entity) {
+    Optional<E> optional = Optional.ofNullable(entity);
+    optional.ifPresent(e -> execute(e, Model::delete));
+    return optional;
   }
 
-  @Override public void delete(I primaryKey) {
-    execute(primaryKey, finder::deleteById);
+  @Override public Optional<E> delete(I primaryKey) {
+    return Optional.ofNullable(primaryKey).flatMap(this::get).flatMap(this::delete);
   }
 
   @Nonnull @Override public Optional<E> get(I primaryKey) {

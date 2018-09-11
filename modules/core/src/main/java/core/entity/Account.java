@@ -5,6 +5,7 @@ import core.util.Accounts;
 import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -36,11 +37,11 @@ public final class Account extends EBeanModel {
   public String username;
   @Column(name = COL_PASSWORD, nullable = false, length = 16)
   public String password;
-  @Column(name = COL_LEVEL, nullable = false)
+  @Column(name = COL_LEVEL)
   public Level level;
-  @Column(name = COL_LAST_TIME, nullable = false)
+  @Column(name = COL_LAST_TIME)
   public Instant lastTime;
-  @Column(name = COL_LAST_DEVICE, nullable = false)
+  @Column(name = COL_LAST_DEVICE)
   public String lastDevice;
 
   @OneToOne
@@ -49,18 +50,14 @@ public final class Account extends EBeanModel {
   public Set<Treasure> treasures;
 
   @Override public boolean checkSelf() {
-    Preconditions.checkNotNull(username);
     Preconditions.checkState(Accounts.checkUsername(username));
-    Preconditions.checkNotNull(password);
-    Preconditions.checkState(Accounts.checkPassword(password));
-    Preconditions.checkNotNull(level);
-    Preconditions.checkNotNull(lastTime);
-    Preconditions.checkNotNull(lastDevice);
+    String value = new String(Base64.getDecoder().decode(password));
+    Preconditions.checkState(Accounts.checkPassword(value));
     if (user != null) {
-      Preconditions.checkState(user.checkSelf());
+      user.checkSelf();
     }
     if (treasures != null) {
-      Preconditions.checkState(treasures.stream().allMatch(Treasure::checkSelf));
+      treasures.forEach(Treasure::checkSelf);
     }
     return true;
   }
@@ -104,32 +101,33 @@ public final class Account extends EBeanModel {
 
   public enum Level {
     @EnumValue("GUEST")
-    GUEST,
+    GUEST("游客"),
     @EnumValue("USER")
-    USER,
+    USER("用户"),
     @EnumValue("ADMIN")
-    ADMIN,
+    ADMIN("管理员"),
     @EnumValue("AUTHOR")
-    AUTHOR,;
+    AUTHOR("创始人"),;
+
+    final String name;
+
+    Level(String value) {
+      this.name = value;
+    }
 
     public static Level of(String value) {
       Preconditions.checkNotNull(value);
-      switch (value.toUpperCase()) {
-        case "游客":
-        case "GUEST":
-          return Level.GUEST;
-        case "用户":
-        case "USER":
-          return Level.USER;
-        case "管理员":
-        case "ADMIN":
-          return Level.ADMIN;
-        case "创始人":
-        case "AUTHOR":
-          return Level.AUTHOR;
-        default:
-          return Level.GUEST;
+      for (Level level : Level.values()) {
+        if (level.name.equals(value)) {
+          return level;
+        }
       }
+
+      return Level.valueOf(value.toUpperCase());
+    }
+
+    @Override public String toString() {
+      return name;
     }
   }
 }

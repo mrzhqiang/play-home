@@ -35,7 +35,7 @@ public final class Users {
    */
   @Nonnull
   public static User ofAnonymity() {
-    String nickname = "用户" + RandomHelper.numberOf(4, 11);
+    String nickname = "用户" + RandomHelper.ofNumber(4, 11);
     // TODO 默认头像的地址。
     String avatar = "http://localhost:9000/users/avatar";
     return of(nickname, avatar);

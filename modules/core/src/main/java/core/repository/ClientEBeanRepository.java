@@ -1,10 +1,11 @@
 package core.repository;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.entity.Client;
 import core.util.Clients;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nonnull;
 
 /**
@@ -18,10 +19,9 @@ import javax.annotation.Nonnull;
     super(Client.class);
   }
 
-  @Nonnull @Override public Optional<Client> find(String name, String apikey) {
-    Preconditions.checkNotNull(name, "Null name.");
-    Preconditions.checkState(Clients.checkName(name), "Invalid name.");
-    Preconditions.checkNotNull(apikey, "Null apikey.");
+  @Nonnull @Override public Optional<Client> find(String name, UUID apikey) {
+    Verify.verify(Clients.checkName(name), "invalid name: %s", name);
+    Verify.verify(Clients.checkApiKey(apikey), "invalid apikey: %s", apikey);
 
     return provide(() -> finder.query().where()
         .eq(Client.COL_NAME, name)

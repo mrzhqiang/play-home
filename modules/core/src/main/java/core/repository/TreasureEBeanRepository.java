@@ -1,6 +1,6 @@
 package core.repository;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.Paging;
 import core.entity.Treasure;
@@ -20,11 +20,10 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Paging<Treasure> search(String name, int from, int size) {
-    Preconditions.checkNotNull(name, "Null name.");
-    Preconditions.checkArgument(Treasures.checkName(name), "Invalid name.");
+    Verify.verify(Treasures.checkName(name), "invalid name: %s", name);
 
-    int firstRow = from < 0 ? 0 : from;
-    int maxRows = size < 10 ? 10 : size;
+    int firstRow = firstRowByIndex(from, size);
+    int maxRows = maxRowsBySize(size);
     return provide(() -> {
       PagedList<Treasure> pagedList = finder.query().where()
           .icontains(Treasure.COL_NAME, name)

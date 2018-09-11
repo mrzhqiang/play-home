@@ -14,55 +14,55 @@ import static org.junit.Assert.*;
 public class RandomHelperTest {
   @Test
   public void usernameOf() {
-    String s = RandomHelper.stringOf(5);
+    String s = RandomHelper.ofString(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void usernameOf1() {
-    String s = RandomHelper.stringOf(5, 10);
+    String s = RandomHelper.ofString(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void numberOf() {
-    String s = RandomHelper.numberOf(5);
+    String s = RandomHelper.ofNumber(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void numberOf1() {
-    String s = RandomHelper.numberOf(5, 10);
+    String s = RandomHelper.ofNumber(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void lowerCaseOf() {
-    String s = RandomHelper.lowerCaseOf(5);
+    String s = RandomHelper.ofLowerCase(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void lowerCaseOf1() {
-    String s = RandomHelper.lowerCaseOf(5, 10);
+    String s = RandomHelper.ofLowerCase(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
   @Test
   public void upperCaseOf() {
-    String s = RandomHelper.upperCaseOf(5);
+    String s = RandomHelper.ofUpperCase(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void upperCaseOf1() {
-    String s = RandomHelper.upperCaseOf(5, 10);
+    String s = RandomHelper.ofUpperCase(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
@@ -73,7 +73,7 @@ public class RandomHelperTest {
     for (int i = 0; i < 100; i++) {
       service.execute(() -> {
         for (int j = 0; j < 1000; j++) {
-          String s = RandomHelper.stringOf(110);
+          String s = RandomHelper.ofString(110);
           assertFalse(lists.contains(s));
           synchronized (lists) {
             lists.add(s);
@@ -87,12 +87,12 @@ public class RandomHelperTest {
 
   @Test
   public void multiThread1() throws InterruptedException {
-    ExecutorService service = Executors.newFixedThreadPool(100);
-    List<String> lists = Lists.newArrayListWithCapacity(100 * 100);
-    for (int i = 0; i < 100; i++) {
+    ExecutorService service = Executors.newFixedThreadPool(10);
+    List<String> lists = Lists.newArrayListWithCapacity(10 * 100);
+    for (int i = 0; i < 10; i++) {
       service.execute(() -> {
         for (int j = 0; j < 100; j++) {
-          String s = RandomHelper.numberOf(6);
+          String s = RandomHelper.ofNumber(6);
           assertFalse(lists.contains(s));
           synchronized (lists) {
             lists.add(s);

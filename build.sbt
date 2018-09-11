@@ -11,7 +11,7 @@ lazy val util = (project in file("modules/util"))
 
 lazy val core = (project in file("modules/core"))
   .settings(commonSetting)
-  .enablePlugins(PlayMinimalJava, PlayEbean)
+  .enablePlugins(PlayEbean)
   .dependsOn(util)
 
 lazy val framework = (project in file("modules/framework"))
@@ -38,3 +38,6 @@ lazy val root = (project in file("."))
 lazy val third = (project in file("modules/3rd"))
   .settings(commonSetting)
   .dependsOn(core)
+
+libraryDependencies += ws
+libraryDependencies += ehcache

@@ -42,12 +42,10 @@ public final class Token extends EBeanModel {
   }
 
   @Override public boolean checkSelf() {
-    Preconditions.checkNotNull(accessToken);
-    Preconditions.checkNotNull(refreshToken);
-    Preconditions.checkNotNull(expiresIn);
+    Preconditions.checkState(Tokens.checkAccessToken(accessToken));
+    Preconditions.checkState(Tokens.checkRefreshToken(refreshToken));
     Preconditions.checkState(Tokens.checkExpiresIn(expiresIn));
-    Preconditions.checkNotNull(account);
-    Preconditions.checkState(account.checkSelf());
+    Preconditions.checkState(account != null && account.checkSelf());
     return true;
   }
 
