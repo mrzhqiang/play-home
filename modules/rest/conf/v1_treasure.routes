@@ -1,9 +1,9 @@
 # Treasure API
-GET           /              rest.v1.treasure.TreasureController.list()
-POST          /              rest.v1.treasure.TreasureController.create()
+GET           /              rest.v1.TreasureController.list()
+POST          /              rest.v1.TreasureController.create()
 
-GET           /search        rest.v1.treasure.TreasureController.search(name: String)
+GET           /search        rest.v1.TreasureController.search(name: String)
 
-GET           /:id           rest.v1.treasure.TreasureController.show(id)
-PUT           /:id           rest.v1.treasure.TreasureController.update(id)
-DELETE        /:id           rest.v1.treasure.TreasureController.delete(id)
+GET           /:id           rest.v1.TreasureController.show(id)
+PUT           /:id           rest.v1.TreasureController.update(id)
+DELETE        /:id           rest.v1.TreasureController.delete(id)

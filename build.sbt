@@ -21,7 +21,7 @@ lazy val framework = (project in file("modules/framework"))
 
 lazy val service = (project in file("modules/service"))
   .settings(commonSetting)
-  .enablePlugins(PlayMinimalJava)
+  .enablePlugins(PlayJava)
   .dependsOn(framework)
 
 lazy val rest = (project in file("modules/rest"))

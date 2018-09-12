@@ -8,8 +8,10 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -46,7 +48,8 @@ public final class Account extends EBeanModel {
 
   @OneToOne
   public User user;
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "account_id")
   public Set<Treasure> treasures;
 
   @Override public boolean checkSelf() {

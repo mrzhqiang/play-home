@@ -1,4 +1,4 @@
-package rest.v1.treasure;
+package rest.v1;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
@@ -9,6 +9,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import service.treasure.TreasureResource;
 import service.treasure.TreasureService;
 
 import static play.libs.Json.toJson;
@@ -34,9 +35,9 @@ public final class TreasureController extends Controller {
   @BodyParser.Of(BodyParser.Json.class)
   public CompletionStage<Result> create() {
     JsonNode jsonNode = request().body().asJson();
-    TreasureResource resource = fromJson(jsonNode, TreasureResource.class);
-    return treasureService.create(resource.toTreasure())
-        .thenApplyAsync(data -> created(toJson(TreasureResource.of(data))),
+    TreasureResource treasureResource = fromJson(jsonNode, TreasureResource.class);
+    return treasureService.create(treasureResource)
+        .thenApplyAsync(resource -> created(toJson(resource)),
             httpExecution.current());
   }
 
@@ -44,14 +45,14 @@ public final class TreasureController extends Controller {
   public CompletionStage<Result> show(String id) {
     long treasureId = asLong(id);
     return treasureService.get(treasureId)
-        .thenApplyAsync(data -> ok(toJson(TreasureResource.of(data))),
+        .thenApplyAsync(resource -> ok(toJson(resource)),
             httpExecution.current());
   }
 
   public CompletionStage<Result> list() {
     return treasureService.list()
         .thenApplyAsync(dataStream -> ok(
-            toJson(dataStream.map(TreasureResource::of).collect(Collectors.toList()))),
+            toJson(dataStream.collect(Collectors.toList()))),
             httpExecution.current());
   }
 
@@ -65,16 +66,16 @@ public final class TreasureController extends Controller {
   public CompletionStage<Result> update(String id) {
     long treasureId = asLong(id);
     JsonNode jsonNode = request().body().asJson();
-    TreasureResource resource = fromJson(jsonNode, TreasureResource.class);
-    return treasureService.update(treasureId, resource.toTreasure())
-        .thenApplyAsync(data -> ok(toJson(TreasureResource.of(data))),
+    TreasureResource treasureResource = fromJson(jsonNode, TreasureResource.class);
+    return treasureService.update(treasureId, treasureResource)
+        .thenApplyAsync(resource -> ok(toJson(resource)),
             httpExecution.current());
   }
 
   public CompletionStage<Result> delete(String id) {
     long treasureId = asLong(id);
     return treasureService.delete(treasureId)
-        .thenApplyAsync(data -> ok(toJson(TreasureResource.of(data))),
+        .thenApplyAsync(resource -> ok(toJson(resource)),
             httpExecution.current());
   }
 }

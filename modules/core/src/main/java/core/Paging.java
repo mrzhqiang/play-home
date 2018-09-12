@@ -4,13 +4,13 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * 实体分页。
+ * 分页。
  *
  * @author mrzhqiang
  */
-public interface Paging<E extends Entity> {
+public interface Paging<E> {
   /**
-   * 实体可获得的总数量。
+   * 可获得的总数量。
    */
   int total();
 

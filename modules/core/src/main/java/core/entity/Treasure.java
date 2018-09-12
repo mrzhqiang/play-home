@@ -23,7 +23,7 @@ public final class Treasure extends EBeanModel {
   public static final String COL_LINK = "link";
 
   @Index(name = BASE_INDEX + COL_NAME)
-  @Column(name = COL_NAME, unique = true, nullable = false, length = 12)
+  @Column(name = COL_NAME, nullable = false, length = 12)
   public String name;
   @Column(name = COL_LINK)
   public String link;

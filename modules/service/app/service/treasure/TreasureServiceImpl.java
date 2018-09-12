@@ -2,14 +2,13 @@ package service.treasure;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import core.Paging;
-import core.entity.Treasure;
 import core.repository.TreasureRepository;
 import core.util.Treasures;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 import service.DatabaseExecutionContext;
+import service.ResourcePaging;
 
 import static core.exception.ApplicationException.*;
 import static java.util.concurrent.CompletableFuture.*;
@@ -29,49 +28,57 @@ import static java.util.concurrent.CompletableFuture.*;
     this.dbExecution = dbExecution;
   }
 
-  @Override public CompletionStage<Stream<Treasure>> list() {
+  @Override public CompletionStage<Stream<TreasureResource>> list() {
     return supplyAsync(
-        () -> repository.list().stream(),
+        () -> repository.list().stream().map(TreasureResource::of),
         dbExecution);
   }
 
-  @Override public CompletionStage<Treasure> create(Treasure treasure) {
+  @Override public CompletionStage<TreasureResource> create(TreasureResource treasure) {
     return supplyAsync(
-        () -> repository.save(treasure).orElseThrow(() -> badRequest("case: " + treasure)),
+        () -> repository.save(treasure.toTreasure())
+            .map(TreasureResource::of)
+            .orElseThrow(() -> badRequest("case: " + treasure)),
         dbExecution);
   }
 
-  @Override public CompletionStage<Treasure> delete(Long id) {
+  @Override public CompletionStage<TreasureResource> delete(Long id) {
     return supplyAsync(
-        () -> repository.delete(id).orElseThrow(() -> notFound("id: " + id)),
-        dbExecution);
-  }
-
-  @Override public CompletionStage<Treasure> update(Long id, Treasure entity) {
-    return supplyAsync(
-        () -> Optional.ofNullable(id)
-            .flatMap(repository::get)
-            .map(treasure1 -> Treasures.merge(treasure1, entity))
-            .flatMap(repository::save)
+        () -> repository.delete(id)
+            .map(TreasureResource::of)
             .orElseThrow(() -> notFound("id: " + id)),
         dbExecution);
   }
 
-  @Override public CompletionStage<Treasure> get(Long id) {
+  @Override public CompletionStage<TreasureResource> update(Long id, TreasureResource resource) {
     return supplyAsync(
-        () -> repository.get(id).orElseThrow(() -> notFound("id: " + id)),
+        () -> Optional.ofNullable(id)
+            .flatMap(repository::get)
+            .map(treasure -> Treasures.merge(treasure, resource.toTreasure()))
+            .flatMap(repository::save)
+            .map(TreasureResource::of)
+            .orElseThrow(() -> notFound("id: " + id)),
         dbExecution);
   }
 
-  @Override public CompletionStage<Paging<Treasure>> search(String name) {
+  @Override public CompletionStage<TreasureResource> get(Long id) {
     return supplyAsync(
-        () -> repository.search(name)
+        () -> repository.get(id)
+            .map(TreasureResource::of)
+            .orElseThrow(() -> notFound("id: " + id)),
+        dbExecution);
+  }
+
+  @Override public CompletionStage<ResourcePaging<TreasureResource>> search(String name) {
+    return supplyAsync(
+        () -> ResourcePaging.convert(repository.search(name), TreasureResource::of)
         , dbExecution);
   }
 
-  @Override public CompletionStage<Paging<Treasure>> search(String name, int index, int size) {
+  @Override public CompletionStage<ResourcePaging<TreasureResource>> search(String name, int index,
+      int size) {
     return supplyAsync(
-        () -> repository.search(name, index, size)
+        () -> ResourcePaging.convert(repository.search(name, index, size), TreasureResource::of)
         , dbExecution);
   }
 }

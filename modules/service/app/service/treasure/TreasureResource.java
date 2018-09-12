@@ -1,8 +1,7 @@
-package rest.v1.treasure;
+package service.treasure;
 
 import com.google.common.base.MoreObjects;
 import core.entity.Treasure;
-import java.net.URL;
 import java.util.Date;
 import play.data.validation.ValidationError;
 import util.LinkHelper;
@@ -26,6 +25,9 @@ public final class TreasureResource implements Validatable<ValidationError> {
   @Required(message = "宝藏链接必填")
   @Pattern(message = "超链接验证失败", value = LinkHelper.SIMPLE_REGEX)
   private String link;
+  /**
+   * 此资源的访问链接，而非宝藏链接。
+   */
   private String href;
   private Date timestamp;
 
@@ -88,7 +90,9 @@ public final class TreasureResource implements Validatable<ValidationError> {
 
   @Override public ValidationError validate() {
     try {
-      new URL(link);
+      if (!LinkHelper.simpleCheck(link)) {
+        return new ValidationError("link", "链接不合法");
+      }
     } catch (Exception e) {
       return new ValidationError("link", "未能识别的超链接");
     }
@@ -101,6 +105,7 @@ public final class TreasureResource implements Validatable<ValidationError> {
         .add("name", name)
         .add("link", link)
         .add("href", href)
+        .add("timestamp", timestamp)
         .toString();
   }
 }

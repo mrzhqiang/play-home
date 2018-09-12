@@ -20,7 +20,7 @@ public final class Treasures {
    * 检查宝藏名字。
    */
   public static boolean checkName(@Nullable String value) {
-    return value != null && !value.isEmpty() && value.length() <= 12;
+    return value != null && value.length() >= 2 && value.length() <= 12;
   }
 
   /**

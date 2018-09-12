@@ -6,7 +6,7 @@ import java.util.concurrent.CompletionStage;
 import play.libs.ws.WSClient;
 import play.mvc.*;
 import rest.RestParser;
-import rest.v1.treasure.TreasureResource;
+import service.treasure.TreasureResource;
 
 /**
  * 主页控制器。
@@ -25,7 +25,7 @@ public final class HomeController extends Controller {
 
   /** 首页，展示宝藏列表。 */
   public CompletionStage<Result> index() {
-    return ws.url(rest.v1.treasure.routes.TreasureController.list().absoluteURL(request()))
+    return ws.url(rest.v1.routes.TreasureController.list().absoluteURL(request()))
         .get()
         .thenApply(response -> RestParser.fromListJson(response.asJson(), TreasureResource.class))
         .thenApply(dataList -> ok(views.html.index.render(dataList)));
