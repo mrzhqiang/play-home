@@ -33,7 +33,6 @@ public interface TokenRepository extends Repository<Long, Token> {
     return Optional.ofNullable(bearerToken)
         .filter(s -> s.startsWith(BEARER))
         .map(s -> s.replaceFirst(BEARER, ""))
-        .flatMap(this::find)
-        .filter(Token::isValid);
+        .flatMap(this::find);
   }
 }

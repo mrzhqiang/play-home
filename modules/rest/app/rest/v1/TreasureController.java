@@ -13,8 +13,8 @@ import service.treasure.TreasureResource;
 import service.treasure.TreasureService;
 
 import static play.libs.Json.toJson;
-import static rest.RestParser.asLong;
-import static rest.RestParser.fromJson;
+import static framework.SimpleParser.asLong;
+import static framework.SimpleParser.fromJson;
 
 /**
  * 宝藏控制器。

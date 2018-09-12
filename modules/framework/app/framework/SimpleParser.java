@@ -1,10 +1,11 @@
-package rest;
+package framework;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
+import com.google.common.base.Verify;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -14,29 +15,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import play.libs.Json;
 import util.DateHelper;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static core.exception.ApplicationException.badRequest;
 
 /**
- * 请求 Body 解析器。
+ * 简单解析器。
  * <p>
- * 只包含对一些基本类型以及 JsonNode 和 Json 字符串的解析。
+ * 只包含对 基本类型、JsonNode 以及 Json 字符串的解析。
  *
  * @author mrzhqiang
  */
-public final class RestParser {
-  private RestParser() {
+public final class SimpleParser {
+  private SimpleParser() {
   }
 
   public static boolean asBool(String resource) {
     try {
       return Boolean.parseBoolean(resource);
     } catch (Exception e) {
-      throw badRequest("Parse boolean failed: " + e.getMessage());
+      throw badRequest("parse boolean type failed: " + e.getMessage());
     }
   }
 
@@ -44,7 +45,7 @@ public final class RestParser {
     try {
       return Integer.parseInt(resource);
     } catch (Exception e) {
-      throw badRequest("Parse int failed: " + e.getMessage());
+      throw badRequest("parse int type failed: " + e.getMessage());
     }
   }
 
@@ -52,7 +53,7 @@ public final class RestParser {
     try {
       return Long.parseLong(resource);
     } catch (Exception e) {
-      throw badRequest("Parse long failed: " + e.getMessage());
+      throw badRequest("parse long type failed: " + e.getMessage());
     }
   }
 
@@ -60,7 +61,7 @@ public final class RestParser {
     try {
       return Float.parseFloat(resource);
     } catch (Exception e) {
-      throw badRequest("Parse float failed: " + e.getMessage());
+      throw badRequest("parse float type failed: " + e.getMessage());
     }
   }
 
@@ -68,23 +69,20 @@ public final class RestParser {
     try {
       return Double.parseDouble(resource);
     } catch (Exception e) {
-      throw badRequest("Parse double failed: " + e.getMessage());
+      throw badRequest("parse double type failed: " + e.getMessage());
     }
   }
 
   @Nonnull
-  @CheckReturnValue
   public static UUID asUUID(String resource) {
-    badRequest(resource != null && !resource.isEmpty(), "resource is null or empty");
     try {
-      return UUID.fromString(resource);
+      return UUID.fromString(checkNotNull(resource));
     } catch (Exception e) {
-      throw badRequest("Parse int failed: " + e.getMessage());
+      throw badRequest("parse UUID type failed: " + e.getMessage());
     }
   }
 
   @Nonnull
-  @CheckReturnValue
   public static Date asDate(String resource) {
     try {
       Date date = DateHelper.parseNormal(resource);
@@ -92,9 +90,9 @@ public final class RestParser {
         return date;
       }
     } catch (Exception e) {
-      throw badRequest("Parse date failed: " + e.getMessage());
+      throw badRequest("parse Date type failed: " + e.getMessage());
     }
-    throw badRequest("Date can not parse to java.util.Date");
+    throw badRequest("can not parse to java.util.Date");
   }
 
   /**
@@ -103,18 +101,17 @@ public final class RestParser {
    * 本质上就是 {@link Json#fromJson(JsonNode, Class)}。
    */
   @Nonnull
-  @CheckReturnValue
   public static <T> T fromJson(JsonNode jsonNode, Class<T> clazz) {
-    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not be object");
+    Verify.verify(jsonNode != null && jsonNode.isObject(), "json node null or not be object");
     try {
       T t = Json.fromJson(jsonNode, clazz);
       if (t != null) {
         return t;
       }
     } catch (Exception e) {
-      throw badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("json node parse failed: " + e.getMessage());
     }
-    throw badRequest("Json can not parse");
+    throw badRequest("json node can not parse");
   }
 
   /**
@@ -123,9 +120,8 @@ public final class RestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   @Nonnull
-  @CheckReturnValue
   public static <E> List<E> fromListJson(JsonNode jsonNode, Class<E> clazz) {
-    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not be array.");
+    Verify.verify(jsonNode != null && jsonNode.isArray(), "json node null or not be array.");
     return fromCollectionJson(jsonNode.toString(), ArrayList.class, clazz);
   }
 
@@ -135,9 +131,8 @@ public final class RestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   @Nonnull
-  @CheckReturnValue
   public static <E> Set<E> fromSetJson(JsonNode jsonNode, Class<E> clazz) {
-    badRequest(jsonNode != null && jsonNode.isArray(), "Json null or not be array.");
+    Verify.verify(jsonNode != null && jsonNode.isArray(), "json node null or not be array.");
     return fromCollectionJson(jsonNode.toString(), HashSet.class, clazz);
   }
 
@@ -147,7 +142,6 @@ public final class RestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   @Nonnull
-  @CheckReturnValue
   public static <T> T fromCollectionJson(String resource,
       Class<? extends Collection> collectionClass,
       Class<?> clazz) {
@@ -160,9 +154,18 @@ public final class RestParser {
         return t;
       }
     } catch (Exception e) {
-      throw badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("json node parse failed: " + e.getMessage());
     }
-    throw badRequest("Json can not parse to collection");
+    throw badRequest("json node can not parse to collection");
+  }
+
+  /**
+   * 通过 {@link JsonNode} 类型，得到字符串的 {@link HashMap} 实例。
+   */
+  @Nonnull
+  public static Map<String, String> fromMapString(JsonNode jsonNode) {
+    Verify.verify(jsonNode != null && jsonNode.isObject(), "json node null or not be map.");
+    return fromMapJson(jsonNode, String.class, String.class);
   }
 
   /**
@@ -171,10 +174,9 @@ public final class RestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   @Nonnull
-  @CheckReturnValue
   public static <K, V> Map<K, V> fromMapJson(JsonNode jsonNode, Class<K> keyClass,
       Class<V> valueClass) {
-    badRequest(jsonNode != null && jsonNode.isObject(), "Json null or not be map.");
+    Verify.verify(jsonNode != null && jsonNode.isObject(), "json node null or not be map.");
     return fromMapJson(jsonNode.toString(), HashMap.class, keyClass, valueClass);
   }
 
@@ -184,7 +186,6 @@ public final class RestParser {
    * 本质上就是 {@link ObjectMapper#readValue(String, JavaType)}
    */
   @Nonnull
-  @CheckReturnValue
   public static <K, V> Map<K, V> fromMapJson(String resource, Class<? extends Map> mapClass,
       Class<K> keyClass, Class<V> valueClass) {
     try {
@@ -196,8 +197,8 @@ public final class RestParser {
         return map;
       }
     } catch (Exception e) {
-      throw badRequest("Json parse failed: " + e.getMessage());
+      throw badRequest("json node parse failed: " + e.getMessage());
     }
-    throw badRequest("Json can not parse to map");
+    throw badRequest("json node can not parse to map");
   }
 }

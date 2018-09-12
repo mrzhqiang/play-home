@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import util.LinkHelper;
 
 /**
  * 用户。
@@ -34,7 +35,7 @@ public final class User extends EBeanModel {
   @Override public boolean checkSelf() {
     Preconditions.checkState(Users.checkNickname(nickname));
     if (avatar != null) {
-      Preconditions.checkState(Users.checkAvatar(avatar));
+      Preconditions.checkState(LinkHelper.simpleCheck(avatar));
     }
     if (profiles != null) {
       Preconditions.checkState(profiles.checkSelf());
@@ -43,7 +44,7 @@ public final class User extends EBeanModel {
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), nickname, avatar);
+    return Objects.hash(super.hashCode(), nickname, avatar, profiles);
   }
 
   @Override public boolean equals(Object obj) {
@@ -58,13 +59,15 @@ public final class User extends EBeanModel {
     User other = (User) obj;
     return super.equals(obj)
         && Objects.equals(nickname, other.nickname)
-        && Objects.equals(avatar, other.avatar);
+        && Objects.equals(avatar, other.avatar)
+        && Objects.equals(profiles, other.profiles);
   }
 
   @Override public String toString() {
     return toStringHelper()
         .add("昵称", nickname)
         .add("头像", avatar)
+        .add("资料", profiles)
         .toString();
   }
 }

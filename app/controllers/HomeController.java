@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import java.util.concurrent.CompletionStage;
 import play.libs.ws.WSClient;
 import play.mvc.*;
-import rest.RestParser;
+import framework.SimpleParser;
 import service.treasure.TreasureResource;
 
 /**
@@ -27,7 +27,7 @@ public final class HomeController extends Controller {
   public CompletionStage<Result> index() {
     return ws.url(rest.v1.routes.TreasureController.list().absoluteURL(request()))
         .get()
-        .thenApply(response -> RestParser.fromListJson(response.asJson(), TreasureResource.class))
+        .thenApply(response -> SimpleParser.fromListJson(response.asJson(), TreasureResource.class))
         .thenApply(dataList -> ok(views.html.index.render(dataList)));
   }
 }

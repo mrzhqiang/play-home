@@ -1,6 +1,5 @@
 package core.util;
 
-import core.entity.Account;
 import org.junit.Test;
 import util.RandomHelper;
 
@@ -55,16 +54,5 @@ public class AccountsTest {
     assertTrue(Accounts.checkPassword(password));
     password = RandomHelper.ofLowerCase(6, 16);
     assertTrue(Accounts.checkPassword(password));
-  }
-
-  @Test
-  public void ofGuest() {
-    Account guest = Accounts.ofGuest();
-    guest.save();
-    System.out.println(guest);
-  }
-
-  @Test
-  public void of() {
   }
 }

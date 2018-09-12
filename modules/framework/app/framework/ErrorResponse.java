@@ -3,6 +3,7 @@ package framework;
 import com.google.common.base.MoreObjects;
 import java.util.Locale;
 import java.util.Objects;
+import play.mvc.Http;
 
 /**
  * 错误/异常响应。
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author mrzhqiang
  */
-final class ErrorResponse {
+public final class ErrorResponse {
   private static final int HTTP_STATUS = 500;
   private static final int CODE = -1;
   private static final String MESSAGE = "A unknown error occurred.";
@@ -58,6 +59,11 @@ final class ErrorResponse {
 
   public String getMoreInfo() {
     return moreInfo;
+  }
+
+  public static ErrorResponse ofAuthenticator(String message) {
+    return new ErrorResponse(
+        Http.Status.UNAUTHORIZED, message.hashCode(), message, DEVELOPER_MESSAGE, MORE_INFO);
   }
 
   static ErrorResponse unknownError(int code) {

@@ -1,7 +1,7 @@
 package core.util;
 
 import core.entity.Account;
-import java.time.Instant;
+import java.util.Base64;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,10 +41,7 @@ public final class Accounts {
   public static Account ofGuest() {
     Account account = new Account();
     account.username = RandomHelper.ofString(16);
-    account.password = RandomHelper.ofNumber(6);
-    account.level = Account.Level.GUEST;
-    account.lastTime = Instant.now();
-    account.lastDevice = Account.DEFAULT_DEVICE_UNKNOWN;
+    account.password = Base64.getEncoder().encodeToString(RandomHelper.ofNumber(6).getBytes());
     return account;
   }
 
@@ -55,10 +52,7 @@ public final class Accounts {
   public static Account of(@Nonnull String username, @Nonnull String password) {
     Account account = new Account();
     account.username = username;
-    account.password = password;
-    account.level = Account.Level.USER;
-    account.lastTime = Instant.now();
-    account.lastDevice = Account.DEFAULT_DEVICE_UNKNOWN;
+    account.password = Base64.getEncoder().encodeToString(password.getBytes());
     return account;
   }
 }

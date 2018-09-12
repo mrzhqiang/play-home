@@ -7,14 +7,10 @@ create table accounts (
   id                            bigint auto_increment not null,
   username                      varchar(16) not null,
   password                      varchar(16) not null,
-  level                         varchar(6),
-  last_time                     datetime(6),
-  last_device                   varchar(255),
   user_id                       bigint,
   version                       bigint not null,
   created                       datetime(6) not null,
   modified                      datetime(6) not null,
-  constraint ck_accounts_level check ( level in ('GUEST','ADMIN','AUTHOR','USER')),
   constraint uq_accounts_username unique (username),
   constraint uq_accounts_user_id unique (user_id),
   constraint pk_accounts primary key (id)
@@ -52,7 +48,6 @@ create table treasures (
   version                       bigint not null,
   created                       datetime(6) not null,
   modified                      datetime(6) not null,
-  constraint uq_treasures_name unique (name),
   constraint pk_treasures primary key (id)
 );
 

@@ -2,9 +2,7 @@ package core.entity;
 
 import com.google.common.base.Preconditions;
 import core.util.Accounts;
-import io.ebean.annotation.EnumValue;
 import io.ebean.annotation.Index;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Set;
@@ -28,23 +26,12 @@ public final class Account extends EBeanModel {
 
   public static final String COL_USERNAME = "username";
   public static final String COL_PASSWORD = "password";
-  public static final String COL_LEVEL = "level";
-  public static final String COL_LAST_TIME = "last_time";
-  public static final String COL_LAST_DEVICE = "last_device";
-
-  public static final String DEFAULT_DEVICE_UNKNOWN = "Unknown";
 
   @Index(name = BASE_INDEX + COL_USERNAME)
   @Column(name = COL_USERNAME, unique = true, nullable = false, length = 16)
   public String username;
   @Column(name = COL_PASSWORD, nullable = false, length = 16)
   public String password;
-  @Column(name = COL_LEVEL)
-  public Level level;
-  @Column(name = COL_LAST_TIME)
-  public Instant lastTime;
-  @Column(name = COL_LAST_DEVICE)
-  public String lastDevice;
 
   @OneToOne
   public User user;
@@ -66,8 +53,7 @@ public final class Account extends EBeanModel {
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(),
-        username, password, level, lastTime, lastDevice, user, treasures);
+    return Objects.hash(super.hashCode(), username, password, user, treasures);
   }
 
   @Override public boolean equals(Object obj) {
@@ -83,54 +69,16 @@ public final class Account extends EBeanModel {
     return super.equals(obj)
         && Objects.equals(username, other.username)
         && Objects.equals(password, other.password)
-        && Objects.equals(level, other.level)
-        && Objects.equals(lastTime, other.lastTime)
-        && Objects.equals(lastDevice, other.lastDevice)
         && Objects.equals(user, other.user)
         && Objects.equals(treasures, other.treasures);
   }
 
   @Override public String toString() {
     return toStringHelper()
-        .add("用户名", username)
-        .add("密码", password)
-        .add("权限等级", level)
-        .add("上次登录时间", lastTime)
-        .add("上次登录设备", lastDevice)
+        .add("用户账号", username)
+        .add("用户密码", password)
         .add("用户资料", user)
-        .add("宝藏列表", treasures)
+        .add("用户宝藏", treasures)
         .toString();
-  }
-
-  public enum Level {
-    @EnumValue("GUEST")
-    GUEST("游客"),
-    @EnumValue("USER")
-    USER("用户"),
-    @EnumValue("ADMIN")
-    ADMIN("管理员"),
-    @EnumValue("AUTHOR")
-    AUTHOR("创始人"),;
-
-    final String name;
-
-    Level(String value) {
-      this.name = value;
-    }
-
-    public static Level of(String value) {
-      Preconditions.checkNotNull(value);
-      for (Level level : Level.values()) {
-        if (level.name.equals(value)) {
-          return level;
-        }
-      }
-
-      return Level.valueOf(value.toUpperCase());
-    }
-
-    @Override public String toString() {
-      return name;
-    }
   }
 }
