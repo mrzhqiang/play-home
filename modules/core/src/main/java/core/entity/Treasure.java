@@ -1,6 +1,7 @@
 package core.entity;
 
 import com.google.common.base.Preconditions;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import core.util.Treasures;
 import io.ebean.annotation.Index;
 import java.util.Objects;
@@ -28,7 +29,7 @@ public final class Treasure extends EBeanModel {
   @Column(name = COL_LINK)
   public String link;
 
-  @Override public boolean checkSelf() {
+  @CanIgnoreReturnValue @Override public boolean checkSelf() {
     Preconditions.checkState(Treasures.checkName(name));
     if (link != null) {
       Preconditions.checkState(LinkHelper.simpleCheck(link));
@@ -56,7 +57,7 @@ public final class Treasure extends EBeanModel {
   }
 
   @Override public String toString() {
-    return toStringHelper()
+    return stringHelper()
         .add("宝藏", name)
         .add("地址", link)
         .toString();

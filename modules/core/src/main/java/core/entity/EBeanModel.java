@@ -1,12 +1,13 @@
 package core.entity;
 
 import com.google.common.base.MoreObjects;
-import core.Entity;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import java.time.Instant;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
@@ -17,7 +18,7 @@ import javax.persistence.Version;
  * @author mrzhqiang
  */
 @MappedSuperclass
-public abstract class EBeanModel extends Model implements Entity {
+public abstract class EBeanModel extends Model {
   @Id
   public Long id;
   @Version
@@ -27,7 +28,9 @@ public abstract class EBeanModel extends Model implements Entity {
   @WhenModified
   public Instant modified;
 
-  MoreObjects.ToStringHelper toStringHelper() {
+  @Nonnull
+  @CanIgnoreReturnValue
+  MoreObjects.ToStringHelper stringHelper() {
     return MoreObjects.toStringHelper(this)
         .add("编号", id)
         .add("版本", version)

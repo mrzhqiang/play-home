@@ -14,7 +14,7 @@ import static core.exception.ApplicationException.*;
 import static java.util.concurrent.CompletableFuture.*;
 
 /**
- * 宝藏服务的实现。
+ * 宝藏服务。
  *
  * @author mrzhqiang
  */
@@ -22,8 +22,7 @@ import static java.util.concurrent.CompletableFuture.*;
   private final TreasureRepository repository;
   private final DatabaseExecutionContext dbExecution;
 
-  @Inject TreasureServiceImpl(TreasureRepository repository,
-      DatabaseExecutionContext dbExecution) {
+  @Inject TreasureServiceImpl(TreasureRepository repository, DatabaseExecutionContext dbExecution) {
     this.repository = repository;
     this.dbExecution = dbExecution;
   }

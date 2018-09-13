@@ -1,5 +1,6 @@
-package service.user;
+package service.account;
 
+import com.google.inject.ImplementedBy;
 import core.entity.User;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
@@ -9,6 +10,7 @@ import java.util.stream.Stream;
  *
  * @author qiang.zhang
  */
+@ImplementedBy(UserServiceImpl.class)
 public interface UserService {
   /**
    * 取得用户列表。

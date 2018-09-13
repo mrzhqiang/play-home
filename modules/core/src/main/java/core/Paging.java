@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  *
  * @author mrzhqiang
  */
-public interface Paging<E extends Entity> {
+public interface Paging<E> {
   /**
    * 实体可获得的总数量。
    */

@@ -3,7 +3,6 @@ package core.repository;
 import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.entity.Client;
-import core.util.Clients;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;

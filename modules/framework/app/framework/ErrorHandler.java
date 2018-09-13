@@ -22,7 +22,7 @@ import play.mvc.Results;
 /**
  * 错误处理程序。
  * <p>
- * 参考：<a href="https://www.playframework.com/documentation/2.6.x/JavaErrorHandling">官方文档。</a>
+ * 参考：https://www.playframework.com/documentation/2.6.x/JavaErrorHandling
  *
  * @author mrzhqiang
  */

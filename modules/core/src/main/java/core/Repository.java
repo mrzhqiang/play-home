@@ -18,7 +18,7 @@ import play.Logger;
  *
  * @author qiang.zhang
  */
-public interface Repository<I, E extends Entity> {
+public interface Repository<I, E> {
   Logger.ALogger logger = Logger.of("core");
 
   /**
@@ -27,11 +27,6 @@ public interface Repository<I, E extends Entity> {
    * 不存在，插入；存在，更新。
    */
   Optional<E> save(E entity);
-
-  /**
-   * 删除实体数据。
-   */
-  Optional<E> delete(E entity);
 
   /**
    * 通过主键删除实体数据。
@@ -63,7 +58,7 @@ public interface Repository<I, E extends Entity> {
   default void execute(E entity, Consumer<E> consumer) {
     Preconditions.checkNotNull(consumer);
     try {
-      Optional.ofNullable(entity).filter(Entity::checkSelf).ifPresent(consumer);
+      Optional.ofNullable(entity).ifPresent(consumer);
     } catch (Exception e) {
       String message = "Repository execute failed: " + e.getMessage();
       logger.error(message);

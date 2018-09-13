@@ -1,16 +1,19 @@
 package core.entity;
 
-import com.google.common.base.Preconditions;
-import core.util.Clients;
+import com.google.common.base.Verify;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.ebean.annotation.Index;
 import java.util.Objects;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
  * 客户端。
+ * <p>
+ * TODO 客户端 access log
  *
  * @author mrzhqiang
  */
@@ -24,14 +27,28 @@ public final class Client extends EBeanModel {
 
   @Index(name = BASE_INDEX + COL_NAME)
   @Column(name = COL_NAME, unique = true, nullable = false, length = 24)
-  public String name;
+  private String name;
   @Column(name = COL_API_KEY, nullable = false)
-  public UUID apikey;
+  private UUID apikey;
 
-  @Override public boolean checkSelf() {
-    Preconditions.checkState(Clients.checkName(name));
-    Preconditions.checkState(Clients.checkApiKey(apikey));
-    return true;
+  @Nonnull
+  public String getName() {
+    return name;
+  }
+
+  public void setName(@Nonnull String name) {
+    Verify.verify(!name.isEmpty() && name.length() <= 24,
+        "invalid name: %s", name);
+    this.name = name;
+  }
+
+  @Nonnull
+  public UUID getApikey() {
+    return apikey;
+  }
+
+  public void setApikey(@Nonnull UUID apikey) {
+    this.apikey = apikey;
   }
 
   @Override public int hashCode() {
@@ -54,9 +71,21 @@ public final class Client extends EBeanModel {
   }
 
   @Override public String toString() {
-    return toStringHelper()
+    return stringHelper()
         .add("客户端", name)
         .add("秘钥", apikey)
         .toString();
+  }
+
+  /**
+   * 根据名字生成唯一的客户端。
+   */
+  @Nonnull
+  @CanIgnoreReturnValue
+  public static Client of(@Nonnull String name) {
+    Client client = new Client();
+    client.setName(name);
+    client.setApikey(UUID.randomUUID());
+    return client;
   }
 }

@@ -1,6 +1,7 @@
-package framework.authenticators;
+package rest.authenticators;
 
 import com.google.inject.Inject;
+import core.model.Token;
 import core.repository.ClientRepository;
 import core.repository.TokenRepository;
 import framework.ErrorResponse;
@@ -31,6 +32,7 @@ public final class ClientAuthenticator extends Security.Authenticator {
     return optional.flatMap(clientRepository::authenticate)
         .map(client -> "")
         .orElse(optional.flatMap(tokenRepository::authenticate)
+            .filter(Token::isValid)
             .map(token -> "")
             .orElse(null));
   }

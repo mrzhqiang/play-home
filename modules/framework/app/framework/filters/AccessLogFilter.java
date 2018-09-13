@@ -13,14 +13,14 @@ import play.mvc.Result;
 /**
  * 访问日志过滤器。
  * <p>
- * 参考：<a href="https://www.playframework.com/documentation/2.6.x/JavaHttpFilters">官方文档。</a>
+ * 参考：https://www.playframework.com/documentation/2.6.x/JavaHttpFilters
  *
  * @author mrzhqiang
  */
 @Singleton
 public final class AccessLogFilter extends Filter {
   private final Logger.ALogger logger = Logger.of("access");
-  private static final String MESSAGE = "IP={} method={} uri={} status={} elapsed={}ms";
+  private static final String MESSAGE = "method={} uri={} status={} elapsed={}ms";
 
   @Inject
   public AccessLogFilter(Materializer mat) {
@@ -36,7 +36,7 @@ public final class AccessLogFilter extends Filter {
       long endTime = System.currentTimeMillis();
       long requestTime = endTime - startTime;
 
-      logger.info(MESSAGE, req.remoteAddress(), req.method(), req.uri(), result.status(), requestTime);
+      logger.info(MESSAGE, req.method(), req.uri(), result.status(), requestTime);
       return result.withHeader("Request-Time", String.valueOf(requestTime));
     });
   }

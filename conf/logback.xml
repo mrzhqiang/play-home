@@ -5,26 +5,26 @@
       converterClass="play.api.libs.logback.ColoredLevel"/>
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${application.home:-.}/logs/application.log</file>
+    <file>/var/logs/${application.name}/application.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- Daily rollover with compression -->
-      <fileNamePattern>${application.home:-.}/logs/application-log-%d{yyyy-MM-dd}.gz
+      <fileNamePattern>/var/logs/${application.name}/application-log-%d{yyyy-MM-dd}.gz
       </fileNamePattern>
       <!-- keep 30 days worth of history -->
       <maxHistory>30</maxHistory>
     </rollingPolicy>
     <encoder>
-      <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger in %thread -
+      <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from [%logger] in %thread -
         %message%n%xException
       </pattern>
     </encoder>
   </appender>
 
   <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${application.home:-.}/logs/access.log</file>
+    <file>/var/logs/${application.name}/access.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- daily rollover with compression -->
-      <fileNamePattern>${application.home:-.}/logs/access-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <fileNamePattern>/var/logs/${application.name}/access-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
       <!-- keep 1 week worth of history -->
       <maxHistory>7</maxHistory>
     </rollingPolicy>

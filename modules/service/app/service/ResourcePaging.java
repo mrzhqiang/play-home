@@ -1,6 +1,5 @@
 package service;
 
-import core.Entity;
 import core.Paging;
 import java.util.List;
 import java.util.function.Function;

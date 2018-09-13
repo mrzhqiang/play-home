@@ -2,7 +2,7 @@ package core.repository;
 
 import com.google.inject.ImplementedBy;
 import core.Repository;
-import core.entity.Token;
+import core.model.Token;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 

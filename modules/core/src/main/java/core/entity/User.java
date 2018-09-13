@@ -1,14 +1,16 @@
 package core.entity;
 
-import com.google.common.base.Preconditions;
-import core.util.Users;
+import com.google.common.base.Verify;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.ebean.annotation.Index;
 import java.util.Objects;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import util.LinkHelper;
+import util.RandomHelper;
 
 /**
  * 用户。
@@ -30,17 +32,35 @@ public final class User extends EBeanModel {
   public String avatar;
 
   @Embedded
-  public Profiles profiles;
+  private Profiles profiles;
 
-  @Override public boolean checkSelf() {
-    Preconditions.checkState(Users.checkNickname(nickname));
-    if (avatar != null) {
-      Preconditions.checkState(LinkHelper.simpleCheck(avatar));
-    }
-    if (profiles != null) {
-      Preconditions.checkState(profiles.checkSelf());
-    }
-    return true;
+  @Nonnull
+  public String getNickname() {
+    return nickname;
+  }
+
+  public void setNickname(@Nonnull String nickname) {
+    Verify.verify(!nickname.isEmpty() && nickname.length() <= 24,
+        "invalid nickname: %s", nickname);
+    this.nickname = nickname;
+  }
+
+  @CheckForNull
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(@Nonnull String avatar) {
+    this.avatar = avatar;
+  }
+
+  @CheckForNull
+  public Profiles getProfiles() {
+    return profiles;
+  }
+
+  public void setProfiles(@Nonnull Profiles profiles) {
+    this.profiles = profiles;
   }
 
   @Override public int hashCode() {
@@ -64,10 +84,31 @@ public final class User extends EBeanModel {
   }
 
   @Override public String toString() {
-    return toStringHelper()
+    return stringHelper()
         .add("昵称", nickname)
         .add("头像", avatar)
         .add("资料", profiles)
         .toString();
+  }
+
+  /**
+   * 匿名用户。
+   */
+  @Nonnull
+  @CanIgnoreReturnValue
+  public static User ofAnonymity() {
+    return of("用户_" + RandomHelper.ofNumber(11), "");
+  }
+
+  /**
+   * 正常用户。
+   */
+  @Nonnull
+  @CanIgnoreReturnValue
+  public static User of(@Nonnull String nickname, @Nonnull String avatar) {
+    User user = new User();
+    user.setNickname(nickname);
+    user.setAvatar(avatar);
+    return user;
   }
 }

@@ -1,8 +1,11 @@
 package core.entity;
 
-import com.google.common.base.Preconditions;
-import core.Entity;
+import com.google.common.base.Verify;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.time.LocalDate;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.Embeddable;
 
 /**
@@ -11,35 +14,88 @@ import javax.persistence.Embeddable;
  * @author qiang.zhang
  */
 @Embeddable
-public final class Profiles implements Entity {
+public final class Profiles {
   /**
-   * 名字
+   * 名字。
    */
-  public String firstName;
+  private String name;
   /**
-   * 姓氏
+   * 性别。
    */
-  public String lastName;
+  private Sex sex;
   /**
-   * 生日
+   * 生日。
    */
-  public LocalDate birthday;
+  private LocalDate birthday;
 
-  public String name() {
-    // 暂时是中文格式
-    return lastName + firstName;
+  @CheckForNull
+  public String getName() {
+    return name;
   }
 
-  @Override public boolean checkSelf() {
-    if (firstName != null) {
-      Preconditions.checkState(!firstName.isEmpty());
+  public void setName(@Nonnull String name) {
+    this.name = name;
+  }
+
+  @CheckForNull
+  public Sex getSex() {
+    return sex;
+  }
+
+  public void setSex(@Nonnull Sex sex) {
+    this.sex = sex;
+  }
+
+  @CheckForNull
+  public LocalDate getBirthday() {
+    return birthday;
+  }
+
+  public void setBirthday(@Nonnull LocalDate birthday) {
+    Verify.verify(LocalDate.now().isAfter(birthday),
+        "invalid birthday: %s", birthday);
+    this.birthday = birthday;
+  }
+
+  @Nonnull
+  @CanIgnoreReturnValue
+  public static Profiles of(@Nullable String name, @Nullable Sex sex,
+      @Nullable LocalDate birthday) {
+    Profiles profiles = new Profiles();
+    if (name != null) {
+      profiles.setName(name);
     }
-    if (lastName != null) {
-      Preconditions.checkState(!lastName.isEmpty());
+    if (sex != null) {
+      profiles.setSex(sex);
     }
     if (birthday != null) {
-      Preconditions.checkState(birthday.isBefore(LocalDate.now()));
+      profiles.setBirthday(birthday);
     }
-    return true;
+    return profiles;
+  }
+
+  public enum Sex {
+    MALE("男"),
+    FEMALE("女"),
+    UNKNOWN("未知"),;
+
+    final String value;
+
+    Sex(String value) {
+      this.value = value;
+    }
+
+    public static Sex of(String value) {
+      for (Sex sex : Sex.values()) {
+        if (sex.value.equals(value)) {
+          return sex;
+        }
+      }
+      return Sex.valueOf(value);
+    }
+
+    @Override public String toString() {
+      return value;
+    }
   }
 }
