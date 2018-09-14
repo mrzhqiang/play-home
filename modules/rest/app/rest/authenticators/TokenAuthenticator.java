@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import core.Redis;
 import core.exception.ApplicationException;
-import core.repository.TokenRepository;
 import framework.ErrorResponse;
 import framework.SimpleParser;
 import java.util.Optional;

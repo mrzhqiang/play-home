@@ -3,32 +3,35 @@ package core.entity;
 import com.google.common.base.Verify;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.ebean.annotation.Index;
+import io.ebean.annotation.Length;
 import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import util.NameHelper;
 
 /**
  * 客户端。
  * <p>
- * TODO 客户端 access log
+ * 表示如果是移动端，则必须经过客户端权限验证；Web 端没有要求。
  *
  * @author mrzhqiang
  */
 @Entity
 @Table(name = "clients")
 public final class Client extends EBeanModel {
-  private static final String BASE_INDEX = "index_client_";
+  private static final String REGEX_API_KEY = "[a-z0-9-]";
 
   public static final String COL_NAME = "name";
   public static final String COL_API_KEY = "apikey";
 
-  @Index(name = BASE_INDEX + COL_NAME)
-  @Column(name = COL_NAME, unique = true, nullable = false, length = 24)
+  @Index(name = "index_client_name")
+  @Column(name = COL_NAME, unique = true, nullable = false)
+  @Length(24)
   private String name;
-  @Column(name = COL_API_KEY, nullable = false)
+  @Column(name = COL_API_KEY, unique = true, nullable = false)
   private UUID apikey;
 
   @Nonnull
@@ -37,17 +40,14 @@ public final class Client extends EBeanModel {
   }
 
   public void setName(@Nonnull String name) {
-    Verify.verify(!name.isEmpty() && name.length() <= 24,
-        "invalid name: %s", name);
+    boolean b = NameHelper.checkName(name, 2, 24);
+    Verify.verify(b, "invalid name: %s", name);
     this.name = name;
   }
 
-  @Nonnull
-  public UUID getApikey() {
-    return apikey;
-  }
-
   public void setApikey(@Nonnull UUID apikey) {
+    boolean b = NameHelper.checkRegexAndLength(REGEX_API_KEY, apikey.toString(), 36, 36);
+    Verify.verify(b, "invalid apikey: %s", apikey);
     this.apikey = apikey;
   }
 

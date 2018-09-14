@@ -3,7 +3,6 @@ package rest.authenticators;
 import com.google.inject.Inject;
 import core.model.Token;
 import core.repository.ClientRepository;
-import core.repository.TokenRepository;
 import framework.ErrorResponse;
 import java.util.Optional;
 import play.libs.Json;

@@ -26,12 +26,12 @@ public interface Repository<I, E> {
    * <p>
    * 不存在，插入；存在，更新。
    */
-  Optional<E> save(E entity);
+  @Nonnull Optional<E> save(E entity);
 
   /**
    * 通过主键删除实体数据。
    */
-  Optional<E> delete(I primaryKey);
+  @Nonnull Optional<E> delete(I primaryKey);
 
   /**
    * 获取实体数据。
@@ -41,7 +41,7 @@ public interface Repository<I, E> {
   /**
    * 获取此仓库的实体数据列表，从指定行数开始，获取固定大小的数据。
    */
-  @Nonnull Paging<E> list(int from, int size);
+  @Nonnull Paging<E> list(int firstRow, int maxRows);
 
   /**
    * 获取此仓库的所有数据。
@@ -80,24 +80,5 @@ public interface Repository<I, E> {
       logger.error(message);
       throw new DatabaseException(message);
     }
-  }
-
-  /**
-   * 通过页面索引，计算当前页面第一行的序号。
-   */
-  default int firstRowByIndex(int from, int size) {
-    if (from < 1) {
-      return 1;
-    }
-    return (from - 1) * size + 1;
-  }
-
-  /**
-   * 通过传入的页面大小，返回一页的最大行数。
-   * <p>
-   * 注意：最大行数最小为 10。
-   */
-  default int maxRowsBySize(int size) {
-    return size < 10 ? 10 : size;
   }
 }

@@ -1,44 +1,47 @@
 package core.entity;
 
-import com.google.common.base.Preconditions;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import core.util.Treasures;
+import com.google.common.base.Verify;
 import io.ebean.annotation.Index;
+import io.ebean.annotation.Length;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import util.LinkHelper;
+import util.NameHelper;
 
 /**
  * 宝藏。
+ * <p>
+ * 这意味着是私人收藏。
  *
  * @author mrzhqiang
  */
 @Entity
 @Table(name = "treasures")
 public final class Treasure extends EBeanModel {
-  private static final String BASE_INDEX = "index_treasure_";
-
   public static final String COL_NAME = "name";
-  public static final String COL_LINK = "link";
 
-  @Index(name = BASE_INDEX + COL_NAME)
-  @Column(name = COL_NAME, nullable = false, length = 12)
-  public String name;
-  @Column(name = COL_LINK)
-  public String link;
+  @Index(name = "index_treasure_name")
+  @Column(name = COL_NAME, nullable = false)
+  @Length(24)
+  private String name;
 
-  @CanIgnoreReturnValue @Override public boolean checkSelf() {
-    Preconditions.checkState(Treasures.checkName(name));
-    if (link != null) {
-      Preconditions.checkState(LinkHelper.simpleCheck(link));
-    }
-    return true;
+  // TODO 游戏（包含：服务器信息，游戏角色，职业，等等）
+
+  @Nonnull
+  public String getName() {
+    return name;
+  }
+
+  public void setName(@Nonnull String name) {
+    boolean b = NameHelper.checkName(name, 2, 24);
+    Verify.verify(b, "invalid name: %s", name);
+    this.name = name;
   }
 
   @Override public int hashCode() {
-    return Objects.hash(super.hashCode(), name, link);
+    return Objects.hash(super.hashCode(), name);
   }
 
   @Override public boolean equals(Object obj) {
@@ -52,14 +55,21 @@ public final class Treasure extends EBeanModel {
 
     Treasure other = (Treasure) obj;
     return super.equals(obj)
-        && Objects.equals(name, other.name)
-        && Objects.equals(link, other.link);
+        && Objects.equals(name, other.name);
   }
 
   @Override public String toString() {
     return stringHelper()
-        .add("宝藏", name)
-        .add("地址", link)
+        .add("宝藏名", name)
         .toString();
+  }
+
+  /**
+   * 新的宝藏。
+   */
+  public static Treasure of(@Nonnull String name) {
+    Treasure treasure = new Treasure();
+    treasure.setName(name);
+    return treasure;
   }
 }

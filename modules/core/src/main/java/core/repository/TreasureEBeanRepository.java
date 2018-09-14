@@ -22,8 +22,8 @@ import javax.annotation.Nonnull;
   @Nonnull @Override public Paging<Treasure> search(String name, int from, int size) {
     Verify.verify(Treasures.checkName(name), "invalid name: %s", name);
 
-    int firstRow = firstRowByIndex(from, size);
-    int maxRows = maxRowsBySize(size);
+    int firstRow = computeFirstRow(from, size);
+    int maxRows = computeMaxRows(size);
     return provide(() -> {
       PagedList<Treasure> pagedList = finder.query().where()
           .icontains(Treasure.COL_NAME, name)

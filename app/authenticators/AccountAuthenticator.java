@@ -1,16 +1,12 @@
 package authenticators;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import core.Redis;
-import core.exception.ApplicationException;
-import core.repository.TokenRepository;
 import framework.ErrorResponse;
-import framework.SimpleParser;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import service.account.AccountService;
 
 /**
  * 账号认证器。
@@ -18,29 +14,17 @@ import play.mvc.Security;
  * @author mrzhqiang
  */
 public final class AccountAuthenticator extends Security.Authenticator {
-  private final Redis redis;
-  private final TokenRepository tokenRepository;
+  private final AccountService accountService;
 
   @Inject
-  public AccountAuthenticator(Redis redis, TokenRepository tokenRepository) {
-    this.redis = redis;
-    this.tokenRepository = tokenRepository;
+  public AccountAuthenticator(AccountService accountService) {
+    this.accountService = accountService;
   }
 
   @Override public String getUsername(Http.Context ctx) {
     String accessToken = ctx.request().cookie("accessToken").value();
     // 检查是否过期，过期则抛出 403 异常；没有过期则将账户存入 Redis 中，返回存储的 Key 到当前会话
-    return optional.flatMap(tokenRepository::authenticate)
-        .flatMap(token -> {
-          ApplicationException.forbidden(token.isValid(), "Token 已过期，请刷新。");
-          return redis.get(jedis -> {
-            JsonNode jsonNode = Json.toJson(token.account);
-            String key = "account:" + token.account.id;
-            jedis.hmset(key, SimpleParser.fromMapString(jsonNode));
-            return key;
-          });
-        })
-        .orElse(null);
+    return accessToken;
   }
 
   @Override public Result onUnauthorized(Http.Context ctx) {

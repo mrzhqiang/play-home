@@ -1,5 +1,6 @@
 package core.repository;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.entity.Client;
@@ -19,10 +20,12 @@ import javax.annotation.Nonnull;
   }
 
   @Nonnull @Override public Optional<Client> find(String name, UUID apikey) {
-    Verify.verify(Clients.checkName(name), "invalid name: %s", name);
-    Verify.verify(Clients.checkApiKey(apikey), "invalid apikey: %s", apikey);
+    Verify.verify(!Strings.isNullOrEmpty(name),
+        "name must be not null or empty.");
+    Verify.verify(apikey != null,
+        "apikey must be not null.");
 
-    return provide(() -> finder.query().where()
+    return provide(() -> query().where()
         .eq(Client.COL_NAME, name)
         .eq(Client.COL_API_KEY, apikey)
         .findOneOrEmpty());

@@ -15,36 +15,31 @@ import javax.annotation.Nonnull;
  *
  * @author qiang.zhang
  */
-abstract class EBeanRepository<I, E extends EBeanModel> implements Repository<I, E> {
-  final Finder<I, E> finder;
-
-  EBeanRepository(Class<E> entityClass) {
-    this.finder = new Finder<>(entityClass);
+abstract class EBeanRepository<I, E extends EBeanModel> extends Finder<I, E>
+    implements Repository<I, E> {
+  EBeanRepository(Class<E> type) {
+    super(type);
   }
 
-  @Override public Optional<E> save(E entity) {
+  @Nonnull @Override public Optional<E> save(E entity) {
     Optional<E> optional = Optional.ofNullable(entity);
     optional.ifPresent(e -> execute(e, Model::save));
     return optional;
   }
 
-  @Override public Optional<E> delete(E entity) {
-    Optional<E> optional = Optional.ofNullable(entity);
+  @Nonnull @Override public Optional<E> delete(I primaryKey) {
+    Optional<E> optional = Optional.ofNullable(primaryKey).flatMap(this::get);
     optional.ifPresent(e -> execute(e, Model::delete));
     return optional;
   }
 
-  @Override public Optional<E> delete(I primaryKey) {
-    return Optional.ofNullable(primaryKey).flatMap(this::get).flatMap(this::delete);
-  }
-
   @Nonnull @Override public Optional<E> get(I primaryKey) {
-    return provide(() -> Optional.ofNullable(primaryKey).map(finder::byId));
+    return provide(() -> Optional.ofNullable(primaryKey).map(this::byId));
   }
 
   @Nonnull @Override public Paging<E> list(int from, int size) {
     return provide(() -> {
-      PagedList<E> pagedList = finder.query()
+      PagedList<E> pagedList = query()
           .setFirstRow(from)
           .setMaxRows(size)
           .findPagedList();
@@ -53,6 +48,25 @@ abstract class EBeanRepository<I, E extends EBeanModel> implements Repository<I,
   }
 
   @Nonnull @Override public List<E> list() {
-    return provide(finder::all);
+    return provide(this::all);
+  }
+
+  /**
+   * 通过页面索引，计算当前页面第一行的序号。
+   */
+  int computeFirstRow(int index, int size) {
+    if (index < 1) {
+      return 1;
+    }
+    return (index - 1) * computeMaxRows(size) + 1;
+  }
+
+  /**
+   * 通过页面大小，计算当前页面的最大行数。
+   * <p>
+   * 注意：最大行数的最小值为 10。
+   */
+  int computeMaxRows(int size) {
+    return size < 10 ? 10 : size;
   }
 }

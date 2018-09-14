@@ -1,10 +1,10 @@
 package core.repository;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.inject.Singleton;
 import core.Paging;
 import core.entity.User;
-import core.util.Users;
 import io.ebean.PagedList;
 import javax.annotation.Nonnull;
 
@@ -19,13 +19,14 @@ import javax.annotation.Nonnull;
     super(User.class);
   }
 
-  @Nonnull @Override public Paging<User> search(String nickname, int from, int size) {
-    Verify.verify(Users.checkNickname(nickname), "invalid nickname: %s", nickname);
+  @Nonnull @Override public Paging<User> search(String nickname, int index, int size) {
+    Verify.verify(!Strings.isNullOrEmpty(nickname),
+        "nickname must be not null or empty.");
 
-    int firstRow = from < 0 ? 0 : from;
-    int maxRows = size < 10 ? 10 : size;
+    int firstRow = computeFirstRow(index, size);
+    int maxRows = computeMaxRows(size);
     return provide(() -> {
-      PagedList<User> pagedList = finder.query().where()
+      PagedList<User> pagedList = query().where()
           .icontains(User.COL_NICKNAME, nickname)
           .setFirstRow(firstRow)
           .setMaxRows(maxRows)

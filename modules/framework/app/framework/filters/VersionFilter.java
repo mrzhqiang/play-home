@@ -13,7 +13,7 @@ import play.mvc.Result;
 /**
  * 版本过滤器。
  * <p>
- * 参考：<a href="https://www.playframework.com/documentation/2.6.x/JavaHttpFilters">官方文档。</a>
+ * 参考：https://www.playframework.com/documentation/2.6.x/JavaHttpFilters
  *
  * @author mrzhqiang
  */

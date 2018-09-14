@@ -22,12 +22,14 @@ public final class ErrorResponse {
   private static final String APP_PACKAGES_REGEX =
       "^(controllers|models|util|core|framework|service|rest).*";
 
-  private final int httpStatus;
+  final int httpStatus;
   private final int code;
   private final String message;
   private final String developerMessage;
   private final String moreInfo;
 
+  @SuppressWarnings("unused")
+  // Json 序列化需要
   public ErrorResponse() {
     this(HTTP_STATUS, CODE, MESSAGE, DEVELOPER_MESSAGE, MORE_INFO);
   }
@@ -39,26 +41,6 @@ public final class ErrorResponse {
     this.message = message;
     this.developerMessage = developerMessage;
     this.moreInfo = moreInfo;
-  }
-
-  public int getHttpStatus() {
-    return httpStatus;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public String getDeveloperMessage() {
-    return developerMessage;
-  }
-
-  public String getMoreInfo() {
-    return moreInfo;
   }
 
   public static ErrorResponse ofAuthenticator(String message) {
